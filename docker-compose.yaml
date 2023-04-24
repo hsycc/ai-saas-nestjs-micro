@@ -1,0 +1,28 @@
+version: '3.5'
+
+services:
+  api-gateway:
+    image: api-gateway:local
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: build
+    env_file:
+      - ./apps/api-gateway/.env
+    command: npm run start:dev api-gateway
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  auth-svc:
+    image: auth-svc:local
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: build
+    env_file:
+      - ./apps/auth/.env
+    command: npm run start:dev auth-svc
+    volumes:
+      - .:/app
+      - /app/node_modules

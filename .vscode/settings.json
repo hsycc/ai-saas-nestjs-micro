@@ -1,0 +1,33 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "fileheader.customMade": {
+    // 头部注释默认字段
+    "Author": "hsycc",
+    // "Date": "Do not edit", // 设置后默认设置文件生成时间
+    // "LastEditTime": "Do not edit", // 设置后，保存文件更改默认更新最后编辑时间
+    "Description": "",
+    "custom_string_obkoro1": ""
+  },
+  // 函数注释
+  "fileheader.cursorMode": {
+    // 默认字段
+    "description": "",
+    "param": "",
+    "return": ""
+  },
+  "fileheader.configObj": {
+    "autoAdd": false, // 检测文件没有头部注释，自动添加文件头部注释
+    "autoAddLine": 100, // 文件超过多少行数 不再自动添加头部注释
+    "autoAlready": true, // 只添加插件支持的语言以及用户通过`language`选项自定义的注释
+    "supportAutoLanguage": [], // 设置之后，在数组内的文件才支持自动添加
+    // 自动添加头部注释黑名单
+    "prohibitAutoAdd": ["json"],
+    "prohibitItemAutoAdd": [
+      "项目的全称禁止项目自动添加头部注释, 使用快捷键自行添加"
+    ]
+  },
+  "commentTranslate.source": "Google",
+  "commentTranslate.targetLanguage": "zh-CN",
+  "cSpell.words": ["nacos", "protoc", "protos", "tsup"]
+}
