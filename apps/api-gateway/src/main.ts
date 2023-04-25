@@ -1,5 +1,4 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import {
   DocumentBuilder,
   SwaggerDocumentOptions,
@@ -9,15 +8,24 @@ import {
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import { WinstonModule } from 'nest-winston';
+import { HttpLoggingInterceptor, CreateLoggerOption } from '@app/logger';
+import {
+  GrpcToHttpInterceptor,
+  HttpClientExceptionFilter,
+  // HttpBodyValidationPipe,
+  TransformInterceptor,
+} from '@app/grpc-exceptions';
 
-import { createLoggerOption } from '@app/common/logger';
-import { LoggingInterceptor } from '@app/common/interceptors/logging.interceptor';
-import { GrpcToHttpInterceptor } from '@app/grpc-exceptions';
+import { AppModule } from './app.module';
 
-export const serviceName = 'api-gateway';
+export const service = 'api-gateway';
 
 const port = process.env.PORT || 9000;
-const logger = WinstonModule.createLogger(createLoggerOption(serviceName));
+const logger = WinstonModule.createLogger(
+  CreateLoggerOption({
+    service,
+  }),
+);
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -42,18 +50,20 @@ async function bootstrap() {
     credentials: true,
   });
 
-  app.useGlobalInterceptors(new GrpcToHttpInterceptor());
-  // /* 统一请求成功的返回数据 */
-  // app.useGlobalInterceptors(new TransformInterceptor());
+  /* 统一验证DTO 抛出指定异常过滤 */
+  // app.useGlobalPipes(new HttpBodyValidationPipe());
 
-  // /* 拦截全部的错误请求,统一返回格式 */
-  // app.useGlobalFilters(new ApiGatewayExceptionFilter(logger));
+  /* 统一请求成功的返回数据 */
+  app.useGlobalInterceptors(new TransformInterceptor());
 
   /** 统一打上时间戳, 统计接口耗时 */
-  app.useGlobalInterceptors(new LoggingInterceptor(logger));
+  app.useGlobalInterceptors(new HttpLoggingInterceptor(logger));
 
-  /* 统一验证DTO 抛出指定异常过滤 */
-  // app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  /* catchError rpcException return new HttpException */
+  app.useGlobalInterceptors(new GrpcToHttpInterceptor(logger));
+
+  /* HttpClientExceptionFilter 异常过滤器 */
+  app.useGlobalFilters(new HttpClientExceptionFilter(logger, service));
 
   /* Swagger */
   const config = new DocumentBuilder()
@@ -79,7 +89,7 @@ async function bootstrap() {
   logger.log(`process.env.NODE_ENV:${process.env.NODE_ENV}`, bootstrap.name);
   await app.listen(port);
   logger.log(
-    `http://localhost:${port} ${serviceName} 服务启动成功`,
+    `http://localhost:${port} ${service} 服务启动成功`,
     bootstrap.name,
   );
 }

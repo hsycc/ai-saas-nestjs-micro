@@ -6,13 +6,13 @@ import { join } from 'path';
 import { OrderSvcModule } from './order-svc.module';
 import { protobufPackage } from '@proto/gen/order.pb';
 import { WinstonModule } from 'nest-winston';
-import { createLoggerOption } from '@app/common/logger';
+import { CreateLoggerOption } from '@app/logger';
 
-export const serviceName = 'order-svc';
+export const service = 'order-svc';
 const { NODE_ENV, MICRO_ORDER_DOMAIN, MICRO_ORDER_PORT, MICRO_ORDER_PROTO } =
   process.env;
 
-const logger = WinstonModule.createLogger(createLoggerOption(serviceName));
+const logger = WinstonModule.createLogger(CreateLoggerOption({ service }));
 
 async function bootstrap() {
   const app: INestMicroservice = await NestFactory.createMicroservice(
@@ -34,7 +34,7 @@ async function bootstrap() {
   logger.log(`NODE_ENV:${NODE_ENV}`, bootstrap.name);
   await app.listen();
   logger.log(
-    `tcp://${MICRO_ORDER_DOMAIN}:${MICRO_ORDER_PORT} ${serviceName} 微服务启动成功`,
+    `tcp://${MICRO_ORDER_DOMAIN}:${MICRO_ORDER_PORT} ${service} 微服务启动成功`,
     bootstrap.name,
   );
 }

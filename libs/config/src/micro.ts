@@ -1,6 +1,6 @@
 import { registerAs } from '@nestjs/config';
 
-export default registerAs('microConfig', () => ({
+export const MicroConfig = registerAs('MicroConfig', () => ({
   microAuthDomain: process.env.MICRO_AUTH_DOMAIN,
   microAuthPort: process.env.MICRO_AUTH_PORT,
   microAuthProto: process.env.MICRO_AUTH_PROTO,

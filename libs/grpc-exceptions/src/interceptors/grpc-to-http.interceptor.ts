@@ -4,6 +4,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  LoggerService,
   NestInterceptor,
 } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
@@ -13,6 +14,7 @@ import { HTTP_CODE_FROM_GRPC } from '../utils';
 
 @Injectable()
 export class GrpcToHttpInterceptor implements NestInterceptor {
+  constructor(private readonly logger: LoggerService) {}
   intercept(
     _context: ExecutionContext,
     next: CallHandler<any>,
@@ -26,8 +28,9 @@ export class GrpcToHttpInterceptor implements NestInterceptor {
             err.details &&
             typeof err.details === 'string'
           )
-        )
+        ) {
           return throwError(() => err);
+        }
 
         const exception = JSON.parse(err.details) as {
           error: string | object;
@@ -35,10 +38,9 @@ export class GrpcToHttpInterceptor implements NestInterceptor {
           exceptionName: string;
         };
 
-        console.log(exception, 2323);
-
-        if (exception.exceptionName !== RpcException.name)
+        if (exception.exceptionName !== RpcException.name) {
           return throwError(() => err);
+        }
 
         const statusCode =
           HTTP_CODE_FROM_GRPC[err.code] || HttpStatus.INTERNAL_SERVER_ERROR;

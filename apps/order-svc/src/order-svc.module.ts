@@ -2,44 +2,44 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerOptions } from 'typeorm';
-import { appConfig } from '@app/config';
+import { MysqlBase, MysqlOrder, MicroConfig } from '@app/config';
 import { WinstonModule } from 'nest-winston';
-import { createLoggerOption } from '@app/common/logger';
+import { CreateLoggerOption } from '@app/logger';
 
-import { serviceName } from './main';
+import { service } from './main';
 import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [appConfig.mysqlBase, appConfig.mysqlOrder, appConfig.microConfig],
+      load: [MysqlBase, MysqlOrder, MicroConfig],
       isGlobal: true,
     }),
-    WinstonModule.forRoot(createLoggerOption(serviceName)),
+    WinstonModule.forRoot(CreateLoggerOption({ service })),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => {
         return {
-          host: config.get<string>('mysqlOrder.host'),
-          port: config.get<number>('mysqlOrder.port'),
-          username: config.get<string>('mysqlOrder.username'),
-          password: config.get<string>('mysqlOrder.password'),
-          database: config.get<string>('mysqlOrder.database'),
+          host: config.get<string>('MysqlOrder.host'),
+          port: config.get<number>('MysqlOrder.port'),
+          username: config.get<string>('MysqlOrder.username'),
+          password: config.get<string>('MysqlOrder.password'),
+          database: config.get<string>('MysqlOrder.database'),
 
-          type: config.get<'mysql'>('mysqlBase.type'),
-          synchronize: config.get<boolean>('mysqlBase.synchronize'),
-          charset: config.get<string>('mysqlBase.charset'),
+          type: config.get<'mysql'>('MysqlBase.type'),
+          synchronize: config.get<boolean>('MysqlBase.synchronize'),
+          charset: config.get<string>('MysqlBase.charset'),
           multipleStatements: config.get<boolean>(
-            'mysqlBase.multipleStatements',
+            'MysqlBase.multipleStatements',
           ),
           connectionLimit: 10, // 连接限制
           /* with that options, every model registered through the `forFeature()` method will be automatically added to the `models` arrays of the configuration object */
           autoLoadEntities: true,
-          logging: config.get<LoggerOptions>('mysqlBase.logging'),
-          logger: config.get<any>('mysqlBase.logger'),
-          dropSchema: config.get<boolean>('mysqlBase.dropSchema'),
-          cache: config.get<boolean>('mysqlBase.cache'),
+          logging: config.get<LoggerOptions>('MysqlBase.logging'),
+          logger: config.get<any>('MysqlBase.logger'),
+          dropSchema: config.get<boolean>('MysqlBase.dropSchema'),
+          cache: config.get<boolean>('MysqlBase.cache'),
         };
       },
     }),

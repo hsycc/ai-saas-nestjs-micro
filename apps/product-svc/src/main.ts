@@ -5,10 +5,10 @@ import { useContainer } from 'class-validator';
 import { join } from 'path';
 import { protobufPackage } from '@proto/gen/product.pb';
 import { ProductSvcModule } from './product-svc.module';
-import { createLoggerOption } from '@app/common/logger';
+import { CreateLoggerOption } from '@app/logger';
 import { WinstonModule } from 'nest-winston';
 
-export const serviceName = 'product-svc';
+export const service = 'product-svc';
 const {
   NODE_ENV,
   MICRO_PRODUCT_DOMAIN,
@@ -16,7 +16,7 @@ const {
   MICRO_PRODUCT_PROTO,
 } = process.env;
 
-const logger = WinstonModule.createLogger(createLoggerOption(serviceName));
+const logger = WinstonModule.createLogger(CreateLoggerOption({ service }));
 
 async function bootstrap() {
   const app: INestMicroservice = await NestFactory.createMicroservice(
@@ -38,7 +38,7 @@ async function bootstrap() {
   logger.log(`NODE_ENV:${NODE_ENV}`, bootstrap.name);
   await app.listen();
   logger.log(
-    `tcp://${MICRO_PRODUCT_DOMAIN}:${MICRO_PRODUCT_PORT} ${serviceName} 微服务启动成功`,
+    `tcp://${MICRO_PRODUCT_DOMAIN}:${MICRO_PRODUCT_PORT} ${service} 微服务启动成功`,
     bootstrap.name,
   );
 }

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
-import { appConfig } from '@app/config';
-import { createLoggerOption } from '@app/common/logger';
+import { MicroConfig } from '@app/config';
+import { CreateLoggerOption } from '@app/logger';
 
-import { serviceName } from './main';
+import { service } from './main';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -14,11 +14,11 @@ import { ProductModule } from './product/product.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [appConfig.microConfig],
+      load: [MicroConfig],
       isGlobal: true,
     }),
 
-    WinstonModule.forRoot(createLoggerOption(serviceName)),
+    WinstonModule.forRoot(CreateLoggerOption({ service })),
     AuthModule,
     ProductModule,
     OrderModule,

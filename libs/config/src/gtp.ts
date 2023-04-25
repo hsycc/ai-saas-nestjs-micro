@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
 
-export default registerAs('gtpConfig', () => ({
+export const GtpConfig = registerAs('GtpConfig', () => ({
   apiKey: process.env.GTP_API_KEY,
 }));

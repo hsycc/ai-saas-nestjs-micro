@@ -18,14 +18,36 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@proto/*": ["_proto/*"],
-      "@app/proto": ["_proto"],
-      "@app/common": ["libs/common/src"],
-      "@app/common/*": ["libs/common/src/*"],
-      "@app/config": ["libs/config/src"],
-      "@app/config/*": ["libs/config/src/*"],
-      "@app/grpc-exceptions": ["libs/grpc-exceptions/src"],
-      "@app/grpc-exceptions/*": ["libs/grpc-exceptions/src/*"]
+      "@proto/*": [
+        "_proto/*"
+      ],
+      "@app/proto": [
+        "_proto"
+      ],
+      "@app/common": [
+        "libs/common/src"
+      ],
+      "@app/common/*": [
+        "libs/common/src/*"
+      ],
+      "@app/config": [
+        "libs/config/src"
+      ],
+      "@app/config/*": [
+        "libs/config/src/*"
+      ],
+      "@app/grpc-exceptions": [
+        "libs/grpc-exceptions/src"
+      ],
+      "@app/grpc-exceptions/*": [
+        "libs/grpc-exceptions/src/*"
+      ],
+      "@app/logger": [
+        "libs/logger/src"
+      ],
+      "@app/logger/*": [
+        "libs/logger/src/*"
+      ]
     }
   }
 }

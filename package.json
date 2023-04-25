@@ -108,7 +108,8 @@
       "^@app/proto(|/.*)$": "<rootDir>/_proto/$1",
       "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^@app/config(|/.*)$": "<rootDir>/libs/config/src/$1",
-      "^@app/grpc-exceptions(|/.*)$": "<rootDir>/libs/grpc-exceptions/src/$1"
+      "^@app/grpc-exceptions(|/.*)$": "<rootDir>/libs/grpc-exceptions/src/$1",
+      "^@app/logger(|/.*)$": "<rootDir>/libs/logger/src/$1"
     }
   }
 }

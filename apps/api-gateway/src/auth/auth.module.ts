@@ -17,11 +17,11 @@ import { AuthService } from './auth.service';
           transport: Transport.GRPC,
           options: {
             url:
-              config.get<string>('microConfig.microAuthDomain') +
+              config.get<string>('MicroConfig.microAuthDomain') +
               ':' +
-              config.get<string>('microConfig.microAuthPort'),
+              config.get<string>('MicroConfig.microAuthPort'),
             package: AUTH_PACKAGE_NAME,
-            protoPath: config.get<string>('microConfig.microAuthProto'),
+            protoPath: config.get<string>('MicroConfig.microAuthProto'),
           },
         });
       },

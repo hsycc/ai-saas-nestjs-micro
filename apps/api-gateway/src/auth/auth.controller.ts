@@ -1,4 +1,3 @@
-import { tap } from 'rxjs/operators';
 import {
   Body,
   Controller,
@@ -8,7 +7,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { Observable, firstValueFrom, lastValueFrom } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   AuthServiceClient,
   AUTH_SERVICE_NAME,
@@ -37,10 +36,7 @@ export class AuthController implements OnModuleInit {
   private async register(
     @Body() body: RegisterRequestDto,
   ): Promise<Observable<RegisterResponse>> {
-    const a = this.svc.register(body, new Metadata());
-    // console.log(await lastValueFrom(a), 1212);
-
-    return a;
+    return this.svc.register(body, new Metadata());
   }
 
   @Put('login')

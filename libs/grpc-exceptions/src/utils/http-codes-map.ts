@@ -1,6 +1,8 @@
 import { status as Status } from '@grpc/grpc-js';
 import { HttpStatus } from '@nestjs/common';
 
+// https://github.com/mohsenbostan/nestjs-grpc-exceptions
+// list of supported http status codes: 401 - 403 - 502 - 404 - 405 - 409 - 422 - 429 - 500
 // https:skyao.gitbooks.io/learning-grpc/content/server/status/class_Status.html
 export const HTTP_CODE_FROM_GRPC: Record<number, number> = {
   [Status.OK]: HttpStatus.OK,

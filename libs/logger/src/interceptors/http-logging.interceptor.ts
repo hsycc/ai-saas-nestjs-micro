@@ -2,7 +2,7 @@
  * 为请求统一打上时间戳, 日志拦截器
  * @Author:
  * @Date: 2023-02-21 13:24:34
- * @LastEditTime: 2023-04-22 17:00:06
+ * @LastEditTime: 2023-04-25 14:42:58
  * @Description:
  *
  */
@@ -18,7 +18,7 @@ import { tap } from 'rxjs/operators';
 import { Request, Response } from 'express';
 
 @Injectable()
-export class LoggingInterceptor implements NestInterceptor {
+export class HttpLoggingInterceptor implements NestInterceptor {
   constructor(private readonly logger: LoggerService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
@@ -29,10 +29,8 @@ export class LoggingInterceptor implements NestInterceptor {
     const url = request.url;
 
     const requestTime = Date.now();
-
     // Add request time to params to be used in exception filters
     request.params.requestTime = requestTime.toString();
-
     return next
       .handle()
       .pipe(
@@ -41,7 +39,7 @@ export class LoggingInterceptor implements NestInterceptor {
             `${method} ${url} - ${response.statusCode} - ${
               Date.now() - requestTime
             }ms`,
-            LoggingInterceptor.name,
+            HttpLoggingInterceptor.name,
           ),
         ),
       );

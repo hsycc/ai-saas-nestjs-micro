@@ -1,3 +1,3 @@
 import { registerAs } from '@nestjs/config';
 
-export default registerAs('redisConfig', () => ({}));
+export const RedisConfig = registerAs('RedisConfig', () => ({}));

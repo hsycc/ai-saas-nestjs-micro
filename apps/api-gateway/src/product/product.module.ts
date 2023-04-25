@@ -18,11 +18,11 @@ import { ProductController } from './product.controller';
           transport: Transport.GRPC,
           options: {
             url:
-              config.get<string>('microConfig.microProductDomain') +
+              config.get<string>('MicroConfig.microProductDomain') +
               ':' +
-              config.get<string>('microConfig.microProductPort'),
+              config.get<string>('MicroConfig.microProductPort'),
             package: PRODUCT_PACKAGE_NAME,
-            protoPath: config.get<string>('microConfig.microProductProto'),
+            protoPath: config.get<string>('MicroConfig.microProductProto'),
           },
         });
       },

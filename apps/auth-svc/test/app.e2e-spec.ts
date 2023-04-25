@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+// import * as request from 'supertest';
 import { AuthSvcModule } from './../src/auth-svc.module';
 
 describe('AuthSvcController (e2e)', () => {

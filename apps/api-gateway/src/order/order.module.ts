@@ -15,11 +15,11 @@ import { OrderController } from './order.controller';
           transport: Transport.GRPC,
           options: {
             url:
-              config.get<string>('microConfig.microOrderDomain') +
+              config.get<string>('MicroConfig.microOrderDomain') +
               ':' +
-              config.get<string>('microConfig.microOrderPort'),
+              config.get<string>('MicroConfig.microOrderPort'),
             package: ORDER_PACKAGE_NAME,
-            protoPath: config.get<string>('microConfig.microOrderProto'),
+            protoPath: config.get<string>('MicroConfig.microOrderProto'),
           },
         });
       },

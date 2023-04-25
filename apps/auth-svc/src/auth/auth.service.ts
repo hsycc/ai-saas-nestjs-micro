@@ -2,8 +2,8 @@ import {
   HttpStatus,
   Inject,
   Injectable,
-  NotFoundException,
-  UnauthorizedException,
+  // NotFoundException,
+  // UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -19,9 +19,6 @@ import {
   RegisterResponse,
   ValidateResponse,
 } from '@proto/gen/auth.pb';
-import { ForbiddenException } from '@nestjs/common/exceptions';
-import { RpcException } from '@nestjs/microservices';
-import { GrpcNotFoundException } from '@app/grpc-exceptions';
 
 @Injectable()
 export class AuthService {
@@ -35,17 +32,6 @@ export class AuthService {
     email,
     password,
   }: RegisterRequestDto): Promise<RegisterResponse> {
-    throw new GrpcNotFoundException('User Not Found.');
-
-    // throw new Error('xxx');
-    //
-    // throw new UnauthorizedException();
-    // throw new RpcException({
-    //   status: 400111,
-    // });
-
-    // throw new RpcException(new NotFoundException('Product was not found!'));
-
     let auth: Auth = await this.repository.findOne({ where: { email } });
 
     if (auth) {
@@ -121,5 +107,5 @@ export class AuthService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public async validateUser(username, password) {}
+  // public async validateUser(username, password) {}
 }
