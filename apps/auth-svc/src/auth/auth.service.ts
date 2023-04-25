@@ -107,5 +107,5 @@ export class AuthService {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  // public async validateUser(username, password) {}
+  public async validateUser(username, password) {}
 }

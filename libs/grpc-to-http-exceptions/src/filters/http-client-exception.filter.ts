@@ -1,11 +1,12 @@
 /*
- * 全局过滤器 - 处理错误信息
+ * 全局过滤器 - 处理 http-client to grpc-server 错误信息
  * @Author: hsycc
- * @Date: 2023-02-21 13:24:34
- * @LastEditTime: 2023-04-25 14:55:23
+ * @Date: 2023-04-24 18:48:48
+ * @LastEditTime: 2023-04-25 18:42:26
  * @Description:
  *
  */
+
 import { Request, Response } from 'express';
 import {
   LoggerService,
@@ -16,6 +17,15 @@ import {
   ExceptionFilter,
   BadRequestException,
 } from '@nestjs/common';
+
+export interface JsonResponseType {
+  statusCode: string;
+  code: string;
+  message: string | object;
+  service?: string;
+  meta?: any[];
+  data?: any;
+}
 
 @Catch(HttpException)
 export class HttpClientExceptionFilter implements ExceptionFilter {

@@ -1,12 +1,13 @@
 /*
  * 拦截器:
- * 统一请求成功的返回数据
+ * http-client 统一请求成功的返回数据
  * @Author: hsycc
- * @Date: 2023-02-21 13:24:34
- * @LastEditTime: 2023-04-25 15:10:24
+ * @Date: 2023-04-22 15:42:43
+ * @LastEditTime: 2023-04-25 17:51:27
  * @Description:
  *
  */
+
 import {
   Injectable,
   NestInterceptor,
@@ -19,7 +20,7 @@ interface Response<T> {
   data: T;
 }
 @Injectable()
-export class TransformInterceptor<T>
+export class HttpTransformInterceptor<T>
   implements NestInterceptor<T, Response<T>>
 {
   intercept(

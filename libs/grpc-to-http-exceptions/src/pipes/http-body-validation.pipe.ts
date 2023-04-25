@@ -1,10 +1,24 @@
-import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
+/*
+ * 管道:
+ * http-client validate body
+ * @Author: hsycc
+ * @Date: 2023-04-22 15:42:43
+ * @LastEditTime: 2023-04-25 17:54:48
+ * @Description:
+ *
+ */
+
+import {
+  PipeTransform,
+  Injectable,
+  ArgumentMetadata,
+  BadRequestException,
+} from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
-import { GrpcInvalidArgumentException } from '../exceptions';
 
 @Injectable()
-export class GrpcBodyValidationPipe implements PipeTransform<any> {
+export class HttpBodyValidationPipe implements PipeTransform<any> {
   async transform(value: any, metadata: ArgumentMetadata) {
     // Account for an empty request body
     if (value == null) {
@@ -43,7 +57,7 @@ export class GrpcBodyValidationPipe implements PipeTransform<any> {
           return validationErrors;
         });
 
-      throw new GrpcInvalidArgumentException({
+      throw new BadRequestException({
         message: 'Validation failed',
         meta: topLevelErrors.concat(...nestedErrors),
       });

@@ -1,3 +1,11 @@
+/*
+ * rpcException 封装
+ * @Author: hsycc
+ * @Date: 2023-04-24 15:19:42
+ * @LastEditTime: 2023-04-25 17:56:51
+ * @Description:
+ *
+ */
 export * from './not-found.exception';
 export * from './aborted.exception';
 export * from './unknown.exception';

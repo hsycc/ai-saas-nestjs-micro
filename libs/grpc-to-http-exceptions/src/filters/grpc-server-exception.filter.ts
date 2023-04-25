@@ -1,3 +1,12 @@
+/*
+ * 全局过滤器 - 处理 grpc-server to http-client  错误信息
+ * @Author: hsycc
+ * @Date: 2023-04-24 18:48:48
+ * @LastEditTime: 2023-04-25 17:56:31
+ * @Description:
+ *
+ */
+
 import {
   ArgumentsHost,
   Catch,

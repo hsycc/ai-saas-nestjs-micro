@@ -13,8 +13,8 @@ import {
   GrpcToHttpInterceptor,
   HttpClientExceptionFilter,
   // HttpBodyValidationPipe,
-  TransformInterceptor,
-} from '@app/grpc-exceptions';
+  HttpTransformInterceptor,
+} from '@app/grpc-to-http-exceptions';
 
 import { AppModule } from './app.module';
 
@@ -54,7 +54,7 @@ async function bootstrap() {
   // app.useGlobalPipes(new HttpBodyValidationPipe());
 
   /* 统一请求成功的返回数据 */
-  app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalInterceptors(new HttpTransformInterceptor());
 
   /** 统一打上时间戳, 统计接口耗时 */
   app.useGlobalInterceptors(new HttpLoggingInterceptor(logger));

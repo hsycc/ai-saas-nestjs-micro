@@ -1,3 +1,12 @@
+/*
+ * 拦截器:
+ * grpc-server 封装RpcException异常错误抛出 http-client
+ * @Author: hsycc
+ * @Date: 2023-04-24 15:19:42
+ * @LastEditTime: 2023-04-25 17:51:20
+ * @Description:
+ *
+ */
 import {
   CallHandler,
   ExecutionContext,

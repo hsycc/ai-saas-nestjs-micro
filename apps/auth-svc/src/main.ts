@@ -9,7 +9,7 @@ import { AuthSvcModule } from './auth-svc.module';
 import {
   GrpcServerExceptionFilter,
   GrpcBodyValidationPipe,
-} from '@app/grpc-exceptions';
+} from '@app/grpc-to-http-exceptions';
 
 export const service = 'auth-svc';
 const { NODE_ENV, MICRO_AUTH_DOMAIN, MICRO_AUTH_PORT, MICRO_AUTH_PROTO } =

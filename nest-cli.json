@@ -77,13 +77,13 @@
         "tsConfigPath": "libs/config/tsconfig.lib.json"
       }
     },
-    "grpc-exceptions": {
+    "grpc-to-http-exceptions": {
       "type": "library",
-      "root": "libs/grpc-exceptions",
+      "root": "libs/grpc-to-http-exceptions",
       "entryFile": "index",
-      "sourceRoot": "libs/grpc-exceptions/src",
+      "sourceRoot": "libs/grpc-to-http-exceptions/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/grpc-exceptions/tsconfig.lib.json"
+        "tsConfigPath": "libs/grpc-to-http-exceptions/tsconfig.lib.json"
       }
     },
     "logger": {
