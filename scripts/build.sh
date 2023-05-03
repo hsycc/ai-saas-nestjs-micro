@@ -1,5 +1,5 @@
 #!/bin/bash
 
 pnpm run build api-gateway
-pnpm run build auth-svc
+pnpm run build user-svc
 

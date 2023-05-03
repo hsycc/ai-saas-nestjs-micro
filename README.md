@@ -1,11 +1,11 @@
-## ai-saas-nestjs
+## ai-saas-nestjs-micro
 
 ### TODO
 
 - [x] nest-cli monorepo mode create service and library
 
   ```
-  nest g app auth-svc
+  nest g app user-svc
   nest g library common
   // todo: 单独构建 library  "build": "tsup index.ts --format cjs,esm --dts",
   ```
@@ -18,7 +18,7 @@
 
   ```
     make proto-all
-    make proto-auth
+    make proto-user
     make ...
 
     bash script/generate-proto-docs.sh
@@ -69,10 +69,9 @@
           └── http-codes-map.ts
       ```
 
-- 业务编码
-
 - [ ] jwt
 - [ ] 登录鉴权
+
 - [ ] 权限设计
 - [ ] 切换成 prisma/ pg
 - [ ] 缓存
@@ -86,5 +85,5 @@
 
 - [ ] 账号体系
 - [ ] 渠道管理
-- [ ] chat-gtp 服务设计
+- [ ] chat-gpt 服务设计
 -

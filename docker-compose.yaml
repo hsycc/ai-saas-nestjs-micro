@@ -14,15 +14,15 @@ services:
       - .:/app
       - /app/node_modules
 
-  auth-svc:
-    image: auth-svc:local
+  user-svc:
+    image: user-svc:local
     build:
       context: .
       dockerfile: ./Dockerfile
       target: build
     env_file:
-      - ./apps/auth/.env
-    command: npm run start:dev auth-svc
+      - ./apps/user/.env
+    command: npm run start:dev user-svc
     volumes:
       - .:/app
       - /app/node_modules

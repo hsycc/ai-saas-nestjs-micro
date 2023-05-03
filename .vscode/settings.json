@@ -54,5 +54,18 @@
   },
   "commentTranslate.source": "Google",
   "commentTranslate.targetLanguage": "zh-CN",
-  "cSpell.words": ["commitlint", "nacos", "protoc", "protos", "tsup"]
+  "cSpell.words": [
+    "ciphertext",
+    "commitlint",
+    "davinci",
+    "moderations",
+    "nacos",
+    "protoc",
+    "protos",
+    "srcs",
+    "tsup"
+  ],
+  "[proto3]": {
+    "editor.defaultFormatter": "zxh404.vscode-proto3"
+  }
 }

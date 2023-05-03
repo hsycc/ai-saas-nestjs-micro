@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package gpt;
+
+service GptService {
+  rpc Stt (FindOneRequest) returns (FindOneResponse) {}
+}
+
+
+message FindOneRequest {
+    int32 id = 1;
+}
+
+
+message FindOneResponse {
+    string text = 1;
+}

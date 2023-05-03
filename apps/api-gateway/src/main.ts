@@ -67,7 +67,7 @@ async function bootstrap() {
 
   /* Swagger */
   const config = new DocumentBuilder()
-    .setTitle('ai-saas 云')
+    .setTitle('ai-saas')
     .setDescription('API服务管理')
     .setVersion('1.0.0')
     .addBearerAuth({ type: 'http', bearerFormat: 'JWT', scheme: 'bearer' })

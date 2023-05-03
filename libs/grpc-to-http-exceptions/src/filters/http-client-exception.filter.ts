@@ -2,7 +2,7 @@
  * 全局过滤器 - 处理 http-client to grpc-server 错误信息
  * @Author: hsycc
  * @Date: 2023-04-24 18:48:48
- * @LastEditTime: 2023-04-25 18:42:26
+ * @LastEditTime: 2023-04-26 18:12:32
  * @Description:
  *
  */
@@ -38,7 +38,6 @@ export class HttpClientExceptionFilter implements ExceptionFilter {
 
     const res = ctx.getResponse<Response>();
     const req = ctx.getRequest<Request>();
-
     // Get the location where the error was thrown from to use as a logging tag
     const status =
       exception instanceof HttpException
@@ -48,7 +47,9 @@ export class HttpClientExceptionFilter implements ExceptionFilter {
     const url = req.url;
     const requestTime = Number(req.params.requestTime) || 0;
     this.logger.log(
-      `${method} ${url} - ${status} - ${Date.now() - requestTime}ms`,
+      `${method} ${url} - ${status} - ${
+        requestTime === 0 ? requestTime : Date.now() - requestTime
+      }ms`,
       'Access',
     );
 

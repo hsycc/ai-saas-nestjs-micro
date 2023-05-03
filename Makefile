@@ -1,19 +1,19 @@
-.PHONY: proto-gen-only clean-gen proto-all proto-auth proto-product proto-order 
+.PHONY: proto-gen-only clean-gen proto-all proto-user proto-tpl proto-gpt 
 
 DIRNAME = _proto
 DIRNAME_GEN = _proto/gen
 
-SVC_AUTH = auth
-DIRNAME_GETEWAY_AUTH= apps/api-gateway/src/auth
-DIRNAME_SVC_AUTH= apps/auth-svc/src/auth
+SVC_USER = user
+DIRNAME_GETEWAY_USER= apps/api-gateway/src/user
+DIRNAME_SVC_USER= apps/user-svc/src/user
 
-SVC_PRODUCT = product
-DIRNAME_GETEWAY_PRODUCT = apps/api-gateway/src/product
-DIRNAME_SVC_PRODUCT = apps/product-svc/src/product
+SVC_TPL = tpl
+DIRNAME_GETEWAY_TPL = apps/api-gateway/src/tpl
+DIRNAME_SVC_TPL = apps/tpl-svc/src/tpl
 
-SVC_ORDER = order
-DIRNAME_GETEWAY_ORDER = apps/api-gateway/src/order
-DIRNAME_SVC_ORDER = apps/order-svc/src/order/proto
+SVC_GPT = gpt
+DIRNAME_GETEWAY_GPT = apps/api-gateway/src/gpt
+DIRNAME_SVC_GPT = apps/gpt-svc/src/gpt/proto
 
 define proto-gen 
     mkdir -p $(2)
@@ -35,22 +35,20 @@ clean-gen:
 proto-gen-only:
 	$(call proto-gen,*,$(DIRNAME_GEN))
 
-proto-all: proto-auth proto-product proto-order 
+proto-all: proto-user proto-gpt 
 
-proto-auth:
-		$(call proto-gen,$(SVC_AUTH),$(DIRNAME_GEN)) 
-#		$(call proto-gen,$(SVC_AUTH),$(DIRNAME_GETEWAY_AUTH))
-#		$(call proto-gen,$(SVC_AUTH),$(DIRNAME_SVC_AUTH)) 
+proto-user:
+		$(call proto-gen,$(SVC_USER),$(DIRNAME_GEN)) 
+#		$(call proto-gen,$(SVC_USER),$(DIRNAME_GETEWAY_USER))
+#		$(call proto-gen,$(SVC_USER),$(DIRNAME_SVC_USER)) 
 
-proto-product:
-		$(call proto-gen,$(SVC_PRODUCT),$(DIRNAME_GEN)) 
-#		$(call proto-gen,$(SVC_PRODUCT),$(DIRNAME_GETEWAY_PRODUCT))
-#		$(call proto-gen,$(SVC_PRODUCT),$(DIRNAME_SVC_PRODUCT)) 
-proto-order:
-		$(call proto-gen,$(SVC_ORDER),$(DIRNAME_GEN)) 
-		$(call proto-gen,$(SVC_PRODUCT),$(DIRNAME_GEN)) 
-#		$(call proto-gen,$(SVC_ORDER),$(DIRNAME_GETEWAY_ORDER))
-#		$(call proto-gen,$(SVC_ORDER),$(DIRNAME_SVC_ORDER)) 
-#		$(call proto-gen,$(SVC_PRODUCT),$(DIRNAME_SVC_ORDER)) 
+# proto-tpl:
+# 		$(call proto-gen,$(SVC_TPL),$(DIRNAME_GEN)) 
+# #		$(call proto-gen,$(SVC_TPL),$(DIRNAME_GETEWAY_TPL))
+# #		$(call proto-gen,$(SVC_TPL),$(DIRNAME_SVC_TPL)) 
+proto-gpt:
+		$(call proto-gen,$(SVC_GPT),$(DIRNAME_GEN)) 
+#		$(call proto-gen,$(SVC_GPT),$(DIRNAME_GETEWAY_GPT))
+#		$(call proto-gen,$(SVC_GPT),$(DIRNAME_SVC_GPT)) 
 
 

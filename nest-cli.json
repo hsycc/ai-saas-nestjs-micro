@@ -14,7 +14,8 @@
         "name": "@nestjs/swagger",
         "options": {
           "classValidatorShim": false,
-          "introspectComments": true
+          "introspectComments": true,
+          "controllerKeyOfComment": "summary"
         }
       }
     ],
@@ -32,31 +33,22 @@
         "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
       }
     },
-    "auth-svc": {
+    "user-svc": {
       "type": "application",
-      "root": "apps/auth-svc",
+      "root": "apps/user-svc",
       "entryFile": "main",
-      "sourceRoot": "apps/auth-svc/src",
+      "sourceRoot": "apps/user-svc/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/auth-svc/tsconfig.app.json"
+        "tsConfigPath": "apps/user-svc/tsconfig.app.json"
       }
     },
-    "order-svc": {
+    "gpt-svc": {
       "type": "application",
-      "root": "apps/order-svc",
+      "root": "apps/gpt-svc",
       "entryFile": "main",
-      "sourceRoot": "apps/order-svc/src",
+      "sourceRoot": "apps/gpt-svc/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/order-svc/tsconfig.app.json"
-      }
-    },
-    "product-svc": {
-      "type": "application",
-      "root": "apps/product-svc",
-      "entryFile": "main",
-      "sourceRoot": "apps/product-svc/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/product-svc/tsconfig.app.json"
+        "tsConfigPath": "apps/gpt-svc/tsconfig.app.json"
       }
     },
     "common": {
