@@ -1,49 +1,36 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-04-19 12:44:27
+ * @LastEditTime: 2023-05-06 02:30:46
+ * @Description:
+ *
+ */
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { LoggerOptions } from 'typeorm';
-import { MysqlBase, MysqlGpt, MicroConfig } from '@app/config';
+import { ConfigModule } from '@nestjs/config';
+import { MicroConfig } from '@app/config';
 import { WinstonModule } from 'nest-winston';
+import { CustomPrismaModule } from 'nestjs-prisma';
+import { PrismaClient } from '.prisma/gpt-client';
 import { CreateLoggerOption } from '@app/logger';
 
-import { service } from './main';
 import { GptModule } from './gpt/gpt.module';
+import { PRISMA_CLIENT_SERVICE_NAME, SVC_SERVICE_NAME } from './constants';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [MysqlBase, MysqlGpt, MicroConfig],
+      load: [MicroConfig],
       isGlobal: true,
     }),
-    WinstonModule.forRoot(CreateLoggerOption({ service })),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (config: ConfigService) => {
-        return {
-          host: config.get<string>('MysqlGpt.host'),
-          port: config.get<number>('MysqlGpt.port'),
-          username: config.get<string>('MysqlGpt.username'),
-          password: config.get<string>('MysqlGpt.password'),
-          database: config.get<string>('MysqlGpt.database'),
-
-          type: config.get<'mysql'>('MysqlBase.type'),
-          synchronize: config.get<boolean>('MysqlBase.synchronize'),
-          charset: config.get<string>('MysqlBase.charset'),
-          multipleStatements: config.get<boolean>(
-            'MysqlBase.multipleStatements',
-          ),
-          connectionLimit: 10, // 连接限制
-          /* with that options, every model registered through the `forFeature()` method will be automatically added to the `models` arrays of the configuration object */
-          autoLoadEntities: true,
-          logging: config.get<LoggerOptions>('MysqlBase.logging'),
-          logger: config.get<any>('MysqlBase.logger'),
-          dropSchema: config.get<boolean>('MysqlBase.dropSchema'),
-          cache: config.get<boolean>('MysqlBase.cache'),
-        };
+    WinstonModule.forRoot(CreateLoggerOption({ service: SVC_SERVICE_NAME })),
+    GptModule,
+    CustomPrismaModule.forRootAsync({
+      isGlobal: true,
+      name: PRISMA_CLIENT_SERVICE_NAME, // 👈 must be unique for each PrismaClient
+      useFactory: () => {
+        return new PrismaClient(); // create new instance of PrismaClient
       },
     }),
-    GptModule,
   ],
   controllers: [],
   providers: [],

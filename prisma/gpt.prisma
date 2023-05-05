@@ -1,0 +1,26 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/gpt-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("PG_DATABASE_GPT")
+}
+
+model ChatModel {
+  id          Int      @id @default(autoincrement())
+  provider    String?  @default("chatgpt") @db.VarChar(50)
+  model       String?  @default("gpt-3.5-turbo'") @db.VarChar(50)
+  name        String   @db.VarChar(50) // 会话形象名称
+  preset      Json?
+  questionTpl String?  @default("%question%") @map("question_tpl")
+  userId      Int?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("chat_model")
+}

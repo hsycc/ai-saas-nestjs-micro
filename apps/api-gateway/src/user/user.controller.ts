@@ -22,7 +22,7 @@ import { Metadata } from '@grpc/grpc-js';
 import {
   LoginRequestDto,
   RegisterRequestDto,
-} from 'apps/user-svc/src/user/user.dto';
+} from 'apps/user-svc/src/user/dto/user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserAuthGuard } from '../common/guards/user-auth.guard';
 @ApiTags('user')

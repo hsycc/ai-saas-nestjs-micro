@@ -4,7 +4,7 @@ import {
   LoginRequestDto,
   RegisterRequestDto,
   ValidateRequestDto,
-} from './user.dto';
+} from './dto/user.dto';
 import {
   USER_SERVICE_NAME,
   RegisterResponse,

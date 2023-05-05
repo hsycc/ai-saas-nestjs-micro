@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
-import { JwtConfig, MicroConfig } from '@app/config';
+import { MicroConfig } from '@app/config';
 import { CreateLoggerOption } from '@app/logger';
 
 import { service } from './main';
@@ -13,7 +13,7 @@ import { GptModule } from './gpt/gpt.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [MicroConfig, JwtConfig],
+      load: [MicroConfig],
       isGlobal: true,
     }),
 

@@ -1,3 +1,10 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-04-19 12:44:18
+ * @LastEditTime: 2023-05-06 01:46:17
+ * @Description:
+ *
+ */
 import { NestFactory } from '@nestjs/core';
 import {
   DocumentBuilder,
@@ -21,6 +28,8 @@ import { AppModule } from './app.module';
 export const service = 'api-gateway';
 
 const port = process.env.PORT || 9000;
+
+const swaggerEnable = process.env.SWAGGER_ENABLE || false;
 const logger = WinstonModule.createLogger(
   CreateLoggerOption({
     service,
@@ -65,28 +74,35 @@ async function bootstrap() {
   /* HttpClientExceptionFilter 异常过滤器 */
   app.useGlobalFilters(new HttpClientExceptionFilter(logger, service));
 
-  /* Swagger */
-  const config = new DocumentBuilder()
-    .setTitle('ai-saas')
-    .setDescription('API服务管理')
-    .setVersion('1.0.0')
-    .addBearerAuth({ type: 'http', bearerFormat: 'JWT', scheme: 'bearer' })
-    .build();
-  const options: SwaggerDocumentOptions = {
-    // 去掉 moduleController 前缀
-    operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
-  };
-  const document = SwaggerModule.createDocument(app, config, options);
+  if (swaggerEnable) {
+    /* Swagger */
+    const config = new DocumentBuilder()
+      .setTitle('ai-saas')
+      .setDescription('API服务管理')
+      .setVersion('1.0.0')
+      .addBearerAuth({ type: 'http', bearerFormat: 'JWT', scheme: 'bearer' })
+      .build();
+    const options: SwaggerDocumentOptions = {
+      // 去掉 moduleController 前缀
+      operationIdFactory: (controllerKey: string, methodKey: string) =>
+        methodKey,
+    };
+    const document = SwaggerModule.createDocument(app, config, options);
 
-  // ExpressSwaggerCustomOptions 可以再 customOptions 配置Swagger自定义UI
-  const customOptions: SwaggerCustomOptions = {
-    swaggerOptions: {
-      // 刷新页面后保留身份验证令牌
-      persistAuthorization: true,
-    },
-  };
-  SwaggerModule.setup('api', app, document, customOptions);
-  logger.log(`process.env.NODE_ENV:${process.env.NODE_ENV}`, bootstrap.name);
+    // ExpressSwaggerCustomOptions 可以再 customOptions 配置Swagger自定义UI
+    const customOptions: SwaggerCustomOptions = {
+      swaggerOptions: {
+        // 刷新页面后保留身份验证令牌
+        persistAuthorization: true,
+      },
+    };
+    SwaggerModule.setup('api', app, document, customOptions);
+  }
+
+  logger.log(
+    `process.env.NODE_ENV:${process.env.NODE_ENV || 'dev'}`,
+    bootstrap.name,
+  );
   await app.listen(port);
   logger.log(
     `http://localhost:${port} ${service} 服务启动成功`,

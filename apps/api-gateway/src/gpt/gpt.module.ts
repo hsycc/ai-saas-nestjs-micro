@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { GPT_SERVICE_NAME, GPT_PACKAGE_NAME } from '@proto/gen/gpt.pb';
 import { GptController } from './gpt.controller';
+import { MicroConfigType } from '@app/config';
 
 @Module({
   controllers: [GptController],
@@ -11,15 +12,13 @@ import { GptController } from './gpt.controller';
     {
       provide: GPT_SERVICE_NAME,
       useFactory: (config: ConfigService) => {
+        const MicroConfig = config.get<MicroConfigType>('MicroConfig');
         return ClientProxyFactory.create({
           transport: Transport.GRPC,
           options: {
-            url:
-              config.get<string>('MicroConfig.microGptDomain') +
-              ':' +
-              config.get<string>('MicroConfig.microGptPort'),
+            url: `${MicroConfig.microDomainGpt}:${MicroConfig.microPortGpt}`,
             package: GPT_PACKAGE_NAME,
-            protoPath: config.get<string>('MicroConfig.microGptProto'),
+            protoPath: MicroConfig.microProtoGpt,
           },
         });
       },

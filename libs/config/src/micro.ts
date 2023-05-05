@@ -1,11 +1,18 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-04-20 18:07:23
+ * @LastEditTime: 2023-05-05 19:23:49
+ * @Description:
+ *
+ */
 import { registerAs } from '@nestjs/config';
 
 export const MicroConfig = registerAs('MicroConfig', () => ({
-  microUserDomain: process.env.MICRO_USER_DOMAIN,
-  microUserPort: process.env.MICRO_USER_PORT,
-  microUserProto: process.env.MICRO_USER_PROTO,
+  microDomainUser: process.env.MICRO_DOMAIN_USER,
+  microPortUser: process.env.MICRO_PORT_USER,
+  microProtoUser: process.env.MICRO_PROTO_USER,
 
-  microGptDomain: process.env.MICRO_GPT_DOMAIN,
-  microGptPort: process.env.MICRO_GPT_PORT,
-  microGptProto: process.env.MICRO_GPT_PROTO,
+  microDomainGpt: process.env.MICRO_DOMAIN_GPT,
+  microPortGpt: process.env.MICRO_PORT_GPT,
+  microProtoGpt: process.env.MICRO_PROTO_GPT,
 }));

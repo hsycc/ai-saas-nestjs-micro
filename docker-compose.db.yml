@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:13.5
+    container_name: postgres
+    restart: always
+    networks:
+      - ai_app_net
+    ports:
+      - '5432:5432'
+    env_file:
+      - .env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+# 指定需要使用的网络
+networks:
+  # 指定网络的名称，默认会创建bridge桥接网络
+  ai_app_net:
+volumes:
+  postgres:
+    name: nest-db-ai

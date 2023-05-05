@@ -1,15 +1,14 @@
 /*
- * 使用方法:
-
-    import { ChainGuard } from '@/common/guards/chain.guard';
-    @UseGuards(ChainGuard)
-    @SetMetadata('needOwner', boolean)
-
- * @Author: John Trump
- * @Date: 2020-09-25 16:11:07
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-04-28 14:50:18
+ * @Author: hsycc
+ * @Date: 2023-04-28 14:49:49
+ * @LastEditTime: 2023-05-04 18:33:15
+ * @Description: 
+ * Usage
+  import { ChainGuard } from '@/common/guards/chain.guard';
+  @UseGuards(ChainGuard)
+  @SetMetadata('needOwner', boolean)U
  */
+
 import {
   Injectable,
   CanActivate,

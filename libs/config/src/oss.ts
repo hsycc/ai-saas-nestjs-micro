@@ -2,7 +2,7 @@ import { registerAs } from '@nestjs/config';
 
 // https://help.aliyun.com/document_detail/111256.html
 
-export const ossConfig = registerAs('OssConfig', () => ({
+export const OssConfig = registerAs('OssConfig', () => ({
   accessKeyId: process.env.OSS_ACCESS_KEY_ID,
   accessKeySecret: process.env.OSS_ACCESS_KEY_SECRET,
   bucket: process.env.OSS_BUCKET,

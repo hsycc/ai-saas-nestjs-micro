@@ -1,0 +1,56 @@
+version: '3.8'
+services:
+  api-gateway:
+    container_name: ai-api-gateway
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # 覆盖容器启动后默认执行的命令, 支持 shell 格式和 [] 格式
+    command: node ./dist/apps/api-gateway/main
+    ports:
+      - '9000:9000'
+    networks:
+      - ai_app_net
+    depends_on:
+      # - postgres
+      - user-svc
+    env_file:
+      - .env
+
+  user-svc:
+    container_name: ai-user-svc
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '50051:50051'
+    networks:
+      - ai_app_net
+    env_file:
+      - .env
+    # 覆盖容器启动后默认执行的命令, 支持 shell 格式和 [] 格式
+    command: node ./dist/apps/user-svc/main
+
+  # postgres:
+  #   image: postgres:13.5
+  #   container_name: postgres
+  #   restart: always
+  #   ports:
+  #     - '5432:5432'
+  #   networks:
+  #     - ai_app_net
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - postgres:/var/lib/postgresql/data
+
+# 指定需要使用的网络
+networks:
+  # 指定网络的名称，默认会创建bridge桥接网络
+  ai_app_net:
+
+# 指定数据卷
+volumes:
+  logs:
+  # postgres:
+  #   name: nest-db-ai

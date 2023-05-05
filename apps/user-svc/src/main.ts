@@ -1,6 +1,14 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-04-19 15:08:01
+ * @LastEditTime: 2023-05-06 01:45:56
+ * @Description:
+ *
+ */
 import { INestMicroservice } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
+import { CustomPrismaService } from 'nestjs-prisma';
 import { WinstonModule } from 'nest-winston';
 import { join } from 'path';
 import { protobufPackage } from '@proto/gen/user.pb';
@@ -10,23 +18,28 @@ import {
   GrpcServerExceptionFilter,
   GrpcBodyValidationPipe,
 } from '@app/grpc-to-http-exceptions';
+import { PRISMA_CLIENT_SERVICE_NAME, SVC_SERVICE_NAME } from './constants';
 
-export const service = 'user-svc';
-const { NODE_ENV, MICRO_USER_DOMAIN, MICRO_USER_PORT, MICRO_USER_PROTO } =
+import { PrismaClient } from '.prisma/user-client';
+
+const { NODE_ENV, MICRO_DOMAIN_USER, MICRO_PORT_USER, MICRO_PROTO_USER } =
   process.env;
 
-const logger = WinstonModule.createLogger(CreateLoggerOption({ service }));
+const logger = WinstonModule.createLogger(
+  CreateLoggerOption({ service: SVC_SERVICE_NAME }),
+);
 
 async function bootstrap() {
+  /* register grpc */
   const app: INestMicroservice = await NestFactory.createMicroservice(
     UserSvcModule,
     {
       logger,
       transport: Transport.GRPC,
       options: {
-        url: MICRO_USER_DOMAIN + ':' + MICRO_USER_PORT,
+        url: MICRO_DOMAIN_USER + ':' + MICRO_PORT_USER,
         package: protobufPackage,
-        protoPath: join(process.cwd(), MICRO_USER_PROTO),
+        protoPath: join(process.cwd(), MICRO_PROTO_USER),
       },
     },
   );
@@ -38,14 +51,20 @@ async function bootstrap() {
   app.useGlobalInterceptors(new GrpcLoggingInterceptor(logger));
 
   /** 全局 RpcException 异常抛出 */
-  app.useGlobalFilters(new GrpcServerExceptionFilter(logger, service));
+  app.useGlobalFilters(new GrpcServerExceptionFilter(logger, SVC_SERVICE_NAME));
 
-  logger.log(`NODE_ENV:${NODE_ENV}`, bootstrap.name);
+  /*  prisma shutdown hook */
+  const customPrismaService: CustomPrismaService<PrismaClient> = app.get(
+    PRISMA_CLIENT_SERVICE_NAME, // 👈 use the same name as in app.module.ts
+  );
+  await customPrismaService.enableShutdownHooks(app);
+
+  logger.log(`NODE_ENV:${NODE_ENV || 'dev'}`, bootstrap.name);
 
   await app.listen();
 
   logger.log(
-    `grpc ${MICRO_USER_DOMAIN}:${MICRO_USER_PORT} ${service} 微服务启动成功`,
+    `grpc ${MICRO_DOMAIN_USER}:${MICRO_PORT_USER} ${SVC_SERVICE_NAME} 微服务启动成功`,
     bootstrap.name,
   );
 }

@@ -1,17 +1,17 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-04-19 15:08:01
+ * @LastEditTime: 2023-05-06 00:02:26
+ * @Description:
+ *
+ */
 import { Injectable } from '@nestjs/common';
 import { JwtService as Jwt } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from './user.entity';
-import * as bcrypt from 'bcryptjs';
-
+import { UserEntity } from './entity/user.entity';
+import bcrypt from 'bcrypt';
 @Injectable()
 export class JwtService {
-  constructor(
-    @InjectRepository(User)
-    private readonly repository: Repository<User>,
-    private readonly jwt: Jwt,
-  ) {}
+  constructor(private readonly jwt: Jwt) {}
 
   // Decoding the JWT Token
   public async decode(token: string): Promise<unknown> {
@@ -26,8 +26,11 @@ export class JwtService {
   }
 
   // Generate JWT Token
-  public generateToken(user: User): string {
-    return this.jwt.sign({ id: user.id, email: user.email });
+  public generateToken(user: UserEntity): string {
+    return this.jwt.sign({
+      id: user.id,
+      // email: user.email
+    });
   }
 
   // Validate User's password
@@ -43,11 +46,11 @@ export class JwtService {
   }
 
   // Get User by User ID we get from decode()
-  public async validateUser(decoded: any): Promise<User> {
-    return this.repository.findOne({
-      where: {
-        id: decoded.id,
-      },
-    });
+  public async validateUser(decoded: any): Promise<UserEntity | any> {
+    // return this.repository.findOne({
+    //   where: {
+    //     id: decoded.id,
+    //   },
+    // });
   }
 }

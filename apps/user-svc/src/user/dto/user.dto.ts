@@ -1,3 +1,10 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-04-19 15:08:01
+ * @LastEditTime: 2023-05-05 22:09:30
+ * @Description:
+ *
+ */
 import { IsEmail, IsString, MinLength } from 'class-validator';
 import {
   LoginRequest,

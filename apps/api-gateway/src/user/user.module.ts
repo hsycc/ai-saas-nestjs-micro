@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { UserController } from './user.controller';
 import { USER_SERVICE_NAME, USER_PACKAGE_NAME } from '@proto/gen/user.pb';
 import { UserService } from './user.service';
+import { MicroConfigType } from '@app/config';
 
 @Global()
 @Module({
@@ -13,15 +14,13 @@ import { UserService } from './user.service';
     {
       provide: USER_SERVICE_NAME,
       useFactory: (config: ConfigService) => {
+        const MicroConfig = config.get<MicroConfigType>('MicroConfig');
         return ClientProxyFactory.create({
           transport: Transport.GRPC,
           options: {
-            url:
-              config.get<string>('MicroConfig.microUserDomain') +
-              ':' +
-              config.get<string>('MicroConfig.microUserPort'),
+            url: `${MicroConfig.microDomainUser}:${MicroConfig.microPortUser}`,
             package: USER_PACKAGE_NAME,
-            protoPath: config.get<string>('MicroConfig.microUserProto'),
+            protoPath: MicroConfig.microProtoUser,
           },
         });
       },

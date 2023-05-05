@@ -69,17 +69,24 @@
           └── http-codes-map.ts
       ```
 
+- [ ] 切换成 prisma/ pg
+
 - [ ] jwt
+  - TODO: 拓展
+  - [ ]accessToken & refresh 刷新
+  - [ ]logout redis remove
 - [ ] 登录鉴权
 
 - [ ] 权限设计
-- [ ] 切换成 prisma/ pg
 - [ ] 缓存
 - [ ] 网关监控 健康检查 熔断限流
 - [ ] 日志管理
 - [ ] 链路追踪
 - [ ] 配置中心 nacos
-- [ ] docker 集群部署
+- [ ] docker
+  - [x] dockerfile
+  - [x] docker-compose
+  - [ ] docker Swarm 集群部署
 
 ## 业务设计
 
