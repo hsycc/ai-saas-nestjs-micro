@@ -1,4 +1,13 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-05-05 17:47:33
+ * @LastEditTime: 2023-05-06 06:01:58
+ * @Description:
+ *
+ */
 // prisma/seed.ts
+
+import { PrismaClient } from '@prisma/client';
 
 import { PrismaClient as GptClient } from '.prisma/gpt-client';
 

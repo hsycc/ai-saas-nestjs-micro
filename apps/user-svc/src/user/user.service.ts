@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:08:01
- * @LastEditTime: 2023-05-06 00:57:21
+ * @LastEditTime: 2023-05-06 10:09:40
  * @Description:
  *
  */
@@ -25,6 +25,8 @@ import {
 import { CustomPrismaService } from 'nestjs-prisma';
 import { PRISMA_CLIENT_SERVICE_NAME } from '../constants';
 import { PrismaClient } from '.prisma/user-client';
+
+import { NodeRSA } from 'node-rsa';
 @Injectable()
 export class UserService {
   constructor(
@@ -108,5 +110,13 @@ export class UserService {
     }
 
     // return { userId: decoded.id } as any;
+  }
+
+  public async createKeys() {
+    const key = new NodeRSA({ b: 512 });
+    return {
+      public_key: key.exportKey('pkcs8-public-der').toString('base64'),
+      private_key: key.exportKey('pkcs1-private-der').toString('base64'),
+    };
   }
 }

@@ -1,12 +1,19 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-04-26 14:31:24
+ * @LastEditTime: 2023-05-06 10:14:58
+ * @Description:
+ *
+ */
 import {
   Body,
   Controller,
-  Delete,
-  Get,
   Inject,
   OnModuleInit,
+  Get,
   Post,
   Put,
+  Patch,
   UseGuards,
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
@@ -52,6 +59,16 @@ export class UserController implements OnModuleInit {
   }
 
   /**
+   * 更新用户信息
+   */
+  @Patch('update')
+  @ApiBearerAuth()
+  @UseGuards(UserAuthGuard)
+  private async Update() {
+    //
+  }
+
+  /**
    * 渠道用户登录
    */
   @Put('login')
@@ -64,7 +81,7 @@ export class UserController implements OnModuleInit {
   /**
    * 渠道用户退出
    */
-  @Delete('logout')
+  @Put('logout')
   private async logout() {
     //
   }
@@ -84,16 +101,6 @@ export class UserController implements OnModuleInit {
   @ApiBearerAuth()
   @UseGuards(UserAuthGuard)
   private async createKeys() {
-    //
-  }
-
-  /**
-   * 重置密钥对
-   */
-  @Post('update_keys')
-  @ApiBearerAuth()
-  @UseGuards(UserAuthGuard)
-  private async updateKeys() {
     //
   }
 }

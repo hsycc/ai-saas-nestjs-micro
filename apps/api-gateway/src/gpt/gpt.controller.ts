@@ -1,3 +1,10 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-04-19 15:03:20
+ * @LastEditTime: 2023-05-06 09:57:21
+ * @Description:
+ *
+ */
 import {
   Controller,
   Inject,
@@ -10,7 +17,7 @@ import {
 import { ClientGrpc } from '@nestjs/microservices';
 import { GptServiceClient, GPT_SERVICE_NAME } from '@proto/gen/gpt.pb';
 import { ApiTags } from '@nestjs/swagger';
-
+import { ApiAuth } from '../common/decorators/api-auth.decorator';
 @ApiTags('gpt')
 @Controller('gpt')
 export class GptController implements OnModuleInit {
@@ -28,6 +35,7 @@ export class GptController implements OnModuleInit {
    * 列出当前可用的型号，并提供每个型号的基本信息，如所有者和可用性。
    */
   @Get('models')
+  @ApiAuth()
   private async listModels() {
     //
   }

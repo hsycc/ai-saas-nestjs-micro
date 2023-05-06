@@ -1,14 +1,15 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:18:23
- * @LastEditTime: 2023-05-05 21:29:05
+ * @LastEditTime: 2023-05-06 07:04:55
  * @Description:
  *
  */
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { CustomPrismaService, loggingMiddleware } from 'nestjs-prisma';
+import { CustomPrismaService } from 'nestjs-prisma';
 import { PrismaClient } from '.prisma/gpt-client';
 import { PRISMA_CLIENT_SERVICE_NAME } from '../constants';
+import { loggingMiddleware } from '../common/prisma/logging.middleware';
 @Injectable()
 export class GptService implements OnModuleInit {
   constructor(

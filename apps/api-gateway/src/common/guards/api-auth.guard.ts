@@ -1,12 +1,12 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-28 14:49:49
- * @LastEditTime: 2023-05-04 18:33:15
+ * @LastEditTime: 2023-05-06 10:02:18
  * @Description: 
  * Usage
-  import { ChainGuard } from '@/common/guards/chain.guard';
-  @UseGuards(ChainGuard)
-  @SetMetadata('needOwner', boolean)U
+  import { ApiAuthGuard } from '@/common/guards/api-auth.guard';
+  @UseGuards(ApiAuthGuard)
+  @SetMetadata('needOwner', boolean)
  */
 
 import {
@@ -16,16 +16,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-// import { ChainService } from '@/chain/chain.service';
 
 /**
  * 获取chain的信息, 更可以进行权限拦截(如果这个链不属于该用户的话)
  */
 @Injectable()
-export class ChainGuard implements CanActivate {
-  constructor(
-    private readonly reflector: Reflector, // private readonly chainService: ChainService,
-  ) {}
+export class ApiAuthGuard implements CanActivate {
+  constructor(private readonly reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();

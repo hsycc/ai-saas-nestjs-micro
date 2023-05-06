@@ -1,3 +1,11 @@
+<!--
+ * @Author: hsycc
+ * @Date: 2023-04-19 12:43:27
+ * @LastEditTime: 2023-05-06 10:22:15
+ * @Description:
+ *
+-->
+
 ## ai-saas-nestjs-micro
 
 ### TODO
@@ -69,24 +77,27 @@
           └── http-codes-map.ts
       ```
 
-- [ ] 切换成 prisma/ pg
+- [x] 切换成 prisma/ pg
+- [ ] docker
 
-- [ ] jwt
+  - [x] dockerfile
+  - [x] docker-compose
+  - [ ] docker Swarm 集群部署
+
+- [x] jwt
   - TODO: 拓展
   - [ ]accessToken & refresh 刷新
   - [ ]logout redis remove
-- [ ] 登录鉴权
+- [ ] 渠道用户登录鉴权
+- [ ] api 调用鉴权
 
 - [ ] 权限设计
 - [ ] 缓存
+- [ ] 幂等设计
 - [ ] 网关监控 健康检查 熔断限流
 - [ ] 日志管理
 - [ ] 链路追踪
 - [ ] 配置中心 nacos
-- [ ] docker
-  - [x] dockerfile
-  - [x] docker-compose
-  - [ ] docker Swarm 集群部署
 
 ## 业务设计
 

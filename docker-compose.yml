@@ -18,7 +18,7 @@ services:
       - .env
 
   user-svc:
-    container_name: ai-user-svc
+    container_name: user-svc
     build:
       context: .
       dockerfile: Dockerfile
@@ -30,6 +30,19 @@ services:
       - .env
     # 覆盖容器启动后默认执行的命令, 支持 shell 格式和 [] 格式
     command: node ./dist/apps/user-svc/main
+  gpt-svc:
+    container_name: gpt-svc
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '50052:50052'
+    networks:
+      - ai_app_net
+    env_file:
+      - .env
+    # 覆盖容器启动后默认执行的命令, 支持 shell 格式和 [] 格式
+    command: node ./dist/apps/gpt-svc/main
 
   # postgres:
   #   image: postgres:13.5

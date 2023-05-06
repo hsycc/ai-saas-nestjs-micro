@@ -16,7 +16,7 @@ specifiers:
   '@nestjs/schematics': ^9.0.0
   '@nestjs/swagger': ^6.3.0
   '@nestjs/testing': ^9.0.0
-  '@prisma/client': ^4.12.0
+  '@prisma/client': ^4.13.0
   '@types/bcrypt': ^5.0.0
   '@types/express': ^4.17.13
   '@types/jest': 29.2.4
@@ -52,6 +52,7 @@ specifiers:
   mysql: ^2.18.1
   nest-winston: ^1.9.1
   nestjs-prisma: ^0.20.0
+  node-rsa: ^1.1.1
   passport: ^0.6.0
   passport-jwt: ^4.0.1
   passport-local: ^1.0.0
@@ -82,7 +83,7 @@ dependencies:
   '@nestjs/passport': 9.0.3_xygznos57mh4mi6h22se6rwjhq
   '@nestjs/platform-express': 9.4.0_gqkob5jndcfeb3wjw72wbdwyne
   '@nestjs/swagger': 6.3.0_wgmggry273v4dignukmrfwr7na
-  '@prisma/client': 4.12.0_prisma@4.13.0
+  '@prisma/client': 4.13.0_prisma@4.13.0
   axios: 1.3.6
   bcrypt: 5.1.0
   class-transformer: 0.5.1
@@ -96,7 +97,8 @@ dependencies:
   moment: 2.29.4
   mysql: 2.18.1
   nest-winston: 1.9.1_txf5h4v4gz6kvqhwwuemhgbinm
-  nestjs-prisma: 0.20.0_7olbkmzfb4am5x2d747xnfauvq
+  nestjs-prisma: 0.20.0_hfzl6vt5acrt4kes2a5hhjwlc4
+  node-rsa: 1.1.1
   passport: 0.6.0
   passport-jwt: 4.0.1
   passport-local: 1.0.0
@@ -2622,8 +2624,8 @@ packages:
     dev: true
     optional: true
 
-  /@prisma/client/4.12.0_prisma@4.13.0:
-    resolution: {integrity: sha512-j9/ighfWwux97J2dS15nqhl60tYoH8V0IuSsgZDb6bCFcQD3fXbXmxjYC8GHhIgOk3lB7Pq+8CwElz2MiDpsSg==}
+  /@prisma/client/4.13.0_prisma@4.13.0:
+    resolution: {integrity: sha512-YaiiICcRB2hatxsbnfB66uWXjcRw3jsZdlAVxmx0cFcTc/Ad/sKdHCcWSnqyDX47vAewkjRFwiLwrOUjswVvmA==}
     engines: {node: '>=14.17'}
     requiresBuild: true
     peerDependencies:
@@ -2632,12 +2634,12 @@ packages:
       prisma:
         optional: true
     dependencies:
-      '@prisma/engines-version': 4.12.0-67.659ef412370fa3b41cd7bf6e94587c1dfb7f67e7
+      '@prisma/engines-version': 4.13.0-50.1e7af066ee9cb95cf3a403c78d9aab3e6b04f37a
       prisma: 4.13.0
     dev: false
 
-  /@prisma/engines-version/4.12.0-67.659ef412370fa3b41cd7bf6e94587c1dfb7f67e7:
-    resolution: {integrity: sha512-JIHNj5jlXb9mcaJwakM0vpgRYJIAurxTUqM0iX0tfEQA5XLZ9ONkIckkhuAKdAzocZ+80GYg7QSsfpjg7OxbOA==}
+  /@prisma/engines-version/4.13.0-50.1e7af066ee9cb95cf3a403c78d9aab3e6b04f37a:
+    resolution: {integrity: sha512-fsQlbkhPJf08JOzKoyoD9atdUijuGBekwoOPZC3YOygXEml1MTtgXVpnUNchQlRSY82OQ6pSGQ9PxUe4arcSLQ==}
     dev: false
 
   /@prisma/engines/4.13.0:
@@ -3479,6 +3481,12 @@ packages:
   /asap/2.0.6:
     resolution: {integrity: sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==}
     dev: true
+
+  /asn1/0.2.6:
+    resolution: {integrity: sha512-ix/FxPn0MDjeyJ7i/yoHGFt/EX6LyNbxSEhPPXODPL+KB0VPk86UYfL0lMdy+KCnv+fmvIzySwaK5COwqVbWTQ==}
+    dependencies:
+      safer-buffer: 2.1.2
+    dev: false
 
   /ast-transform/0.0.0:
     resolution: {integrity: sha512-e/JfLiSoakfmL4wmTGPjv0HpTICVmxwXgYOB8x+mzozHL8v+dSfCbrJ8J8hJ0YBP0XcYu1aLZ6b/3TnxNK3P2A==}
@@ -7271,7 +7279,7 @@ packages:
       winston: 3.8.2
     dev: false
 
-  /nestjs-prisma/0.20.0_7olbkmzfb4am5x2d747xnfauvq:
+  /nestjs-prisma/0.20.0_hfzl6vt5acrt4kes2a5hhjwlc4:
     resolution: {integrity: sha512-tqOcoJQh4U8Y7akyCwluo1VFqhqjqYy8JAYYfrKRhvZ7N4trt3wYXXllRGH3LeLaom09QchHP9WEo/BAV9JMjg==}
     peerDependencies:
       '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0
@@ -7281,7 +7289,7 @@ packages:
       '@angular-devkit/core': 13.3.11
       '@angular-devkit/schematics': 13.3.11
       '@nestjs/common': 9.4.0_welcnyot5bzd5wa2aovbkxpi4i
-      '@prisma/client': 4.12.0_prisma@4.13.0
+      '@prisma/client': 4.13.0_prisma@4.13.0
       '@schematics/angular': 13.3.11
       prisma: 4.13.0
     transitivePeerDependencies:
@@ -7323,6 +7331,12 @@ packages:
 
   /node-releases/2.0.10:
     resolution: {integrity: sha512-5GFldHPXVG/YZmFzJvKK2zDSzPKhEp0+ZR5SVaoSag9fsL5YgHbUHDfnG5494ISANDcK4KwPXAx2xqVEydmd7w==}
+
+  /node-rsa/1.1.1:
+    resolution: {integrity: sha512-Jd4cvbJMryN21r5HgxQOpMEqv+ooke/korixNNK3mGqfGJmy0M77WDDzo/05969+OkMy3XW1UuZsSmW9KQm7Fw==}
+    dependencies:
+      asn1: 0.2.6
+    dev: false
 
   /nopt/5.0.0:
     resolution: {integrity: sha512-Tbj67rffqceeLpcRXrT7vKAN8CwfPeIBgM7E6iBkmKLV7bEMwpGgYLGv0jACUsECaa/vuxP0IjEont6umdMgtQ==}
