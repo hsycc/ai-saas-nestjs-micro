@@ -8,7 +8,7 @@
 import { Module } from '@nestjs/common';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtConfigType, MicroConfigType } from '@app/config';
+import { JwtConfigType, MicroConfigType } from '@lib/config';
 import { USER_PACKAGE_NAME, USER_SERVICE_NAME } from '@proto/gen/user.pb';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';

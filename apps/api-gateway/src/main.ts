@@ -15,15 +15,15 @@ import {
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import { WinstonModule } from 'nest-winston';
-import { HttpLoggingInterceptor, CreateLoggerOption } from '@app/logger';
+import { HttpLoggingInterceptor, CreateLoggerOption } from '@lib/logger';
 import {
   GrpcToHttpInterceptor,
   HttpClientExceptionFilter,
   // HttpBodyValidationPipe,
-} from '@app/grpc';
+} from '@lib/grpc';
 
 import { AppModule } from './app.module';
-import { HttpTransformInterceptor } from '@app/swagger';
+import { HttpTransformInterceptor } from '@lib/swagger';
 
 export const service = 'api-gateway';
 

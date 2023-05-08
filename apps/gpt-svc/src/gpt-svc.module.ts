@@ -7,11 +7,11 @@
  */
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { MicroConfig } from '@app/config';
+import { MicroConfig } from '@lib/config';
 import { WinstonModule } from 'nest-winston';
 import { CustomPrismaModule } from 'nestjs-prisma';
 import { PrismaClient } from '.prisma/gpt-client';
-import { CreateLoggerOption } from '@app/logger';
+import { CreateLoggerOption } from '@lib/logger';
 
 import { GptModule } from './gpt/gpt.module';
 import { PRISMA_CLIENT_SERVICE_NAME, SVC_SERVICE_NAME } from './constants';

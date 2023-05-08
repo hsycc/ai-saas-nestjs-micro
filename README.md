@@ -1,7 +1,7 @@
 <!--
  * @Author: hsycc
  * @Date: 2023-04-19 12:43:27
- * @LastEditTime: 2023-05-08 11:32:32
+ * @LastEditTime: 2023-05-09 05:48:36
  * @Description:
  *
 -->
@@ -37,17 +37,9 @@
 
 - libs 服务公共依赖库的管理
 
-  - [x] rpc-to-http-exceptions
-        grpc-server 《=》 http-client
-        提供 swagger ApiResponse 泛型包装 、管道数据校验、日志打印、异常抛出、成功响应的数据结构体包装、异常状态码枚举管理的封装
+  - [x] rpc
+        grpc-server 和 http-client 管道道数据校验、日志打印、异常抛出、异常状态码枚举管理的封装
     - ```
-      ├── decorators
-      │   ├── api-list-response.decorator.ts
-      │   ├── api-obj-response.decorator.ts
-      │   ├── api-paginated-response.decorator.ts
-      ├── dto
-      │   ├── pagination.dto.ts
-      │   └── response.dto.ts
       ├── error
       │   ├── gen-rpc-exception-error.ts
       ├── exceptions
@@ -86,16 +78,17 @@
   - TODO: 安全拓展
   - [ ] accessToken & refresh 刷新
   - [ ] logout redis remove jwt sign
-- [ ] 渠道用户登录鉴权
-- [ ] api 调用鉴权
+  - [ ] 接入 sms 短信 以及验证码服务
+- [x] 渠道用户登录鉴权
+- [ ] api 调用鉴权 逻辑
 
+- [ ] 网关监控 健康检查 熔断限流
 - [ ] 权限设计
 - [ ] 缓存
 - [ ] 幂等设计
 - [ ] 日志管理
 - [ ] 链路追踪
 - [ ] 配置中心 nacos
-- [ ] 网关监控 健康检查 熔断限流
 
 ## 业务设计
 
@@ -107,7 +100,7 @@
 
 ## 备忘
 
+- 鉴权逻辑均放在 api-gateway/auth 模块当中
 - [ ]设计 ak、sk 签名流程
 - [ ]ak/sk 自定义 Passport 插件编码 ApiStrategy
 - [ ]改写 rpcExceptions 的抛出逻辑
-- [ ]

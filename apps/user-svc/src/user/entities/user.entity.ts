@@ -8,7 +8,7 @@
 
 import { hashSync, genSaltSync } from 'bcrypt';
 import { User } from '.prisma/user-client';
-import { getAesInstance } from '@app/common/utils';
+import { getAesInstance } from '@lib/common/utils';
 
 import { UserStatusEnum, UserRolesEnum } from '@proto/gen/user.pb';
 export class UserEntity implements User {

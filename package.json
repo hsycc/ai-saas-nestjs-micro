@@ -141,11 +141,11 @@
     ],
     "moduleNameMapper": {
       "^@app/proto(|/.*)$": "<rootDir>/_proto/$1",
-      "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
-      "^@app/config(|/.*)$": "<rootDir>/libs/config/src/$1",
-      "^@app/grpc(|/.*)$": "<rootDir>/libs/grpc/src/$1",
-      "^@app/logger(|/.*)$": "<rootDir>/libs/logger/src/$1",
-      "^@app/swagger(|/.*)$": "<rootDir>/libs/swagger/src/$1"
+      "^@lib/common(|/.*)$": "<rootDir>/libs/common/src/$1",
+      "^@lib/config(|/.*)$": "<rootDir>/libs/config/src/$1",
+      "^@lib/grpc(|/.*)$": "<rootDir>/libs/grpc/src/$1",
+      "^@lib/logger(|/.*)$": "<rootDir>/libs/logger/src/$1",
+      "^@lib/swagger(|/.*)$": "<rootDir>/libs/swagger/src/$1"
     }
   }
 }

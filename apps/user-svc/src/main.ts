@@ -12,9 +12,9 @@ import { CustomPrismaService } from 'nestjs-prisma';
 import { WinstonModule } from 'nest-winston';
 import { join } from 'path';
 import { protobufPackage } from '@proto/gen/user.pb';
-import { CreateLoggerOption, GrpcLoggingInterceptor } from '@app/logger';
+import { CreateLoggerOption, GrpcLoggingInterceptor } from '@lib/logger';
 import { UserSvcModule } from './user-svc.module';
-import { GrpcServerExceptionFilter, GrpcBodyValidationPipe } from '@app/grpc';
+import { GrpcServerExceptionFilter, GrpcBodyValidationPipe } from '@lib/grpc';
 import { PRISMA_CLIENT_SERVICE_NAME, SVC_SERVICE_NAME } from './constants';
 
 import { PrismaClient } from '.prisma/user-client';

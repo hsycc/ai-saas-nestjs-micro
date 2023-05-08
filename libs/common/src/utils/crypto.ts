@@ -2,7 +2,7 @@
  * AES crypto util
  * @Author: hsycc
  * @Date: 2023-04-21 13:24:34
- * @LastEditTime: 2023-04-28 15:02:14
+ * @LastEditTime: 2023-05-09 05:57:58
  * @Description:
  *
  */
@@ -69,22 +69,22 @@ export const getAesInstance = (type = 1): AesInfo => {
   switch (type) {
     // 下发关键信息加密
     case 1:
-      return getInstance('Ux4o1wnqUpS41QMb');
+      return getInstance('8&MFhb$v&$4Wnh6b');
     // 公私钥加密
     case 2:
-      return getInstance('qYbzLUi1vxm427Fy');
+      return getInstance('id5&CxDFFd9WEzRQ');
     // 认证信息加密
     case 3:
-      return getInstance('EaK8ASHb8kpRvoVm');
+      return getInstance('3j@rP7A4reRbt9Dt');
     // 存储的token加密
     case 4:
-      return getInstance('pjJufIDmv5htS5aq');
+      return getInstance('%A$!Vex4AFEeXwPU');
     case 5:
-      return getInstance('rjoMwDvEvTYgXhVb');
+      return getInstance('j#q28&HyrDfiV#zY');
     case 6:
-      return getInstance('BuJMSGd1xRz9NbIw');
+      return getInstance('5kf!pwZvHMYcKV5F');
     default:
-      return getInstance('Ux4o1wnqUpS41QMb');
+      return getInstance('8&MFhb$v&$4Wnh6b');
   }
 };
 

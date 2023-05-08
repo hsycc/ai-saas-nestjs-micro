@@ -19,17 +19,23 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@proto/*": ["_proto/*"],
-      "@app/proto": ["_proto"],
-      "@app/common": ["libs/common/src"],
-      "@app/common/*": ["libs/common/src/*"],
-      "@app/config": ["libs/config/src"],
-      "@app/config/*": ["libs/config/src/*"],
-      "@app/grpc": ["libs/grpc/src"],
-      "@app/grpc/*": ["libs/grpc/src/*"],
-      "@app/logger": ["libs/logger/src"],
-      "@app/logger/*": ["libs/logger/src/*"],
-      "@app/swagger": ["libs/swagger/src"],
-      "@app/swagger/*": ["libs/swagger/src/*"]
+      "@app/api-gateway": ["apps/api-gateway/src"],
+      "@app/api-gateway/*": ["apps/api-gateway/src/*"],
+      "@app/user-svc": ["apps/user-svc/src"],
+      "@app/user-svc/*": ["apps/user-svc/src/*"],
+      "@app/gpt-svc": ["apps/gpt-svc/src"],
+      "@app/gpt-svc/*": ["apps/gpt-svc/src/*"],
+
+      "@lib/common": ["libs/common/src"],
+      "@lib/common/*": ["libs/common/src/*"],
+      "@lib/config": ["libs/config/src"],
+      "@lib/config/*": ["libs/config/src/*"],
+      "@lib/grpc": ["libs/grpc/src"],
+      "@lib/grpc/*": ["libs/grpc/src/*"],
+      "@lib/logger": ["libs/logger/src"],
+      "@lib/logger/*": ["libs/logger/src/*"],
+      "@lib/swagger": ["libs/swagger/src"],
+      "@lib/swagger/*": ["libs/swagger/src/*"]
     }
   }
 }

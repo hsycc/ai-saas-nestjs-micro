@@ -15,7 +15,7 @@ import { Metadata } from '@grpc/grpc-js';
 
 import { USER_SERVICE_NAME, UserServiceClient } from '@proto/gen/user.pb';
 
-import { ApiObjResponse } from '@app/swagger';
+import { ApiObjResponse } from '@lib/swagger';
 import { UserEntity } from 'apps/user-svc/src/user/entities/user.entity';
 
 import { AuthService } from './auth.service';

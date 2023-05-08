@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { GPT_SERVICE_NAME, GPT_PACKAGE_NAME } from '@proto/gen/gpt.pb';
 import { GptController } from './gpt.controller';
-import { MicroConfigType } from '@app/config';
+import { MicroConfigType } from '@lib/config';
 import { InterceptingCall } from '@grpc/grpc-js';
 
 @Module({

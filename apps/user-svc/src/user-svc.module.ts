@@ -8,7 +8,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
-import { CreateLoggerOption } from '@app/logger';
+import { CreateLoggerOption } from '@lib/logger';
 
 import { UserModule } from './user/user.module';
 import { PRISMA_CLIENT_SERVICE_NAME, SVC_SERVICE_NAME } from './constants';

@@ -8,8 +8,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
-import { JwtConfig, MicroConfig } from '@app/config';
-import { CreateLoggerOption } from '@app/logger';
+import { JwtConfig, MicroConfig } from '@lib/config';
+import { CreateLoggerOption } from '@lib/logger';
 
 import { service } from './main';
 import { AppController } from './app.controller';
