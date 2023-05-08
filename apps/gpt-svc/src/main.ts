@@ -15,10 +15,7 @@ import { WinstonModule } from 'nest-winston';
 import { CreateLoggerOption, GrpcLoggingInterceptor } from '@app/logger';
 import { CustomPrismaService } from 'nestjs-prisma';
 import { PrismaClient } from '.prisma/gpt-client';
-import {
-  GrpcBodyValidationPipe,
-  GrpcServerExceptionFilter,
-} from 'libs/grpc/src';
+import { GrpcBodyValidationPipe, GrpcServerExceptionFilter } from '@app/grpc';
 import { PRISMA_CLIENT_SERVICE_NAME, SVC_SERVICE_NAME } from './constants';
 
 const { NODE_ENV, MICRO_DOMAIN_GPT, MICRO_PORT_GPT, MICRO_PROTO_GPT } =

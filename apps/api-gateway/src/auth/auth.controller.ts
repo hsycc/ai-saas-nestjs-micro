@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-08 04:23:31
- * @LastEditTime: 2023-05-08 21:17:58
+ * @LastEditTime: 2023-05-09 05:30:13
  * @Description:
  *
  */
@@ -15,7 +15,7 @@ import { Metadata } from '@grpc/grpc-js';
 
 import { USER_SERVICE_NAME, UserServiceClient } from '@proto/gen/user.pb';
 
-import { ApiObjResponse } from '@app/common/decorators';
+import { ApiObjResponse } from '@app/swagger';
 import { UserEntity } from 'apps/user-svc/src/user/entities/user.entity';
 
 import { AuthService } from './auth.service';

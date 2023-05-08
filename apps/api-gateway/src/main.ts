@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 12:44:18
- * @LastEditTime: 2023-05-08 06:34:21
+ * @LastEditTime: 2023-05-09 05:29:31
  * @Description:
  *
  */
@@ -20,10 +20,10 @@ import {
   GrpcToHttpInterceptor,
   HttpClientExceptionFilter,
   // HttpBodyValidationPipe,
-  HttpTransformInterceptor,
-} from 'libs/grpc/src';
+} from '@app/grpc';
 
 import { AppModule } from './app.module';
+import { HttpTransformInterceptor } from '@app/swagger';
 
 export const service = 'api-gateway';
 

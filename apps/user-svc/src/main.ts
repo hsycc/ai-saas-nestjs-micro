@@ -14,10 +14,7 @@ import { join } from 'path';
 import { protobufPackage } from '@proto/gen/user.pb';
 import { CreateLoggerOption, GrpcLoggingInterceptor } from '@app/logger';
 import { UserSvcModule } from './user-svc.module';
-import {
-  GrpcServerExceptionFilter,
-  GrpcBodyValidationPipe,
-} from 'libs/grpc/src';
+import { GrpcServerExceptionFilter, GrpcBodyValidationPipe } from '@app/grpc';
 import { PRISMA_CLIENT_SERVICE_NAME, SVC_SERVICE_NAME } from './constants';
 
 import { PrismaClient } from '.prisma/user-client';

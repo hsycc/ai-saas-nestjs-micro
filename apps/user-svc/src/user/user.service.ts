@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-07 03:44:52
- * @LastEditTime: 2023-05-08 08:59:56
+ * @LastEditTime: 2023-05-09 05:26:33
  * @Description:
  *
  */
@@ -19,7 +19,7 @@ import {
   CreateUserRequestDto,
   UpdateUserRequestDto,
 } from './dto/user.dto';
-import { GrpcInternalException } from 'libs/grpc/src';
+import { GrpcInternalException } from '@app/grpc';
 
 @Injectable()
 export class UserService {

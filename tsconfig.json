@@ -27,7 +27,9 @@
       "@app/grpc": ["libs/grpc/src"],
       "@app/grpc/*": ["libs/grpc/src/*"],
       "@app/logger": ["libs/logger/src"],
-      "@app/logger/*": ["libs/logger/src/*"]
+      "@app/logger/*": ["libs/logger/src/*"],
+      "@app/swagger": ["libs/swagger/src"],
+      "@app/swagger/*": ["libs/swagger/src/*"]
     }
   }
 }
