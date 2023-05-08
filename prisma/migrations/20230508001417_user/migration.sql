@@ -1,19 +1,13 @@
--- CreateEnum
-CREATE TYPE "UserStatus" AS ENUM ('ENABLE', 'DISABLE');
-
--- CreateEnum
-CREATE TYPE "UserRole" AS ENUM ('USER', 'ADMIN');
-
 -- CreateTable
 CREATE TABLE "user" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "username" VARCHAR(50) NOT NULL,
-    "avatar" TEXT,
+    "avatar" TEXT NOT NULL DEFAULT '',
     "password" TEXT NOT NULL,
-    "status" "UserStatus" NOT NULL DEFAULT 'ENABLE',
-    "role" "UserRole" NOT NULL DEFAULT 'USER',
-    "public_key" TEXT,
-    "private_key" TEXT,
+    "status" INTEGER NOT NULL DEFAULT 1,
+    "role" INTEGER NOT NULL DEFAULT 0,
+    "access_key" TEXT NOT NULL DEFAULT '',
+    "secret_key" TEXT NOT NULL DEFAULT '',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 

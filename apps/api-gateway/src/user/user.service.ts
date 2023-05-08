@@ -1,10 +1,17 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-04-26 14:31:13
+ * @LastEditTime: 2023-05-08 07:41:23
+ * @Description:
+ *
+ */
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import {
   UserServiceClient,
   USER_SERVICE_NAME,
-  ValidateResponse,
+  UserModel,
 } from '@proto/gen/user.pb';
 import { Metadata } from '@grpc/grpc-js';
 
@@ -21,7 +28,7 @@ export class UserService {
     this.svc = this.client.getService<UserServiceClient>(USER_SERVICE_NAME);
   }
 
-  public async validate(token: string): Promise<Observable<ValidateResponse>> {
-    return this.svc.validate({ token }, new Metadata());
+  public async validate(username): Promise<Observable<UserModel>> {
+    return this.svc.getUserByName({ username }, new Metadata());
   }
 }

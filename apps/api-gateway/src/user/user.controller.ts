@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-26 14:31:24
- * @LastEditTime: 2023-05-06 10:14:58
+ * @LastEditTime: 2023-05-08 07:38:09
  * @Description:
  *
  */
@@ -12,28 +12,23 @@ import {
   OnModuleInit,
   Get,
   Post,
-  Put,
   Patch,
-  UseGuards,
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
 import {
   UserServiceClient,
   USER_SERVICE_NAME,
-  LoginResponse,
-  RegisterResponse,
+  UserModel,
 } from '@proto/gen/user.pb';
 import { Metadata } from '@grpc/grpc-js';
 
-import {
-  LoginRequestDto,
-  RegisterRequestDto,
-} from 'apps/user-svc/src/user/dto/user.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { UserAuthGuard } from '../common/guards/user-auth.guard';
+import { CreateUserRequestDto } from 'apps/user-svc/src/user/dto/user.dto';
+import { ApiBearerAuth, ApiExtraModels, ApiTags } from '@nestjs/swagger';
+import { UserEntity } from 'apps/user-svc/src/user/entities/user.entity';
 @ApiTags('user')
 @Controller('user')
+@ApiExtraModels(UserEntity)
 export class UserController implements OnModuleInit {
   private svc: UserServiceClient;
 
@@ -51,11 +46,32 @@ export class UserController implements OnModuleInit {
    */
   @Post('register')
   // @ApiBearerAuth()
-  // @UseGuards(UserAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   private async register(
-    @Body() body: RegisterRequestDto,
-  ): Promise<Observable<RegisterResponse>> {
-    return this.svc.register(body, new Metadata());
+    @Body() body: CreateUserRequestDto,
+  ): Promise<Observable<UserModel>> {
+    return this.svc.createUser(body, new Metadata());
+  }
+
+  /**
+   * 获取当前登录状态下渠道用户的信息
+   */
+  @Get('current')
+  private async current() {
+    const user = await lastValueFrom(
+      this.svc.getUserById(
+        {
+          id: 'clhcwl1ybq000uau9t67z8xj0',
+        },
+        new Metadata(),
+      ),
+    );
+    console.log(typeof user.avatar);
+    console.log(typeof user.status);
+    console.log(typeof user.createdAt);
+    // delete user.test;
+    console.log(user);
+    return user;
   }
 
   /**
@@ -63,34 +79,7 @@ export class UserController implements OnModuleInit {
    */
   @Patch('update')
   @ApiBearerAuth()
-  @UseGuards(UserAuthGuard)
   private async Update() {
-    //
-  }
-
-  /**
-   * 渠道用户登录
-   */
-  @Put('login')
-  private async login(
-    @Body() body: LoginRequestDto,
-  ): Promise<Observable<LoginResponse>> {
-    return this.svc.login(body, new Metadata());
-  }
-
-  /**
-   * 渠道用户退出
-   */
-  @Put('logout')
-  private async logout() {
-    //
-  }
-
-  /**
-   * 获取当前渠道用户的信息
-   */
-  @Get('current')
-  private async current() {
     //
   }
 
@@ -99,7 +88,6 @@ export class UserController implements OnModuleInit {
    */
   @Post('create_keys')
   @ApiBearerAuth()
-  @UseGuards(UserAuthGuard)
   private async createKeys() {
     //
   }

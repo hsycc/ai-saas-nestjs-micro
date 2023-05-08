@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:08:01
- * @LastEditTime: 2023-05-06 01:45:56
+ * @LastEditTime: 2023-05-07 09:53:09
  * @Description:
  *
  */
@@ -37,7 +37,7 @@ async function bootstrap() {
       logger,
       transport: Transport.GRPC,
       options: {
-        url: MICRO_DOMAIN_USER + ':' + MICRO_PORT_USER,
+        url: `${MICRO_DOMAIN_USER}:${MICRO_PORT_USER}`,
         package: protobufPackage,
         protoPath: join(process.cwd(), MICRO_PROTO_USER),
       },

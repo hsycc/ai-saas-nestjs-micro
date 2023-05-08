@@ -1,14 +1,14 @@
 <!--
  * @Author: hsycc
  * @Date: 2023-04-19 12:43:27
- * @LastEditTime: 2023-05-06 10:22:15
+ * @LastEditTime: 2023-05-08 11:16:34
  * @Description:
  *
 -->
 
 ## ai-saas-nestjs-micro
 
-### TODO
+###
 
 - [x] nest-cli monorepo mode create service and library
 
@@ -77,31 +77,35 @@
           └── http-codes-map.ts
       ```
 
-- [x] 切换成 prisma/ pg
+- [x] 切换成 prisma/ postgresql
 - [ ] docker
-
   - [x] dockerfile
   - [x] docker-compose
   - [ ] docker Swarm 集群部署
-
 - [x] jwt
-  - TODO: 拓展
-  - [ ]accessToken & refresh 刷新
-  - [ ]logout redis remove
+  - TODO: 安全拓展
+  - [ ] accessToken & refresh 刷新
+  - [ ] logout redis remove jwt sign
 - [ ] 渠道用户登录鉴权
 - [ ] api 调用鉴权
 
 - [ ] 权限设计
 - [ ] 缓存
 - [ ] 幂等设计
-- [ ] 网关监控 健康检查 熔断限流
 - [ ] 日志管理
 - [ ] 链路追踪
 - [ ] 配置中心 nacos
+- [ ] 网关监控 健康检查 熔断限流
 
 ## 业务设计
 
+- [ ] 渠道用户管理
+- [ ] gpt 会话模型管理
+
 - [ ] 账号体系
-- [ ] 渠道管理
 - [ ] chat-gpt 服务设计
--
+
+## 备忘
+
+- [ ]设计 ak、sk 签名流程
+- [ ]ak/sk passport 插件编码 ApiStrategy

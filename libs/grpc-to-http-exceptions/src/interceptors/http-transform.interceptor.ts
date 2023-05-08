@@ -3,7 +3,7 @@
  * http-client 统一请求成功的返回数据
  * @Author: hsycc
  * @Date: 2023-04-22 15:42:43
- * @LastEditTime: 2023-05-06 09:05:40
+ * @LastEditTime: 2023-05-07 06:46:28
  * @Description:
  *
  */
@@ -36,7 +36,7 @@ export class HttpTransformInterceptor<T>
           statusCode: 200,
           code: 0,
           message: 'success',
-          data,
+          data: data,
         };
       }),
     );

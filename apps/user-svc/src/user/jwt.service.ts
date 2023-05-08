@@ -1,14 +1,20 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:08:01
- * @LastEditTime: 2023-05-06 00:02:26
+ * @LastEditTime: 2023-05-07 08:02:10
  * @Description:
  *
  */
 import { Injectable } from '@nestjs/common';
 import { JwtService as Jwt } from '@nestjs/jwt';
-import { UserEntity } from './entity/user.entity';
+import { UserEntity } from './entities/user.entity';
 import bcrypt from 'bcrypt';
+
+export interface JwtPayload {
+  username: string;
+  sub?: string;
+}
+
 @Injectable()
 export class JwtService {
   constructor(private readonly jwt: Jwt) {}
@@ -43,14 +49,5 @@ export class JwtService {
     const salt: string = bcrypt.genSaltSync(10);
 
     return bcrypt.hashSync(password, salt);
-  }
-
-  // Get User by User ID we get from decode()
-  public async validateUser(decoded: any): Promise<UserEntity | any> {
-    // return this.repository.findOne({
-    //   where: {
-    //     id: decoded.id,
-    //   },
-    // });
   }
 }

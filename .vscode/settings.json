@@ -1,5 +1,14 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "[proto3]": {
+    "editor.defaultFormatter": "xaver.clang-format"
+  },
+  "clang-format.language.javascript.enable": false,
+  "clang-format.language.typescript.enable": false,
+  "clang-format.language.java.enable": false,
   "editor.formatOnSave": true,
 
   "files.exclude": {
@@ -70,6 +79,7 @@
   "commentTranslate.targetLanguage": "zh-CN",
   "cSpell.words": [
     "ciphertext",
+    "clhcwl",
     "commitlint",
     "compodoc",
     "davinci",
@@ -79,8 +89,5 @@
     "protos",
     "srcs",
     "tsup"
-  ],
-  "[prisma]": {
-    "editor.defaultFormatter": "Prisma.prisma"
-  }
+  ]
 }

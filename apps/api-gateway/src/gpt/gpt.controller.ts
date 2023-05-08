@@ -17,7 +17,7 @@ import {
 import { ClientGrpc } from '@nestjs/microservices';
 import { GptServiceClient, GPT_SERVICE_NAME } from '@proto/gen/gpt.pb';
 import { ApiTags } from '@nestjs/swagger';
-import { ApiAuth } from '../common/decorators/api-auth.decorator';
+import { ApiAuth } from '../auth/decorators/api-auth.decorator';
 @ApiTags('gpt')
 @Controller('gpt')
 export class GptController implements OnModuleInit {

@@ -11,27 +11,17 @@ datasource db {
   url      = env("PG_DATABASE_USER")
 }
 
-enum UserStatus {
-  ENABLE
-  DISABLE
-}
-
-enum UserRole {
-  USER
-  ADMIN
-}
-
 model User {
-  id          Int        @id @default(autoincrement())
-  username    String     @unique @db.VarChar(50)
-  avatar      String?
-  password    String
-  status      UserStatus @default(ENABLE)
-  role        UserRole   @default(USER)
-  public_key  String?
-  private_key String? // encryptedPrivateKey
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
+  id        String   @id @default(cuid())
+  username  String   @unique @db.VarChar(50)
+  avatar    String   @default("")
+  password  String
+  status    Int      @default(1)
+  role      Int      @default(0)
+  accessKey String   @default("") @map("access_key")
+  secretKey String   @default("") @map("secret_key") // secret_key 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("user")
 }

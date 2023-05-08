@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:18:22
- * @LastEditTime: 2023-05-06 02:26:51
+ * @LastEditTime: 2023-05-07 08:54:09
  * @Description:
  *
  */
@@ -36,7 +36,7 @@ async function bootstrap() {
       logger,
       transport: Transport.GRPC,
       options: {
-        url: MICRO_DOMAIN_GPT + ':' + MICRO_PORT_GPT,
+        url: `${MICRO_DOMAIN_GPT}:${MICRO_PORT_GPT}`,
         package: protobufPackage,
         protoPath: join(process.cwd(), MICRO_PROTO_GPT),
       },

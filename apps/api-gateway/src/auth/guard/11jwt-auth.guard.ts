@@ -1,3 +1,10 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-04-26 14:31:44
+ * @LastEditTime: 2023-05-08 07:42:56
+ * @Description:
+ *
+ */
 import {
   Injectable,
   CanActivate,
@@ -6,17 +13,18 @@ import {
   Inject,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { ValidateResponse } from '@proto/gen/user.pb';
-import { UserService } from '../../user/user.service';
+import { UserModel } from '@proto/gen/user.pb';
 import { lastValueFrom } from 'rxjs';
-
+import { AuthService } from '../auth.service';
 @Injectable()
-export class UserAuthGuard implements CanActivate {
+export class JwtAuthGuard implements CanActivate {
   constructor(
-    @Inject(UserService)
-    public readonly service: UserService,
+    @Inject(AuthService)
+    public readonly service: AuthService,
   ) {}
   public async canActivate(ctx: ExecutionContext): Promise<boolean> | never {
+    console.log('JwtAuthGuard, ');
+
     const req: Request = ctx.switchToHttp().getRequest();
     const authorization: string = req.headers['authorization'];
 
@@ -35,9 +43,11 @@ export class UserAuthGuard implements CanActivate {
     // 获取用户id 同时挂载到 req.user 上面
 
     try {
-      const res = await lastValueFrom(await this.service.validate(token));
+      const res: UserModel = await lastValueFrom(
+        await this.service.validateToken(token),
+      );
 
-      req.user = res.userId;
+      req.user = res.id;
 
       return true;
     } catch (error) {

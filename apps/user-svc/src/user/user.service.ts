@@ -1,122 +1,111 @@
 /*
  * @Author: hsycc
- * @Date: 2023-04-19 15:08:01
- * @LastEditTime: 2023-05-06 10:09:40
+ * @Date: 2023-05-07 03:44:52
+ * @LastEditTime: 2023-05-08 08:59:56
  * @Description:
  *
  */
 import { Inject, Injectable } from '@nestjs/common';
-import { JwtService } from './jwt.service';
-import {
-  RegisterRequestDto,
-  LoginRequestDto,
-  ValidateRequestDto,
-} from './dto/user.dto';
-import { UserEntity } from './entity/user.entity';
-import {
-  LoginResponse,
-  RegisterResponse,
-  ValidateResponse,
-} from '@proto/gen/user.pb';
-import {
-  GrpcNotFoundException,
-  GrpcUnauthenticatedException,
-} from '@app/grpc-to-http-exceptions';
-import { CustomPrismaService } from 'nestjs-prisma';
+
+import * as bcrypt from 'bcrypt';
 import { PRISMA_CLIENT_SERVICE_NAME } from '../constants';
+import { CustomPrismaService } from 'nestjs-prisma';
 import { PrismaClient } from '.prisma/user-client';
 
-import { NodeRSA } from 'node-rsa';
+import { UserModelList, UserModel } from '@proto/gen/user.pb';
+import {
+  QueryUserByIdRequestDto,
+  QueryUserByNameRequestDto,
+  CreateUserRequestDto,
+  UpdateUserRequestDto,
+} from './dto/user.dto';
+import { GrpcInternalException } from '@app/grpc-to-http-exceptions';
+
 @Injectable()
 export class UserService {
   constructor(
-    // @Inject(JwtService)
-    private readonly jwtService: JwtService,
-
     @Inject(PRISMA_CLIENT_SERVICE_NAME)
     private prisma: CustomPrismaService<PrismaClient>,
   ) {}
-  public async register({
-    email,
-    password,
-  }: RegisterRequestDto): Promise<RegisterResponse | any> {
-    // eslint-disable-next-line prefer-const
-    let user: UserEntity;
-    //  = await this.repository.findOne({ where: { email } });
 
-    if (user) {
-      // return { status: HttpStatus.CONFLICT, error: ['E-Mail already exists'] };
-    }
-
-    user = new UserEntity();
-
-    // user.email = email;
-    user.password = this.jwtService.encodePassword(password);
-
-    // await this.repository.save(user);
-
-    // return { status: HttpStatus.CREATED, error: null };
+  async createUser(dto: CreateUserRequestDto): Promise<UserModel> {
+    const { username, password } = dto;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log('hashedPassword', hashedPassword);
+    const user = await this.prisma.client.user.create({
+      data: {
+        username,
+        password: hashedPassword,
+      },
+    });
+    return user as unknown as UserModel;
   }
 
-  public async login({
-    email,
-    password,
-  }: LoginRequestDto): Promise<LoginResponse | any> {
-    let user: UserEntity;
-    // = await this.repository.findOne({ where: { email } });
-
+  async deleteUser(dto: QueryUserByIdRequestDto): Promise<void> {
+    const { id } = dto;
+    const user = await this.prisma.client.user.delete({ where: { id } });
     if (!user) {
-      // return {
-      //   status: HttpStatus.NOT_FOUND,
-      //   error: ['E-Mail not found'],
-      //   token: null,
-      // };
+      throw new GrpcInternalException('User not found');
     }
-
-    const isPasswordValid: boolean = this.jwtService.isPasswordValid(
-      password,
-      user.password,
-    );
-
-    if (!isPasswordValid) {
-      // return {
-      //   status: HttpStatus.NOT_FOUND,
-      //   error: ['Password wrong'],
-      //   token: null,
-      // };
-    }
-
-    const token: string = this.jwtService.generateToken(user);
-
-    // return { token, status: HttpStatus.OK, error: null };
   }
 
-  public async validate({
-    token,
-  }: ValidateRequestDto): Promise<ValidateResponse | any> {
-    const decoded: UserEntity = await this.jwtService.verify(token);
-    // TODO:
-    // 我们可以在此方法中执行数据库查询, 以提取关于用户的更多信息. 从而在请求中提供更丰富的用户对象
-    // 例如在已撤销的令牌列表中查找 userId ，使我们能够执行令牌撤销。
-
-    if (!decoded) {
-      throw new GrpcUnauthenticatedException('Unauthorized');
+  async updateUser(dto: UpdateUserRequestDto): Promise<void> {
+    const { id, avatar, password, status, role, accessKey, secretKey } = dto;
+    const updateData = {} as any;
+    if (avatar) {
+      updateData.avatar = avatar;
     }
-
-    const user: UserEntity = await this.jwtService.validateUser(decoded);
-
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updateData.password = hashedPassword;
+    }
+    if (status) {
+      updateData.status = status;
+    }
+    if (role) {
+      updateData.role = role;
+    }
+    if (accessKey) {
+      updateData.accessKey = accessKey;
+    }
+    if (secretKey) {
+      updateData.secretKey = secretKey;
+    }
+    const user = await this.prisma.client.user.update({
+      where: { id },
+      data: updateData,
+    });
     if (!user) {
-      throw new GrpcNotFoundException('UserEntity not found');
+      throw new GrpcInternalException('User not found');
     }
-
-    // return { userId: decoded.id } as any;
   }
 
-  public async createKeys() {
-    const key = new NodeRSA({ b: 512 });
-    return {
-      public_key: key.exportKey('pkcs8-public-der').toString('base64'),
-      private_key: key.exportKey('pkcs1-private-der').toString('base64'),
-    };
+  async getUserByName(
+    dto: QueryUserByNameRequestDto,
+  ): Promise<UserModel | null> {
+    const { username } = dto;
+    const user = await this.prisma.client.user.findUnique({
+      where: { username },
+    });
+    if (!user) {
+      throw new GrpcInternalException('User not found');
+    }
+    return user as unknown as UserModel;
+  }
+
+  async getUserById(dto: QueryUserByIdRequestDto): Promise<UserModel> {
+    const { id } = dto;
+    const user = await this.prisma.client.user.findUnique({
+      where: { id },
+    });
+    if (!user) {
+      throw new GrpcInternalException('User not found');
+    }
+    return user as unknown as UserModel;
+  }
+
+  async getUserModelList(): Promise<UserModelList> {
+    const users = await this.prisma.client.user.findMany();
+    return { list: users } as unknown as UserModelList;
   }
 }

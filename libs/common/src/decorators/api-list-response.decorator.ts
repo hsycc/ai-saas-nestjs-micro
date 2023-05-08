@@ -3,13 +3,13 @@
  * http swagger Schemas泛型响应结构  ApiResponse list 泛型
  * @Author: hsycc
  * @Date: 2023-04-25 17:31:32
- * @LastEditTime: 2023-04-25 18:20:24
+ * @LastEditTime: 2023-05-08 08:49:41
  * @Description:
  *
  */
 import { applyDecorators, Type } from '@nestjs/common';
 import { ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
-import { ResponseListDto } from '../../../grpc-to-http-exceptions/src/dto/response.dto';
+import { ResponseListDto } from '../dto';
 
 export const ApiListResponse = <TModel extends Type<any>>(model: TModel) => {
   return applyDecorators(

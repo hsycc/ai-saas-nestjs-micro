@@ -26,6 +26,7 @@ define proto-gen
 			--ts_proto_opt=nestJs=true \
 			--ts_proto_opt=addGrpcMetadata=true \
 			--ts_proto_opt=addNestjsRestParameter=true  \
+			--ts_proto_opt=esModuleInterop=true \
 			--ts_proto_opt=returnObservable=false
 endef
 

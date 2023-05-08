@@ -3,15 +3,9 @@ syntax = "proto3";
 package gpt;
 
 service GptService {
-  rpc Stt (FindOneRequest) returns (FindOneResponse) {}
+  rpc Stt(FindOneRequest) returns (FindOneResponse) {}
 }
 
+message FindOneRequest { int32 id = 1; }
 
-message FindOneRequest {
-    int32 id = 1;
-}
-
-
-message FindOneResponse {
-    string text = 1;
-}
+message FindOneResponse { string text = 1; }
