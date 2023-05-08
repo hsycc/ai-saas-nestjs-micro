@@ -1,8 +1,16 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-04-25 15:25:50
+ * @LastEditTime: 2023-05-08 22:01:24
+ * @Description:
+ *
+ */
 // 在项目目录下，新建配置文件 .cz-config.js
 'use strict';
 
 module.exports = {
   types: [
+    { value: 'dev', name: 'dev:      快速开发下提交非整体功能或者改动' },
     { value: 'feat', name: 'feat:     新功能' },
     { value: 'fix', name: 'fix:      修复' },
     { value: 'docs', name: 'docs:     文档变更' },
@@ -19,7 +27,7 @@ module.exports = {
   ],
   // override the messages, defaults are as follows
   messages: {
-    type: '请选择提交类型:',
+    type: '请选择提交类型',
     // scope: '请输入文件修改范围(可选):',
     // used if allowCustomScopes is true
     customScope: '请输入修改范围(可选):',

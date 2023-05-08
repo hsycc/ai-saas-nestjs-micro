@@ -6,9 +6,7 @@
   "private": true,
   "license": "",
   "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
+    "hooks": {}
   },
   "config": {
     "commitizen": {
@@ -70,6 +68,7 @@
     "nestjs-prisma": "^0.20.0",
     "node-rsa": "^1.1.1",
     "passport": "^0.6.0",
+    "passport-custom": "^1.1.1",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "passport-strategy": "^1.0.0",
@@ -78,7 +77,6 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^17.6.1",
     "@compodoc/compodoc": "^1.1.19",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
@@ -96,7 +94,6 @@
     "@typescript-eslint/parser": "^5.0.0",
     "chokidar-cli": "^3.0.0",
     "commitizen": "^4.3.0",
-    "commitlint": "^17.6.1",
     "conventional-changelog-cli": "^2.2.2",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",

@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-08 04:23:31
- * @LastEditTime: 2023-05-08 09:50:41
+ * @LastEditTime: 2023-05-08 21:17:58
  * @Description:
  *
  */
@@ -60,11 +60,12 @@ export class AuthController {
 
   @Put('test')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
-  private async test(@CurrentUser() user) {
-    console.log(user);
-
-    return user;
+  @UseGuards(AuthGuard('api'))
+  private async test(@Req() req) {
+    return req.a;
+    // @CurrentUser() user
+    // console.log(user);
+    // return user;
     //
   }
 }

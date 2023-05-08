@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo $0
+echo $1
+echo '222'
+# npx --no -- commitlint --edit ${1}
+
+
+# if [ $# -eq 0 ]; then
+#   echo "No arguments provided"
+# else
+#   echo "First argument is: $1"
+# fi

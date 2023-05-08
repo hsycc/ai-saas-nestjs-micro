@@ -1,12 +1,28 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-08 06:16:06
- * @LastEditTime: 2023-05-08 06:17:06
- * @Description:
+ * @LastEditTime: 2023-05-08 21:45:37
+ * @Description: 封装AuthGuard,方便维护
  *
  */
-import { Injectable } from '@nestjs/common';
+import { ExecutionContext, Injectable } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {}
+export class JwtAuthGuard extends AuthGuard('jwt') {
+  constructor(private reflector: Reflector) {
+    super();
+  }
+
+  canActivate(context: ExecutionContext) {
+    // const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+    //   context.getHandler(),
+    //   context.getClass(),
+    // ]);
+    // if (isPublic) {
+    //   return true;
+    // }
+    return super.canActivate(context);
+  }
+}

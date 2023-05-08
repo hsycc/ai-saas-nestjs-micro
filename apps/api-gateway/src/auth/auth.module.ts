@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-08 04:23:31
- * @LastEditTime: 2023-05-08 11:13:16
+ * @LastEditTime: 2023-05-08 21:05:23
  * @Description:
  *
  */
@@ -50,7 +50,7 @@ import { ApiStrategy } from './strategy/api.strategy';
     AuthService,
     LocalStrategy,
     JwtStrategy,
-    // ApiStrategy,
+    ApiStrategy,
   ],
   exports: [AuthService],
 })

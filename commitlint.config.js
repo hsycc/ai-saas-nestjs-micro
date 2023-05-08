@@ -1,3 +1,10 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-04-25 15:36:22
+ * @LastEditTime: 2023-05-09 01:13:45
+ * @Description:
+ *
+ */
 module.exports = {
   extends: ['@commitlint/config-conventional'],
   rules: {
@@ -6,6 +13,7 @@ module.exports = {
       2,
       'always',
       [
+        'dev',
         'feat', // 新功能 feature
         'fix', // 修复 bug
         'docs', // 文档注释

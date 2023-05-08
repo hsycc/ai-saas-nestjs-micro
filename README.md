@@ -1,7 +1,7 @@
 <!--
  * @Author: hsycc
  * @Date: 2023-04-19 12:43:27
- * @LastEditTime: 2023-05-08 11:16:34
+ * @LastEditTime: 2023-05-08 11:32:32
  * @Description:
  *
 -->
@@ -108,4 +108,6 @@
 ## 备忘
 
 - [ ]设计 ak、sk 签名流程
-- [ ]ak/sk passport 插件编码 ApiStrategy
+- [ ]ak/sk 自定义 Passport 插件编码 ApiStrategy
+- [ ]改写 rpcExceptions 的抛出逻辑
+- [ ]
