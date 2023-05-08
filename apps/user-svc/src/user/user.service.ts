@@ -19,7 +19,7 @@ import {
   CreateUserRequestDto,
   UpdateUserRequestDto,
 } from './dto/user.dto';
-import { GrpcInternalException } from '@app/grpc-to-http-exceptions';
+import { GrpcInternalException } from 'libs/grpc/src';
 
 @Injectable()
 export class UserService {

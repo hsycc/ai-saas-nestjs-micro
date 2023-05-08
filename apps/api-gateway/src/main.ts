@@ -21,7 +21,7 @@ import {
   HttpClientExceptionFilter,
   // HttpBodyValidationPipe,
   HttpTransformInterceptor,
-} from '@app/grpc-to-http-exceptions';
+} from 'libs/grpc/src';
 
 import { AppModule } from './app.module';
 

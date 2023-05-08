@@ -17,7 +17,7 @@ import { UserSvcModule } from './user-svc.module';
 import {
   GrpcServerExceptionFilter,
   GrpcBodyValidationPipe,
-} from '@app/grpc-to-http-exceptions';
+} from 'libs/grpc/src';
 import { PRISMA_CLIENT_SERVICE_NAME, SVC_SERVICE_NAME } from './constants';
 
 import { PrismaClient } from '.prisma/user-client';

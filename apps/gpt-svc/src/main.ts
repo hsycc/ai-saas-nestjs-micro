@@ -18,7 +18,7 @@ import { PrismaClient } from '.prisma/gpt-client';
 import {
   GrpcBodyValidationPipe,
   GrpcServerExceptionFilter,
-} from '@app/grpc-to-http-exceptions';
+} from 'libs/grpc/src';
 import { PRISMA_CLIENT_SERVICE_NAME, SVC_SERVICE_NAME } from './constants';
 
 const { NODE_ENV, MICRO_DOMAIN_GPT, MICRO_PORT_GPT, MICRO_PROTO_GPT } =

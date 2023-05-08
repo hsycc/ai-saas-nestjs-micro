@@ -143,7 +143,7 @@
       "^@app/proto(|/.*)$": "<rootDir>/_proto/$1",
       "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^@app/config(|/.*)$": "<rootDir>/libs/config/src/$1",
-      "^@app/grpc-to-http-exceptions(|/.*)$": "<rootDir>/libs/grpc-to-http-exceptions/src/$1",
+      "^@app/grpc(|/.*)$": "<rootDir>/libs/grpc/src/$1",
       "^@app/logger(|/.*)$": "<rootDir>/libs/logger/src/$1"
     }
   }

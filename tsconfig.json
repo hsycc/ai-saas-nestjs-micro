@@ -24,8 +24,8 @@
       "@app/common/*": ["libs/common/src/*"],
       "@app/config": ["libs/config/src"],
       "@app/config/*": ["libs/config/src/*"],
-      "@app/grpc-to-http-exceptions": ["libs/grpc-to-http-exceptions/src"],
-      "@app/grpc-to-http-exceptions/*": ["libs/grpc-to-http-exceptions/src/*"],
+      "@app/grpc": ["libs/grpc/src"],
+      "@app/grpc/*": ["libs/grpc/src/*"],
       "@app/logger": ["libs/logger/src"],
       "@app/logger/*": ["libs/logger/src/*"]
     }
