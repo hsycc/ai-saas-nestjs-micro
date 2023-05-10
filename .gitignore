@@ -39,3 +39,6 @@ config.yaml
 .env
 
 /documentation
+
+/.prisma
+@*-client

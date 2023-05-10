@@ -1,30 +1,34 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-08 04:23:31
- * @LastEditTime: 2023-05-09 05:30:13
+ * @LastEditTime: 2023-05-10 08:16:08
  * @Description:
  *
  */
 import { Request } from 'express';
 import { ClientGrpc } from '@nestjs/microservices';
-import { AuthGuard } from '@nestjs/passport';
 import { Controller, Inject, Post, Put, Req, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiTags, ApiExtraModels } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { Metadata } from '@grpc/grpc-js';
 
-import { USER_SERVICE_NAME, UserServiceClient } from '@proto/gen/user.pb';
-
-import { ApiObjResponse } from '@lib/swagger';
-import { UserEntity } from 'apps/user-svc/src/user/entities/user.entity';
+import {
+  USER_SERVICE_NAME,
+  UserModel,
+  UserServiceClient,
+} from '@proto/gen/user.pb';
 
 import { AuthService } from './auth.service';
 import { AccessTokenDto, LoginAuthDto } from './dto';
-import { CurrentUser } from './decorators/user.decorator';
+import { JwtAuthGuard, LocalAuthGuard } from './guard';
+import {
+  ApiBaseResponse,
+  ApiObjResponse,
+  BaseApiExtraModels,
+} from '@lib/swagger';
 
-@ApiExtraModels(ApiObjResponse)
 @ApiTags('auth')
 @Controller('auth')
+@BaseApiExtraModels(AccessTokenDto)
 export class AuthController {
   private svc: UserServiceClient;
   constructor(
@@ -40,32 +44,23 @@ export class AuthController {
   /**
    * 渠道用户登录
    */
-
   @Post('login')
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @ApiBody({ type: LoginAuthDto })
   @ApiObjResponse(AccessTokenDto)
   private async login(@Req() req: Request) {
-    return this.authService.login(req.user as UserEntity);
+    return this.authService.login(req.user as UserModel);
   }
 
   /**
    * 渠道用户登出
    */
   @Put('logout')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiBaseResponse()
   private async logout() {
     return 'logout';
-    //
-  }
-
-  @Put('test')
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard('api'))
-  private async test(@Req() req) {
-    return req.a;
-    // @CurrentUser() user
-    // console.log(user);
-    // return user;
     //
   }
 }

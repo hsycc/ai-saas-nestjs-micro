@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 12:44:27
- * @LastEditTime: 2023-05-06 02:30:46
+ * @LastEditTime: 2023-05-10 00:07:56
  * @Description:
  *
  */
@@ -14,7 +14,8 @@ import { PrismaClient } from '.prisma/gpt-client';
 import { CreateLoggerOption } from '@lib/logger';
 
 import { GptModule } from './gpt/gpt.module';
-import { PRISMA_CLIENT_SERVICE_NAME, SVC_SERVICE_NAME } from './constants';
+import { SVC_SERVICE_NAME } from './constants';
+import { PRISMA_CLIENT_NAME_GPT } from '@prisma/scripts/constants';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { PRISMA_CLIENT_SERVICE_NAME, SVC_SERVICE_NAME } from './constants';
     GptModule,
     CustomPrismaModule.forRootAsync({
       isGlobal: true,
-      name: PRISMA_CLIENT_SERVICE_NAME, // 👈 must be unique for each PrismaClient
+      name: PRISMA_CLIENT_NAME_GPT, // 👈 must be unique for each PrismaClient
       useFactory: () => {
         return new PrismaClient(); // create new instance of PrismaClient
       },

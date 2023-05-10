@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-26 14:31:24
- * @LastEditTime: 2023-05-08 07:38:09
+ * @LastEditTime: 2023-05-10 08:15:43
  * @Description:
  *
  */
@@ -13,9 +13,10 @@ import {
   Get,
   Post,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { Observable, lastValueFrom } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   UserServiceClient,
   USER_SERVICE_NAME,
@@ -23,12 +24,26 @@ import {
 } from '@proto/gen/user.pb';
 import { Metadata } from '@grpc/grpc-js';
 
-import { CreateUserRequestDto } from 'apps/user-svc/src/user/dto/user.dto';
-import { ApiBearerAuth, ApiExtraModels, ApiTags } from '@nestjs/swagger';
-import { UserEntity } from 'apps/user-svc/src/user/entities/user.entity';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guard';
+import { CurrentUser } from '../auth/decorators/user.decorator';
+import {
+  CreateUserDto,
+  UpdateUserPublicDto,
+  UpdateUserPrivateDto,
+} from '@app/user-svc/user/dto';
+import { UserEntity } from '@app/user-svc/user/entities/user.entity';
+import {
+  ApiBaseResponse,
+  ApiListResponse,
+  ApiObjResponse,
+  BaseApiExtraModels,
+} from '@lib/swagger';
+import { AkSkUtil } from '@lib/common';
+
 @ApiTags('user')
 @Controller('user')
-@ApiExtraModels(UserEntity)
+@BaseApiExtraModels(UserEntity)
 export class UserController implements OnModuleInit {
   private svc: UserServiceClient;
 
@@ -42,53 +57,80 @@ export class UserController implements OnModuleInit {
   }
 
   /**
-   * 注册渠道用户
+   * 注册渠道用户, 需要做 权限控制
    */
   @Post('register')
-  // @ApiBearerAuth()
-  // @UseGuards(JwtAuthGuard)
-  private async register(
-    @Body() body: CreateUserRequestDto,
+  @ApiObjResponse(UserEntity)
+  async register(
+    @Body() createUserDto: CreateUserDto,
   ): Promise<Observable<UserModel>> {
-    return this.svc.createUser(body, new Metadata());
+    return this.svc.createUser(createUserDto, new Metadata());
+  }
+  /**
+   * 更新渠道用户的状态, 需要做 权限控制
+   */
+  @Patch('update_security')
+  @ApiBaseResponse()
+  private async updateSecurity(
+    @Body() updateUserPrivateDto: UpdateUserPrivateDto,
+  ) {
+    return this.svc.updateUser(updateUserPrivateDto, new Metadata());
   }
 
   /**
-   * 获取当前登录状态下渠道用户的信息
+   * 获取渠道用户,需要做 权限控制
+   */
+  @Get('list')
+  @ApiListResponse(UserEntity)
+  private async userList() {
+    return this.svc.getUserModelList({}, new Metadata());
+  }
+
+  /**
+   * 获取当前登录状态下渠道用户的信息, 需要 accessToken
    */
   @Get('current')
-  private async current() {
-    const user = await lastValueFrom(
-      this.svc.getUserById(
-        {
-          id: 'clhcwl1ybq000uau9t67z8xj0',
-        },
-        new Metadata(),
-      ),
-    );
-    console.log(typeof user.avatar);
-    console.log(typeof user.status);
-    console.log(typeof user.createdAt);
-    // delete user.test;
-    console.log(user);
-    return user;
+  @ApiObjResponse(UserEntity)
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  private async current(@CurrentUser() id) {
+    return this.svc.getUserById({ id }, new Metadata());
   }
 
   /**
-   * 更新用户信息
+   * 更新用户信息, 需要 accessToken
    */
   @Patch('update')
+  @ApiBaseResponse()
   @ApiBearerAuth()
-  private async Update() {
-    //
+  @UseGuards(JwtAuthGuard)
+  private async update(
+    @CurrentUser() id,
+    @Body() updateUserPublicDto: UpdateUserPublicDto,
+  ) {
+    return this.svc.updateUser(
+      {
+        id,
+        ...updateUserPublicDto,
+      },
+      new Metadata(),
+    );
   }
 
   /**
-   * 创建密钥对
+   * 更新用户密钥对 需要 accessToken
    */
-  @Post('create_keys')
+  @Patch('update_keys')
+  @ApiBaseResponse()
   @ApiBearerAuth()
-  private async createKeys() {
-    //
+  @UseGuards(JwtAuthGuard)
+  private async updateKeys(@CurrentUser() id) {
+    return this.svc.updateUser(
+      {
+        id,
+        ...AkSkUtil.generateKeys(),
+      },
+      new Metadata(),
+    );
   }
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:08:01
- * @LastEditTime: 2023-05-07 09:53:09
+ * @LastEditTime: 2023-05-10 01:49:00
  * @Description:
  *
  */
@@ -15,10 +15,10 @@ import { protobufPackage } from '@proto/gen/user.pb';
 import { CreateLoggerOption, GrpcLoggingInterceptor } from '@lib/logger';
 import { UserSvcModule } from './user-svc.module';
 import { GrpcServerExceptionFilter, GrpcBodyValidationPipe } from '@lib/grpc';
-import { PRISMA_CLIENT_SERVICE_NAME, SVC_SERVICE_NAME } from './constants';
+import { SVC_SERVICE_NAME } from './constants';
 
+import { PRISMA_CLIENT_NAME_USER } from '@prisma/scripts/constants';
 import { PrismaClient } from '.prisma/user-client';
-
 const { NODE_ENV, MICRO_DOMAIN_USER, MICRO_PORT_USER, MICRO_PROTO_USER } =
   process.env;
 
@@ -52,7 +52,7 @@ async function bootstrap() {
 
   /*  prisma shutdown hook */
   const customPrismaService: CustomPrismaService<PrismaClient> = app.get(
-    PRISMA_CLIENT_SERVICE_NAME, // 👈 use the same name as in app.module.ts
+    PRISMA_CLIENT_NAME_USER, // 👈 use the same name as in app.module.ts
   );
   await customPrismaService.enableShutdownHooks(app);
 

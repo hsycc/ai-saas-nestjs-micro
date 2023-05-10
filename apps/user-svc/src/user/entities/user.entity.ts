@@ -1,16 +1,16 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:08:01
- * @LastEditTime: 2023-05-08 07:36:41
+ * @LastEditTime: 2023-05-10 04:56:43
  * @Description:
  *
  */
 
-import { hashSync, genSaltSync } from 'bcrypt';
 import { User } from '.prisma/user-client';
-import { getAesInstance } from '@lib/common/utils';
 
 import { UserStatusEnum, UserRolesEnum } from '@proto/gen/user.pb';
+import { ApiHideProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 export class UserEntity implements User {
   /** id */
   id: string;
@@ -29,12 +29,11 @@ export class UserEntity implements User {
   /** 修改时间 */
   updatedAt: Date;
 
-  /** password */
-  set password(pwd: string) {
-    this.password = hashSync(pwd, genSaltSync(10));
-  }
-  /** 私钥 */
-  set secretKey(key: string) {
-    this.secretKey = key ? getAesInstance(2).encrypt(key) : '';
-  }
+  @ApiHideProperty()
+  @Exclude()
+  password: string;
+
+  @ApiHideProperty()
+  @Exclude()
+  secretKey: string;
 }

@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class ResponseDto {
   @ApiProperty()
+  statusCode: number;
+  @ApiProperty()
   code: number;
   @ApiProperty()
   message: string;
@@ -11,10 +13,13 @@ export class ResponseObjDto<TData> extends ResponseDto {
   @ApiProperty()
   data: TData;
 }
-
+export class ResponseListDataDto<TData> {
+  @ApiProperty()
+  results: TData[];
+}
 export class ResponseListDto<TData> extends ResponseDto {
   @ApiProperty()
-  data: TData[];
+  data: ResponseListDataDto<TData>;
 }
 
 export class ResPaginatedDto {

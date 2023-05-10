@@ -1,47 +1,53 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-07 03:44:52
- * @LastEditTime: 2023-05-09 05:26:33
+ * @LastEditTime: 2023-05-10 08:09:21
  * @Description:
  *
  */
 import { Inject, Injectable } from '@nestjs/common';
 
 import * as bcrypt from 'bcrypt';
-import { PRISMA_CLIENT_SERVICE_NAME } from '../constants';
 import { CustomPrismaService } from 'nestjs-prisma';
-import { PrismaClient } from '.prisma/user-client';
 
 import { UserModelList, UserModel } from '@proto/gen/user.pb';
 import {
-  QueryUserByIdRequestDto,
-  QueryUserByNameRequestDto,
-  CreateUserRequestDto,
-  UpdateUserRequestDto,
-} from './dto/user.dto';
+  QueryUserByIdDto,
+  QueryUserByNameDto,
+  CreateUserDto,
+  UpdateUserDto,
+} from './dto';
 import { GrpcInternalException } from '@lib/grpc';
+import { genSaltSync, hashSync } from 'bcrypt';
+import { AkSkUtil, getAesInstance } from '@lib/common';
+import { PRISMA_CLIENT_NAME_USER } from '@prisma/scripts/constants';
+import { PrismaClient, Prisma } from '.prisma/user-client';
 
 @Injectable()
 export class UserService {
   constructor(
-    @Inject(PRISMA_CLIENT_SERVICE_NAME)
+    @Inject(PRISMA_CLIENT_NAME_USER)
     private prisma: CustomPrismaService<PrismaClient>,
   ) {}
 
-  async createUser(dto: CreateUserRequestDto): Promise<UserModel> {
+  async createUser(dto: CreateUserDto): Promise<UserModel> {
     const { username, password } = dto;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    console.log('hashedPassword', hashedPassword);
+
+    const keys = AkSkUtil.generateKeys();
+    keys.secretKey = getAesInstance(2).encrypt(keys.secretKey);
+
+    const data: Prisma.UserCreateInput = {
+      username,
+      password: hashSync(password, genSaltSync(10)),
+      ...keys,
+    };
     const user = await this.prisma.client.user.create({
-      data: {
-        username,
-        password: hashedPassword,
-      },
+      data,
     });
     return user as unknown as UserModel;
   }
 
-  async deleteUser(dto: QueryUserByIdRequestDto): Promise<void> {
+  async deleteUser(dto: QueryUserByIdDto): Promise<void> {
     const { id } = dto;
     const user = await this.prisma.client.user.delete({ where: { id } });
     if (!user) {
@@ -49,9 +55,9 @@ export class UserService {
     }
   }
 
-  async updateUser(dto: UpdateUserRequestDto): Promise<void> {
+  async updateUser(dto: UpdateUserDto): Promise<void> {
     const { id, avatar, password, status, role, accessKey, secretKey } = dto;
-    const updateData = {} as any;
+    const updateData: Prisma.UserUpdateInput = {};
     if (avatar) {
       updateData.avatar = avatar;
     }
@@ -80,9 +86,7 @@ export class UserService {
     }
   }
 
-  async getUserByName(
-    dto: QueryUserByNameRequestDto,
-  ): Promise<UserModel | null> {
+  async getUserByName(dto: QueryUserByNameDto): Promise<UserModel | null> {
     const { username } = dto;
     const user = await this.prisma.client.user.findUnique({
       where: { username },
@@ -93,7 +97,7 @@ export class UserService {
     return user as unknown as UserModel;
   }
 
-  async getUserById(dto: QueryUserByIdRequestDto): Promise<UserModel> {
+  async getUserById(dto: QueryUserByIdDto): Promise<UserModel> {
     const { id } = dto;
     const user = await this.prisma.client.user.findUnique({
       where: { id },
@@ -106,6 +110,8 @@ export class UserService {
 
   async getUserModelList(): Promise<UserModelList> {
     const users = await this.prisma.client.user.findMany();
-    return { list: users } as unknown as UserModelList;
+    return {
+      results: users,
+    } as unknown as UserModelList;
   }
 }

@@ -1,13 +1,13 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-08 04:23:31
- * @LastEditTime: 2023-05-08 09:00:15
+ * @LastEditTime: 2023-05-10 08:19:23
  * @Description:
  *
  */
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { Observable, lastValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 import { compareSync } from 'bcrypt';
 import {
@@ -18,7 +18,6 @@ import {
 import { Metadata } from '@grpc/grpc-js';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interface';
-import { UserEntity } from 'apps/user-svc/src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -32,14 +31,6 @@ export class AuthService {
 
   public onModuleInit(): void {
     this.svc = this.client.getService<UserServiceClient>(USER_SERVICE_NAME);
-  }
-
-  public async validateToken(
-    accessToken: string,
-  ): Promise<Observable<UserModel>> {
-    // return this.svc.validateToken({ accessToken }, new Metadata());
-    let a;
-    return a as any;
   }
 
   async validateUser(
@@ -58,7 +49,7 @@ export class AuthService {
     } catch (error) {}
   }
 
-  async login(user: UserEntity) {
+  async login(user) {
     const payload: JwtPayload = { username: user.username, sub: user.id };
     return {
       accessToken: this.jwtService.sign(payload),

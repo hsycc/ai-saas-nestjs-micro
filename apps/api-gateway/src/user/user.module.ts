@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:03:20
- * @LastEditTime: 2023-05-08 05:04:44
+ * @LastEditTime: 2023-05-09 07:32:09
  * @Description:
  *
  */
@@ -10,13 +10,11 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { MicroConfigType } from '@lib/config';
 import { USER_SERVICE_NAME, USER_PACKAGE_NAME } from '@proto/gen/user.pb';
-import { UserService } from './user.service';
 import { UserController } from './user.controller';
 @Module({
   imports: [],
   controllers: [UserController],
   providers: [
-    UserService,
     {
       provide: USER_SERVICE_NAME,
       useFactory: (config: ConfigService) => {
@@ -33,6 +31,6 @@ import { UserController } from './user.controller';
       inject: [ConfigService],
     },
   ],
-  exports: [UserService],
+  exports: [],
 })
 export class UserModule {}

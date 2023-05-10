@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-05 23:06:11
- * @LastEditTime: 2023-05-05 23:26:21
+ * @LastEditTime: 2023-05-10 08:18:31
  * @Description:
  *
  */
@@ -59,6 +59,7 @@ export function loggingMiddleware(
     if (logMessage) {
       logger[logLevel](
         logMessage({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           model: params.model!,
           action: params.action,
           before,

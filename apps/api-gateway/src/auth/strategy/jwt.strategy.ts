@@ -2,7 +2,7 @@
  * jwt 认证策略
  * @Author: hsycc
  * @Date: 2023-05-08 09:21:50
- * @LastEditTime: 2023-05-08 09:33:58
+ * @LastEditTime: 2023-05-10 07:01:17
  * @Description:
  *
  */
@@ -13,10 +13,14 @@ import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import { JwtPayload } from '../interface';
 import { JwtConfigType } from '@lib/config';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(config: ConfigService) {
+  constructor(
+    config: ConfigService,
+    private readonly authService: AuthService,
+  ) {
     super({
       // 提供从请求中提取 JWT 的方法
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -34,8 +38,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(
     payload: JwtPayload,
   ): Promise<{ id: string; username: string }> {
-    console.log('jwt ======== validate');
+    console.log('jwt ======== validate', 'payload');
 
+    // const user = await authService.validateUser(username, password);
+    // TODO: check 用户被删除的情况
     // 我们可以在此方法中执行数据库查询, 以提取关于用户的更多信息. 从而在请求中提供更丰富的用户对象
     // 例如在已撤销的令牌列表中查找 userId ，使我们能够执行令牌撤销。
     // 双token策略 accessToken refreshToken 刷新

@@ -1,22 +1,24 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:18:22
- * @LastEditTime: 2023-05-07 08:54:09
+ * @LastEditTime: 2023-05-10 08:09:43
  * @Description:
  *
  */
+import { join } from 'path';
+import { CustomPrismaService } from 'nestjs-prisma';
+import { WinstonModule } from 'nest-winston';
 import { INestMicroservice } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
-import { join } from 'path';
-import { GptSvcModule } from './gpt-svc.module';
-import { protobufPackage } from '@proto/gen/gpt.pb';
-import { WinstonModule } from 'nest-winston';
 import { CreateLoggerOption, GrpcLoggingInterceptor } from '@lib/logger';
-import { CustomPrismaService } from 'nestjs-prisma';
-import { PrismaClient } from '.prisma/gpt-client';
 import { GrpcBodyValidationPipe, GrpcServerExceptionFilter } from '@lib/grpc';
-import { PRISMA_CLIENT_SERVICE_NAME, SVC_SERVICE_NAME } from './constants';
+import { protobufPackage } from '@proto/gen/gpt.pb';
+import { PRISMA_CLIENT_NAME_GPT } from '@prisma/scripts/constants';
+
+import { PrismaClient } from '.prisma/gpt-client';
+import { GptSvcModule } from './gpt-svc.module';
+import { SVC_SERVICE_NAME } from './constants';
 
 const { NODE_ENV, MICRO_DOMAIN_GPT, MICRO_PORT_GPT, MICRO_PROTO_GPT } =
   process.env;
@@ -43,7 +45,6 @@ async function bootstrap() {
   // TODO: 改写 PrismaClientExceptionFilter
   // TODO: add custom prisma logger loggingMiddleware
   // const { httpAdapter } = app.get(HttpAdapterHost);
-  // console.log(httpAdapter, 233);
 
   // app.useGlobalFilters(
   //   new PrismaClientExceptionFilter(httpAdapter, {
@@ -65,7 +66,7 @@ async function bootstrap() {
 
   /*  prisma shutdown hook */
   const customPrismaService: CustomPrismaService<PrismaClient> = app.get(
-    PRISMA_CLIENT_SERVICE_NAME, // 👈 use the same name as in app.module.ts
+    PRISMA_CLIENT_NAME_GPT, // 👈 use the same name as in app.module.ts
   );
   await customPrismaService.enableShutdownHooks(app);
 

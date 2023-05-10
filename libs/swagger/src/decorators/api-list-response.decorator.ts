@@ -3,7 +3,7 @@
  * http swagger Schemas泛型响应结构  ApiResponse list 泛型
  * @Author: hsycc
  * @Date: 2023-04-25 17:31:32
- * @LastEditTime: 2023-05-08 08:49:41
+ * @LastEditTime: 2023-05-10 06:00:20
  * @Description:
  *
  */
@@ -23,8 +23,12 @@ export const ApiListResponse = <TModel extends Type<any>>(model: TModel) => {
               statusCode: { type: 'number', default: 200 },
               message: { type: 'string', default: 'success' },
               data: {
-                type: 'array',
-                items: { $ref: getSchemaPath(model) },
+                properties: {
+                  results: {
+                    type: 'array',
+                    items: { $ref: getSchemaPath(model) },
+                  },
+                },
               },
             },
           },

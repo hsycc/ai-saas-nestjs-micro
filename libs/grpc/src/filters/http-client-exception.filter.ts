@@ -2,7 +2,7 @@
  * 全局过滤器 - 处理 http-client to grpc-server 错误信息
  * @Author: hsycc
  * @Date: 2023-04-24 18:48:48
- * @LastEditTime: 2023-04-26 18:12:32
+ * @LastEditTime: 2023-05-09 22:22:27
  * @Description:
  *
  */
@@ -78,6 +78,12 @@ export class HttpClientExceptionFilter implements ExceptionFilter {
         query: req.query,
         body: req.body,
       }),
+      HttpClientExceptionFilter.name,
+    );
+
+    this.logger.error(
+      `err detail:`,
+      JSON.stringify(errRes),
       HttpClientExceptionFilter.name,
     );
 

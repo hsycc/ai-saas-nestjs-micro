@@ -17,7 +17,7 @@ import {
 import { ClientGrpc } from '@nestjs/microservices';
 import { GptServiceClient, GPT_SERVICE_NAME } from '@proto/gen/gpt.pb';
 import { ApiTags } from '@nestjs/swagger';
-import { ApiAuth } from '../auth/decorators/api-auth.decorator';
+import { Auth } from '../auth/decorators/auth.decorator';
 @ApiTags('gpt')
 @Controller('gpt')
 export class GptController implements OnModuleInit {
@@ -35,7 +35,7 @@ export class GptController implements OnModuleInit {
    * 列出当前可用的型号，并提供每个型号的基本信息，如所有者和可用性。
    */
   @Get('models')
-  @ApiAuth()
+  @Auth()
   private async listModels() {
     //
   }

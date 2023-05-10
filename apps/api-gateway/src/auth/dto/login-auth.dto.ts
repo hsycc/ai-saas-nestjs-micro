@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-08 07:16:21
- * @LastEditTime: 2023-05-08 08:03:50
+ * @LastEditTime: 2023-05-10 06:58:01
  * @Description:
  *
  */
@@ -15,7 +15,7 @@ export class LoginAuthDto {
   username: string;
 
   /**
-   * @example 123456
+   * @example 12345678
    **/
   @IsString()
   @MinLength(8)

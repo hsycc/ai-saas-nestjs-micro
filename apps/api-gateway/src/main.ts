@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 12:44:18
- * @LastEditTime: 2023-05-09 05:29:31
+ * @LastEditTime: 2023-05-09 22:27:11
  * @Description:
  *
  */
@@ -19,7 +19,7 @@ import { HttpLoggingInterceptor, CreateLoggerOption } from '@lib/logger';
 import {
   GrpcToHttpInterceptor,
   HttpClientExceptionFilter,
-  // HttpBodyValidationPipe,
+  HttpBodyValidationPipe,
 } from '@lib/grpc';
 
 import { AppModule } from './app.module';
@@ -60,7 +60,7 @@ async function bootstrap() {
   });
 
   /* 统一验证DTO 抛出指定异常过滤 */
-  // app.useGlobalPipes(new HttpBodyValidationPipe());
+  app.useGlobalPipes(new HttpBodyValidationPipe());
 
   /* 统一请求成功的返回数据 */
   app.useGlobalInterceptors(new HttpTransformInterceptor());

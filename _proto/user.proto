@@ -6,15 +6,15 @@ package user;
 
 service UserService {
 
-  rpc CreateUser(CreateUserRequest) returns (UserModel);
+  rpc createUser(CreateUserRequest) returns (UserModel);
 
-  rpc DeleteUser(QueryUserByIdRequest) returns (google.protobuf.Empty);
+  rpc deleteUser(QueryUserByIdRequest) returns (google.protobuf.Empty);
 
-  rpc UpdateUser(UpdateUserRequest) returns (google.protobuf.Empty);
+  rpc updateUser(UpdateUserRequest) returns (google.protobuf.Empty);
 
-  rpc GetUserByName(QueryUserByNameRequest) returns (UserModel);
-  rpc GetUserById(QueryUserByIdRequest) returns (UserModel);
-  rpc GetUserModelList(google.protobuf.Empty) returns (UserModelList);
+  rpc getUserByName(QueryUserByNameRequest) returns (UserModel);
+  rpc getUserById(QueryUserByIdRequest) returns (UserModel);
+  rpc getUserModelList(google.protobuf.Empty) returns (UserModelList);
 }
 
 enum UserStatusEnum {
@@ -40,8 +40,11 @@ message UserModel {
   double updatedAt = 10;
 }
 
-message UserModelList { repeated UserModel list = 1; }
+message UserModelList { repeated UserModel results = 1; }
 
+message ResultList {
+  repeated UserModel results = 1;
+}
 message CreateUserRequest {
   string username = 1;
   string password = 2;

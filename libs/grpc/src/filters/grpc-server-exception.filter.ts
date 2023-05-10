@@ -2,7 +2,7 @@
  * 全局过滤器 - 处理 grpc-server to http-client  错误信息
  * @Author: hsycc
  * @Date: 2023-04-24 18:48:48
- * @LastEditTime: 2023-05-07 10:06:27
+ * @LastEditTime: 2023-05-10 08:09:25
  * @Description:
  *
  */
@@ -27,7 +27,6 @@ export class GrpcServerExceptionFilter
     private readonly service: string = 'default-service',
   ) {}
   catch(exception: RpcException, host: ArgumentsHost): Observable<any> {
-    console.log(111, 33);
     const error = exception.getError() as GrpcExceptionPayload;
 
     let message: any = error.message;
@@ -69,6 +68,12 @@ export class GrpcServerExceptionFilter
     this.logger.error(
       `${path} payload:`,
       JSON.stringify(data),
+      GrpcServerExceptionFilter.name,
+    );
+
+    this.logger.error(
+      `grpc err detail:`,
+      JSON.stringify(error),
       GrpcServerExceptionFilter.name,
     );
 

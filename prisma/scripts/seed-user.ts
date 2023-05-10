@@ -1,30 +1,35 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-04 03:16:00
- * @LastEditTime: 2023-05-08 08:14:48
+ * @LastEditTime: 2023-05-10 08:07:19
  * @Description:
  *
  */
 // prisma/seed.ts
 
-import { PrismaClient as UserClient } from '.prisma/user-client';
+import { PrismaClient } from '.prisma/user-client';
+import { AkSkUtil, getAesInstance } from '../../libs/common/src';
 import { hashSync, genSaltSync } from 'bcrypt';
+
 // initialize Prisma Client
-const prisma = new UserClient();
+const prisma = new PrismaClient();
 const userMap = [
   {
     id: 'clhcwl1ybq000uau9t67z8xj0',
     username: 'hsycc3333',
-    password: '123456',
+    password: '12345678',
+    ...AkSkUtil.generateKeys(),
   },
   {
     id: 'clhcsprq10000uawc05bf2whi',
     username: 'hsycc',
-    password: '123456',
+    password: '12345678',
+    ...AkSkUtil.generateKeys(),
   },
 ];
 userMap.map((v) => {
   v.password = hashSync(v.password, genSaltSync(10));
+  v.secretKey = getAesInstance(2).encrypt(v.secretKey);
 });
 async function main() {
   // create two dummy articles
@@ -33,6 +38,10 @@ async function main() {
   });
 
   console.log({ post1 });
+
+  const post2 = await prisma.user.findMany();
+
+  console.log({ post2 });
 }
 
 // execute the main function
