@@ -49,7 +49,7 @@ model ChatModel {
   provider    String?  @default("chatgpt") @db.VarChar(50)
   model       String?  @default("gpt-3.5-turbo'") @db.VarChar(50)
   name        String   @db.VarChar(50) // 会话形象名称
-  preset      Json?
+  struct      Json?
   questionTpl String?  @default("%question%") @map("question_tpl")
   userId      String?
   createdAt   DateTime @default(now()) @map("created_at")

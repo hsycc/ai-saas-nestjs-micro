@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../.prisma/user-client"
+  output   = "../prisma/@user-client"
 }
 
 datasource db {
@@ -17,7 +17,7 @@ model User {
   avatar    String   @default("")
   password  String
   status    Int      @default(1)
-  role      Int      @default(0)
+  role      Int      @default(1)
   accessKey String   @default("") @map("access_key")
   secretKey String   @default("") @map("secret_key") // secret_key 
   createdAt DateTime @default(now()) @map("created_at")

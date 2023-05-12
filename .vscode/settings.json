@@ -4,7 +4,7 @@
     "editor.defaultFormatter": "Prisma.prisma"
   },
   "[proto3]": {
-    // "editor.defaultFormatter": "xaver.clang-format"
+    "editor.defaultFormatter": "xaver.clang-format"
   },
   "clang-format.language.javascript.enable": false,
   "clang-format.language.typescript.enable": false,
@@ -92,6 +92,7 @@
     "protoc",
     "protos",
     "srcs",
+    "struct",
     "tsup",
     "uawc"
   ]

@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:08:01
- * @LastEditTime: 2023-05-10 01:49:00
+ * @LastEditTime: 2023-05-11 02:07:26
  * @Description:
  *
  */
@@ -18,7 +18,7 @@ import { GrpcServerExceptionFilter, GrpcBodyValidationPipe } from '@lib/grpc';
 import { SVC_SERVICE_NAME } from './constants';
 
 import { PRISMA_CLIENT_NAME_USER } from '@prisma/scripts/constants';
-import { PrismaClient } from '.prisma/user-client';
+import { PrismaClient } from '@prisma/@user-client';
 const { NODE_ENV, MICRO_DOMAIN_USER, MICRO_PORT_USER, MICRO_PROTO_USER } =
   process.env;
 

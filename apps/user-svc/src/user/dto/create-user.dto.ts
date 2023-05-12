@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-10 02:28:43
- * @LastEditTime: 2023-05-10 02:36:23
+ * @LastEditTime: 2023-05-11 05:42:52
  * @Description:
  *
  */
@@ -18,6 +18,7 @@ export class CreateUserDto implements CreateUserRequest {
   /**
    * @example 12345678
    */
+  @IsString()
   @Length(8)
   password: string;
 }

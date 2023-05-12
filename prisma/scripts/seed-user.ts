@@ -1,13 +1,13 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-04 03:16:00
- * @LastEditTime: 2023-05-10 08:07:19
+ * @LastEditTime: 2023-05-11 10:21:44
  * @Description:
  *
  */
 // prisma/seed.ts
 
-import { PrismaClient } from '.prisma/user-client';
+import { PrismaClient } from '../@user-client';
 import { AkSkUtil, getAesInstance } from '../../libs/common/src';
 import { hashSync, genSaltSync } from 'bcrypt';
 

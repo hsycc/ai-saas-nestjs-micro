@@ -15,7 +15,7 @@ import { AuthController } from './auth.controller';
 import { LocalStrategy } from './strategy/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy';
-import { ApiStrategy } from './strategy/api.strategy';
+import { AkSkStrategy } from './strategy/ak-sk.strategy';
 @Module({
   imports: [
     JwtModule.registerAsync({
@@ -50,7 +50,7 @@ import { ApiStrategy } from './strategy/api.strategy';
     AuthService,
     LocalStrategy,
     JwtStrategy,
-    ApiStrategy,
+    AkSkStrategy,
   ],
   exports: [AuthService],
 })

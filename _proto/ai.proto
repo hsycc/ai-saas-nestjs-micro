@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+// import "google/protobuf/struct.proto";
+// import "google/protobuf/wrappers.proto";
+
+package ai;
+
+service AiService {
+  rpc test(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+}
+
+service AiChatModelService {
+  rpc createChatModel(CreateChatModelRequest) returns (ChatModel);
+
+  rpc deleteChatModel(QueryChatModelByIdRequest)
+      returns (google.protobuf.Empty);
+
+  rpc updateChatModel(UpdateChatModelRequest) returns (google.protobuf.Empty);
+
+  rpc getChatModelById(QueryChatModelByIdRequest) returns (ChatModel);
+  rpc getChatModelList(QueryChatModelListRequest) returns (ChatModelList);
+}
+
+enum StatusEnum {
+  DISABLE = 0;
+  ENABLE = 1;
+}
+
+message Pagination {
+  int32 current = 1;
+  int32 pageSize = 2;
+  int32 total = 3;
+}
+
+message ChatModel {
+  string id = 1;
+  string provider = 2;
+  string model = 3;
+  string name = 4;
+  repeated StructItem struct = 5;
+  string questionTpl = 6;
+  StatusEnum status = 7;
+  string userId = 8;
+  double createdAt = 9;
+  double updatedAt = 10;
+}
+
+message CreateChatModelRequest {
+  string userId = 1;
+  optional string provider = 2;
+  optional string model = 3;
+  string name = 4;
+  repeated StructItem struct = 5;
+  optional string questionTpl = 6;
+}
+
+message StructItem {
+  string key = 1;
+  string value = 2;
+}
+
+message UpdateChatModelRequest {
+  string id = 1;
+  string userId = 2;
+  optional string name = 4;
+  repeated StructItem struct = 5;
+  optional string questionTpl = 6;
+}
+
+message ChatModelList {
+  repeated ChatModel results = 1;
+  Pagination pagination = 2;
+}
+
+message QueryChatModelByIdRequest {
+  string id = 1;
+  string userId = 2;
+}
+
+message QueryChatModelListRequest {
+  string userId = 1;
+  optional int32 current = 2;
+  optional int32 pageSize = 3;
+}

@@ -14,7 +14,7 @@ import { UserModule } from './user/user.module';
 import { SVC_SERVICE_NAME } from './constants';
 import { CustomPrismaModule } from 'nestjs-prisma';
 import { PRISMA_CLIENT_NAME_USER } from '@prisma/scripts/constants';
-import { PrismaClient } from '.prisma/user-client';
+import { PrismaClient } from '@prisma/@user-client';
 @Module({
   imports: [
     ConfigModule.forRoot({

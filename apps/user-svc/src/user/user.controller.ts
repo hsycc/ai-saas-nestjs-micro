@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:08:01
- * @LastEditTime: 2023-05-10 02:53:27
+ * @LastEditTime: 2023-05-11 10:25:38
  * @Description:
  *
  */
@@ -29,7 +29,7 @@ export class UserController {
   ) {}
 
   @GrpcMethod(USER_SERVICE_NAME, 'createUser')
-  private register(payload: CreateUserDto): Promise<UserModel | any> {
+  private register(payload: CreateUserDto): Promise<UserModel> {
     return this.service.createUser(payload);
   }
 

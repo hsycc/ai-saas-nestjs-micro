@@ -2,7 +2,7 @@
  * jwt 认证策略
  * @Author: hsycc
  * @Date: 2023-05-08 09:21:50
- * @LastEditTime: 2023-05-10 07:01:17
+ * @LastEditTime: 2023-05-11 11:39:47
  * @Description:
  *
  */
@@ -38,7 +38,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(
     payload: JwtPayload,
   ): Promise<{ id: string; username: string }> {
-    console.log('jwt ======== validate', 'payload');
+    // console.log('jwt ======== validate', 'payload', payload);
 
     // const user = await authService.validateUser(username, password);
     // TODO: check 用户被删除的情况

@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-07 03:44:52
- * @LastEditTime: 2023-05-10 08:09:21
+ * @LastEditTime: 2023-05-11 14:34:54
  * @Description:
  *
  */
@@ -21,7 +21,7 @@ import { GrpcInternalException } from '@lib/grpc';
 import { genSaltSync, hashSync } from 'bcrypt';
 import { AkSkUtil, getAesInstance } from '@lib/common';
 import { PRISMA_CLIENT_NAME_USER } from '@prisma/scripts/constants';
-import { PrismaClient, Prisma } from '.prisma/user-client';
+import { PrismaClient, Prisma } from '@prisma/@user-client';
 
 @Injectable()
 export class UserService {
@@ -41,48 +41,43 @@ export class UserService {
       password: hashSync(password, genSaltSync(10)),
       ...keys,
     };
-    const user = await this.prisma.client.user.create({
-      data,
-    });
-    return user as unknown as UserModel;
+    try {
+      const user = await this.prisma.client.user.create({
+        data,
+      });
+      return user as unknown as UserModel;
+    } catch (error) {
+      throw new GrpcInternalException();
+    }
   }
 
   async deleteUser(dto: QueryUserByIdDto): Promise<void> {
     const { id } = dto;
-    const user = await this.prisma.client.user.delete({ where: { id } });
-    if (!user) {
-      throw new GrpcInternalException('User not found');
+    // TODO: 拦截 prisma 的异常抛出
+    try {
+      await this.prisma.client.user.delete({ where: { id } });
+    } catch (error) {
+      throw new GrpcInternalException();
     }
   }
 
   async updateUser(dto: UpdateUserDto): Promise<void> {
-    const { id, avatar, password, status, role, accessKey, secretKey } = dto;
-    const updateData: Prisma.UserUpdateInput = {};
-    if (avatar) {
-      updateData.avatar = avatar;
-    }
-    if (password) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      updateData.password = hashedPassword;
-    }
-    if (status) {
-      updateData.status = status;
-    }
-    if (role) {
-      updateData.role = role;
-    }
-    if (accessKey) {
-      updateData.accessKey = accessKey;
-    }
-    if (secretKey) {
-      updateData.secretKey = secretKey;
-    }
-    const user = await this.prisma.client.user.update({
+    const { id } = dto;
+    const updateData: Prisma.UserUpdateInput = {
+      ...dto,
+    };
+
+    await this.prisma.client.user.update({
       where: { id },
       data: updateData,
     });
-    if (!user) {
-      throw new GrpcInternalException('User not found');
+    try {
+      await this.prisma.client.user.update({
+        where: { id },
+        data: updateData,
+      });
+    } catch (error) {
+      throw new GrpcInternalException();
     }
   }
 
@@ -91,10 +86,7 @@ export class UserService {
     const user = await this.prisma.client.user.findUnique({
       where: { username },
     });
-    if (!user) {
-      throw new GrpcInternalException('User not found');
-    }
-    return user as unknown as UserModel;
+    return (user as unknown as UserModel) || null;
   }
 
   async getUserById(dto: QueryUserByIdDto): Promise<UserModel> {
@@ -103,7 +95,7 @@ export class UserService {
       where: { id },
     });
     if (!user) {
-      throw new GrpcInternalException('User not found');
+      throw new GrpcInternalException('Not found');
     }
     return user as unknown as UserModel;
   }

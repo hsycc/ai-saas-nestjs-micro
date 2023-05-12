@@ -10,6 +10,7 @@ specifiers:
   '@nestjs/config': ^2.3.1
   '@nestjs/core': ^9.0.0
   '@nestjs/jwt': ^10.0.3
+  '@nestjs/mapped-types': '*'
   '@nestjs/microservices': ^9.4.0
   '@nestjs/passport': ^9.0.3
   '@nestjs/platform-express': ^9.0.0
@@ -63,6 +64,7 @@ specifiers:
   passport-strategy: ^1.0.0
   prettier: ^2.3.2
   prisma: ^4.14.0
+  protobufjs: ^7.2.3
   reflect-metadata: ^0.1.13
   rimraf: ^5.0.0
   rxjs: ^7.2.0
@@ -84,6 +86,7 @@ dependencies:
   '@nestjs/config': 2.3.1_ojtg6vwerx6d3743ed2mz2c5uy
   '@nestjs/core': 9.4.0_yn6wkbpy63w25j7vqpaxxesoiu
   '@nestjs/jwt': 10.0.3_@nestjs+common@9.4.0
+  '@nestjs/mapped-types': 1.2.2_jbpjjfk2f2t4q57zuyaqjyvrsi
   '@nestjs/microservices': 9.4.0_awmahjs7nezfwva5onvrighyxi
   '@nestjs/passport': 9.0.3_xygznos57mh4mi6h22se6rwjhq
   '@nestjs/platform-express': 9.4.0_gqkob5jndcfeb3wjw72wbdwyne
@@ -113,6 +116,7 @@ dependencies:
   passport-jwt: 4.0.1
   passport-local: 1.0.0
   passport-strategy: 1.0.0
+  protobufjs: 7.2.3
   reflect-metadata: 0.1.13
   rxjs: 7.8.0
   winston: 3.8.2

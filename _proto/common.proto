@@ -1,0 +1,4 @@
+enum StatusEnum {
+  DISABLE = 0;
+  ENABLE = 1;
+}

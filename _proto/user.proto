@@ -23,8 +23,8 @@ enum UserStatusEnum {
 }
 
 enum UserRolesEnum {
-  USER = 0;
-  ADMIN = 1;
+  ADMIN = 0;
+  USER = 1;
 }
 
 message UserModel {
@@ -42,9 +42,6 @@ message UserModel {
 
 message UserModelList { repeated UserModel results = 1; }
 
-message ResultList {
-  repeated UserModel results = 1;
-}
 message CreateUserRequest {
   string username = 1;
   string password = 2;

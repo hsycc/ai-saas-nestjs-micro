@@ -1,7 +1,7 @@
 <!--
  * @Author: hsycc
  * @Date: 2023-05-05 04:04:36
- * @LastEditTime: 2023-05-06 03:16:37
+ * @LastEditTime: 2023-05-11 12:45:19
  * @Description:
  *
 -->
@@ -13,3 +13,17 @@
 [Nestjs gRPC](https://docs.nestjs.com/microservices/grpc)
 [ts-proto](https://github.com/stephenh/ts-proto)
 [2 分钟学会 Protocol Buffer 语法](https://juejin.cn/post/7028110964763410445)
+
+### proto3
+
+```ts
+// 时间戳 double
+
+// 可选 optional
+
+// 定义 字段 为json
+//  google.protobuf.Struct struct = 1
+
+// 定义 字段 为 数组
+//  message ChatModelList { repeated ChatModel results = 1; }
+```

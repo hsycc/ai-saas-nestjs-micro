@@ -1,7 +1,7 @@
 <!--
  * @Author: hsycc
  * @Date: 2023-04-19 12:43:27
- * @LastEditTime: 2023-05-10 08:20:22
+ * @LastEditTime: 2023-05-11 15:46:25
  * @Description:
  *
 -->
@@ -106,9 +106,26 @@
 
 - 鉴权逻辑均放在 api-gateway/auth 模块当中, 数据结构验证也放在 网关服务处理
 - [ ] 设计 ak、sk 签名流程
-- [ ] ak/sk 自定义 Passport 插件编码 ApiStrategy
+- [ ] ak/sk 自定义 Passport 插件编码 AkSkStrategy
 - [ ] 改写 rpcExceptions 的抛出逻辑
-- [ ] proto return google.protobuf.Empty 的
+- [ ] rpcExceptions 异常枚举值定义
+- [ ] rpc 服务挂掉的异常捕获
+- [ ] rpc 序列化 JSON.parse 的异常捕获
+- [ ] prisma 中间件 （logger 异常抛出, findFirstOrThrow ）
+- [ ] proto 定义的字段为数组且值为空， 反序列化时 该字段会丢失，研究下怎么解决
+- [ ] proto return google.protobuf.Empty 的 详细了解
 - [ ] proto prisma 分页查询处理
-- [ ] postresql 默认显示的时区问题, 设置为 utc-8
+- [ ] .prisma 软删除设计
+- [ ] prisma model 硬编码 成 proto3 的 message
+- [ ] postgresql 默认显示的时区问题, 设置为 utc-8
 - [ ] https://github.com/prisma/prisma/issues/5051 prisma 是有记录偏移量
+
+## openai
+
+chat/completions
+
+system 类的聊天消息通常是指代当前聊天会话的全局信息，例如聊天会话的 ID、当前的时间戳、当前的聊天主题等。这些信息对于聊天机器人来说非常重要，因为它们可以帮助聊天机器人更好地理解当前聊天上下文，从而生成更准确的自动补全建议。
+
+另一方面，assistant 类的聊天消息通常是指代聊天机器人自身的信息，例如聊天机器人的名称、聊天机器人的介绍、聊天机器人的提示等。这些信息通常是由聊天机器人自己发出的，用于与用户进行互动，并帮助用户更好地了解聊天机器人。
+
+因此，system 和 assistant 这两个类别的聊天消息在 OpenAI 聊天接口中扮演着非常重要的角色，它们可以帮助聊天机器人更好地理解当前聊天上下文，从而生成更准确的自动补全建议。

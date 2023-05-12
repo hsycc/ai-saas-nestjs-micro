@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-26 14:31:24
- * @LastEditTime: 2023-05-10 08:15:43
+ * @LastEditTime: 2023-05-11 11:21:12
  * @Description:
  *
  */
@@ -12,34 +12,34 @@ import {
   OnModuleInit,
   Get,
   Post,
+  Delete,
   Patch,
-  UseGuards,
+  Param,
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
-import {
-  UserServiceClient,
-  USER_SERVICE_NAME,
-  UserModel,
-} from '@proto/gen/user.pb';
+
+import { ApiParam, ApiTags } from '@nestjs/swagger';
+
 import { Metadata } from '@grpc/grpc-js';
 
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guard';
-import { CurrentUser } from '../auth/decorators/user.decorator';
-import {
-  CreateUserDto,
-  UpdateUserPublicDto,
-  UpdateUserPrivateDto,
-} from '@app/user-svc/user/dto';
-import { UserEntity } from '@app/user-svc/user/entities/user.entity';
 import {
   ApiBaseResponse,
   ApiListResponse,
   ApiObjResponse,
   BaseApiExtraModels,
 } from '@lib/swagger';
+
 import { AkSkUtil } from '@lib/common';
+
+import { UserServiceClient, USER_SERVICE_NAME } from '@proto/gen/user.pb';
+import {
+  CreateUserDto,
+  UpdateUserPublicDto,
+  UpdateUserPrivateDto,
+} from '@app/user-svc/user/dto';
+import { UserEntity } from '@app/user-svc/user/entities/user.entity';
+import { Auth } from '../auth/decorators/auth.decorator';
+import { CurrentUser } from '../auth/decorators/user.decorator';
 
 @ApiTags('user')
 @Controller('user')
@@ -57,54 +57,22 @@ export class UserController implements OnModuleInit {
   }
 
   /**
-   * 注册渠道用户, 需要做 权限控制
-   */
-  @Post('register')
-  @ApiObjResponse(UserEntity)
-  async register(
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<Observable<UserModel>> {
-    return this.svc.createUser(createUserDto, new Metadata());
-  }
-  /**
-   * 更新渠道用户的状态, 需要做 权限控制
-   */
-  @Patch('update_security')
-  @ApiBaseResponse()
-  private async updateSecurity(
-    @Body() updateUserPrivateDto: UpdateUserPrivateDto,
-  ) {
-    return this.svc.updateUser(updateUserPrivateDto, new Metadata());
-  }
-
-  /**
-   * 获取渠道用户,需要做 权限控制
-   */
-  @Get('list')
-  @ApiListResponse(UserEntity)
-  private async userList() {
-    return this.svc.getUserModelList({}, new Metadata());
-  }
-
-  /**
-   * 获取当前登录状态下渠道用户的信息, 需要 accessToken
+   * 获取当前登录状态下渠道用户的信息
    */
   @Get('current')
+  @Auth('jwt')
   @ApiObjResponse(UserEntity)
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   private async current(@CurrentUser() id) {
     return this.svc.getUserById({ id }, new Metadata());
   }
 
   /**
-   * 更新用户信息, 需要 accessToken
+   * 更新用户信息
    */
   @Patch('update')
+  @Auth('jwt')
   @ApiBaseResponse()
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
-  private async update(
+  private async updateUser(
     @CurrentUser() id,
     @Body() updateUserPublicDto: UpdateUserPublicDto,
   ) {
@@ -118,12 +86,11 @@ export class UserController implements OnModuleInit {
   }
 
   /**
-   * 更新用户密钥对 需要 accessToken
+   * 更新用户密钥对
    */
   @Patch('update_keys')
+  @Auth('jwt')
   @ApiBaseResponse()
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   private async updateKeys(@CurrentUser() id) {
     return this.svc.updateUser(
       {
@@ -132,5 +99,60 @@ export class UserController implements OnModuleInit {
       },
       new Metadata(),
     );
+  }
+
+  /**
+   * 注册渠道用户, 权限控制未做
+   */
+  @Post('register')
+  @ApiObjResponse(UserEntity)
+  async register(@Body() createUserDto: CreateUserDto) {
+    return this.svc.createUser(createUserDto, new Metadata());
+  }
+
+  /**
+   * 删除渠道,权限控制未做
+   */
+  @Delete('id')
+  @ApiBaseResponse()
+  @ApiParam({
+    name: 'id',
+    example: 'clhcsprq10000uawc05bf2whi',
+  })
+  private async deleteUser(@Param('id') id: string) {
+    return this.svc.deleteUser({ id }, new Metadata());
+  }
+
+  /**
+   * 更新渠道用户的状态, 权限控制未做
+   */
+  @Patch('update_security')
+  @ApiBaseResponse()
+  private async updateSecurity(
+    @Body() updateUserPrivateDto: UpdateUserPrivateDto,
+  ) {
+    return this.svc.updateUser(updateUserPrivateDto, new Metadata());
+  }
+
+  /**
+   * 获取渠道用户列表,权限控制未做, 分页未做
+   */
+  @Get()
+  @ApiListResponse(UserEntity)
+  private async userList() {
+    return this.svc.getUserModelList({}, new Metadata());
+  }
+
+  /**
+   * 获取渠道用户信息,权限控制未做
+   */
+  @Get('/:id')
+  @ApiObjResponse(UserEntity)
+  @ApiParam({
+    name: 'id',
+    example: 'clhcsprq10000uawc05bf2whi',
+  })
+  private async getUserById(@Param('id') id: string) {
+    return this.svc.getUserById({ id }, new Metadata());
   }
 }

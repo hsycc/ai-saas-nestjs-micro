@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-09 01:59:15
- * @LastEditTime: 2023-05-09 03:31:39
+ * @LastEditTime: 2023-05-12 08:13:51
  * @Description:
  *
  */
@@ -20,7 +20,7 @@ module.exports = {
   // askForBreakingChangeFirst : true, // default is false
 
   // 自定义选项
-  scopes: ['', 'api-gateway', 'user-svc', 'gpt-svc'],
+  scopes: ['', 'api-gateway', 'user-svc', 'ai-svc'],
   // // it needs to match the value for field type. Eg.: 'fix'
   // scopeOverrides: {
   //   feat: [],

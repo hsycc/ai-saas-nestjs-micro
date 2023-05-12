@@ -42,6 +42,15 @@
         "tsConfigPath": "apps/user-svc/tsconfig.app.json"
       }
     },
+    "ai-svc": {
+      "type": "application",
+      "root": "apps/ai-svc",
+      "entryFile": "main",
+      "sourceRoot": "apps/ai-svc/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/ai-svc/tsconfig.app.json"
+      }
+    },
     "gpt-svc": {
       "type": "application",
       "root": "apps/gpt-svc",

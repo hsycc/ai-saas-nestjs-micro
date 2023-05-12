@@ -1,3 +1,10 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-05-09 03:52:25
+ * @LastEditTime: 2023-05-10 23:55:41
+ * @Description:
+ *
+ */
 export interface ConfigType {
   JwtConfigType;
   GptConfigType;
@@ -27,6 +34,10 @@ export interface MicroConfigType {
   microDomainGpt: string;
   microPortGpt: string;
   microProtoGpt: string;
+
+  microDomainAi: string;
+  microPortAi: string;
+  microProtoAi: string;
 }
 
 export interface OssConfigType {

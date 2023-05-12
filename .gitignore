@@ -34,11 +34,11 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-config.yaml
-
 .env
-
 /documentation
-
 /.prisma
-@*-client
+/prisma/@*-client
+
+scripts/develop-cli.md
+
+scripts/gen-*

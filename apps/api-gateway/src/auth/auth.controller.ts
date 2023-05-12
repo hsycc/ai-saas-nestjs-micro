@@ -1,15 +1,14 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-08 04:23:31
- * @LastEditTime: 2023-05-10 08:16:08
+ * @LastEditTime: 2023-05-11 08:21:18
  * @Description:
  *
  */
 import { Request } from 'express';
 import { ClientGrpc } from '@nestjs/microservices';
-import { Controller, Inject, Post, Put, Req, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Inject, Delete, Put, Req } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import {
   USER_SERVICE_NAME,
@@ -18,13 +17,9 @@ import {
 } from '@proto/gen/user.pb';
 
 import { AuthService } from './auth.service';
-import { AccessTokenDto, LoginAuthDto } from './dto';
-import { JwtAuthGuard, LocalAuthGuard } from './guard';
-import {
-  ApiBaseResponse,
-  ApiObjResponse,
-  BaseApiExtraModels,
-} from '@lib/swagger';
+import { AccessTokenDto } from './dto';
+import { ApiBaseResponse, BaseApiExtraModels } from '@lib/swagger';
+import { Auth } from './decorators/auth.decorator';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -41,26 +36,24 @@ export class AuthController {
     this.svc = this.client.getService<UserServiceClient>(USER_SERVICE_NAME);
   }
 
+  // TODO: save token in redis
   /**
    * 渠道用户登录
    */
-  @Post('login')
-  @UseGuards(LocalAuthGuard)
-  @ApiBody({ type: LoginAuthDto })
-  @ApiObjResponse(AccessTokenDto)
+  @Put('login')
+  @Auth('local')
   private async login(@Req() req: Request) {
     return this.authService.login(req.user as UserModel);
   }
 
+  // TODO: delete token in redis
   /**
    * 渠道用户登出
    */
-  @Put('logout')
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  @Delete('logout')
+  @Auth('jwt')
   @ApiBaseResponse()
   private async logout() {
-    return 'logout';
-    //
+    // return 'logout';
   }
 }

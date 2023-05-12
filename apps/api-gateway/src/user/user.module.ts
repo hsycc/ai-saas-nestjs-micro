@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:03:20
- * @LastEditTime: 2023-05-09 07:32:09
+ * @LastEditTime: 2023-05-10 22:38:34
  * @Description:
  *
  */
@@ -12,7 +12,6 @@ import { MicroConfigType } from '@lib/config';
 import { USER_SERVICE_NAME, USER_PACKAGE_NAME } from '@proto/gen/user.pb';
 import { UserController } from './user.controller';
 @Module({
-  imports: [],
   controllers: [UserController],
   providers: [
     {
@@ -31,6 +30,5 @@ import { UserController } from './user.controller';
       inject: [ConfigService],
     },
   ],
-  exports: [],
 })
 export class UserModule {}

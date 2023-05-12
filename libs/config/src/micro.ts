@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-20 18:07:23
- * @LastEditTime: 2023-05-05 19:23:49
+ * @LastEditTime: 2023-05-10 23:57:23
  * @Description:
  *
  */
@@ -15,4 +15,8 @@ export const MicroConfig = registerAs('MicroConfig', () => ({
   microDomainGpt: process.env.MICRO_DOMAIN_GPT,
   microPortGpt: process.env.MICRO_PORT_GPT,
   microProtoGpt: process.env.MICRO_PROTO_GPT,
+
+  microDomainAi: process.env.MICRO_DOMAIN_AI,
+  microPortAi: process.env.MICRO_PORT_AI,
+  microProtoAi: process.env.MICRO_PROTO_AI,
 }));

@@ -1,19 +1,11 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:03:20
- * @LastEditTime: 2023-05-06 09:57:21
+ * @LastEditTime: 2023-05-10 22:16:44
  * @Description:
  *
  */
-import {
-  Controller,
-  Inject,
-  OnModuleInit,
-  Get,
-  Post,
-  Put,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Inject, OnModuleInit, Get, Post } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { GptServiceClient, GPT_SERVICE_NAME } from '@proto/gen/gpt.pb';
 import { ApiTags } from '@nestjs/swagger';
@@ -101,30 +93,6 @@ export class GptController implements OnModuleInit {
    */
   @Post('chat/completions')
   private async chatCompletions() {
-    //
-  }
-
-  /**
-   * 创建对话的人物风格形象
-   */
-  @Post('chat/completions/personality')
-  private async createChatPersonality() {
-    //
-  }
-
-  /**
-   * 更新对话的人物风格形象
-   */
-  @Put('chat/completions/personality/update')
-  private async updateChatPersonality() {
-    //
-  }
-
-  /**
-   * 更新对话的人物风格形象
-   */
-  @Delete('chat/completions/personality/delete')
-  private async deleteChatPersonality() {
     //
   }
 
