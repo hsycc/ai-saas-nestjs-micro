@@ -1,124 +1,135 @@
 <!--
  * @Author: hsycc
  * @Date: 2023-04-19 12:43:27
- * @LastEditTime: 2023-05-11 15:46:25
+ * @LastEditTime: 2023-05-12 12:06:26
  * @Description:
  *
 -->
 
-## ai-saas-nestjs-micro
+# ai-saas-nestjs-micro
 
-###
+基于 nestjs prisma grpc 的分布式微服务系统架构设计
 
-- [x] nest-cli monorepo mode create service and library
+## 环境依赖
 
-  - apps 服务目录
-  - libs 公共依赖目录
+- git
+- pnpm
+- node 16.19.1
+- docker 20.10.7
+- docker-compose 1.29.2
+- postgresql 13.5
 
-  ```
-  nest g app user-svc
-  nest g library common
-  // todo: 单独构建 library  "build": "tsup index.ts --format cjs,esm --dts",
-  ```
+## 架构设计
 
+- [x] 基础框架 nestJs (monorepo 模式)
 - [x] 动态配置管理
-
-- [x] 注册 gRPC 微服务
-- [x] gRPC 动态配置
-- [x] protoc 编译 pb 文件以及 docs
-
-  ```bash
-    # 编译 proto
-    make proto-all
-    make proto-user
-    make ...
-
-    # 构建 proto 文档
-    bash script/generate-proto-docs.sh
-
-  ```
-
-- [x] swagger;
-- [x] 切换成 prisma/ postgresql
-- [ ] docker
+- [x] gRPC 动态配置以及注册调用
+- [x] proto 编译管理以及文档生成
+- [x] prisma 数据库查询器
+- [x] swagger
+- [x] docker (配置脚本待优化)
   - [x] dockerfile
   - [x] docker-compose
   - [ ] docker Swarm 集群部署
-- [x] jwt
-  - TODO: 安全拓展
+- [x] jwt (安全拓展待完善)
   - [ ] accessToken & refresh 刷新
   - [ ] logout redis remove jwt sign
-- 调用鉴权设计
+- [x] 鉴权设计
   - [x] local 本地化策略
   - [x] jwt 登录鉴权
-  - [ ] ai-api 调用鉴权
+  - [ ] ak/ks 调用鉴权
+- [ ] 接口调用的幂等设计
+- [ ] 权限设计
 - [ ] 网关监控 健康检查 熔断限流
 - [ ] 缓存
-- [ ] 幂等设计
 - [ ] 日志管理
-- [ ] 链路追踪
-- [ ] 配置中心 nacos
+- [ ] 链路追踪 (skywalking or other)
+- [ ] 配置中心 (nacos or other)
+- [ ] 运维以及容灾设计
 
 ## 业务设计
 
-- [x] 账号体系设计
+- [ ] 账号体系(待完善)
   - [x] 渠道用户管理
+  - [ ] 用户权限
   - [ ] 接入 sms 短信 以及验证码服务
-  - [ ] 权限设计
-- [ ] gpt 会话模型管理
-- [ ] chat-gpt 服务设计
+- [ ] ai 服务
+  - [x] 会话模型管理
+  - [ ] openai(chat-gpt) 能力封装
+  - [ ] 引入 redis 做 gpt 接口调用的限制管理
+  - [ ] 引入 mongo 做 gpt token 消耗的 的账单记录
 
-## tree
+## 如何运行(开发环境)
 
-- [x] rpc
-      grpc-server 和 http-client 管道道数据校验、日志打印、异常抛出、异常状态码枚举管理的封装
-  - ```
-    ├── error
-    │   ├── gen-rpc-exception-error.ts
-    ├── exceptions
-    │   ├── aborted.exception.ts
-    │   ├── already-exists.exception.ts
-    │   ├── cancelled.exception.ts
-    │   ├── internal.exception.ts
-    │   ├── invalid-argument.exception.ts
-    │   ├── not-found.exception.ts
-    │   ├── permission-denied.exception.ts
-    │   ├── resource-exhausted.exception.ts
-    │   ├── unauthenticated.exception.ts
-    │   ├── unavailable.exception.ts
-    │   └── unknown.exception.ts
-    ├── filters
-    │   ├── grpc-server-exception.filter.ts
-    │   ├── http-client-exception.filter.ts
-    ├── interceptors
-    │   ├── grpc-to-http.interceptor.ts
-    │   ├── http-to-grpc.interceptor.ts
-    │   ├── http-transform.interceptor.ts
-    ├── pipes
-    │   ├── grpc-body-validation.pipe.ts
-    │   ├── http-body-validation.pipe.ts
-    └── utils
-        ├── error-object.ts
-        └── http-codes-map.ts
-    ```
+```bash
+
+# 编辑配置文件
+mv .env.example .env
+vim .env
+
+# docker 启动 postgresql (如果开发环境没有安装启动 postgresql )
+# 等价于  "docker-compose -f docker-compose.db.yml up -d",
+pnpm run docker:db
+
+pnpm install
+
+pnpm run start api-gateway
+
+pnpm run start user-svc
+
+pnpm run start ai-svc
+
+```
+
+## Tree
+
+```
+      ├── scripts                   shell 命令
+      ├── docs                      使用的技术栈的文档归纳
+      ├── _proto                    grpc 依赖
+      ├── prisma                    数据库查询器管理
+      │ ├── migrations              prisma 命令生成的 sql 明细
+      │
+      ├── apps                      服务目录
+      │ ├── api-gateway               网关服务
+      │ ├ ├── auth                      网关鉴权相关
+      │ ├── ai-svc                    ai服务相关
+      │ └── user-svc                  用户服务
+      │
+      ├── libs                      依赖库管理
+      │ ├── common                    公共函数相关
+      │ ├── config                    配置管理
+      │ ├── grpc                      封装 rpc 异常抛出拦截、管道数据校验
+      │ ├── logger                    logger 日志打印器的封装
+      │ ├── swagger                   swagger ApiResponse 泛型封装
+      │ └── openai                    open-ai(chat-gpt) 的能力封装
+
+```
 
 ## 备忘
 
-- 鉴权逻辑均放在 api-gateway/auth 模块当中, 数据结构验证也放在 网关服务处理
-- [ ] 设计 ak、sk 签名流程
-- [ ] ak/sk 自定义 Passport 插件编码 AkSkStrategy
-- [ ] 改写 rpcExceptions 的抛出逻辑
-- [ ] rpcExceptions 异常枚举值定义
-- [ ] rpc 服务挂掉的异常捕获
-- [ ] rpc 序列化 JSON.parse 的异常捕获
-- [ ] prisma 中间件 （logger 异常抛出, findFirstOrThrow ）
-- [ ] proto 定义的字段为数组且值为空， 反序列化时 该字段会丢失，研究下怎么解决
-- [ ] proto return google.protobuf.Empty 的 详细了解
-- [ ] proto prisma 分页查询处理
-- [ ] .prisma 软删除设计
-- [ ] prisma model 硬编码 成 proto3 的 message
-- [ ] postgresql 默认显示的时区问题, 设置为 utc-8
-- [ ] https://github.com/prisma/prisma/issues/5051 prisma 是有记录偏移量
+- 鉴权设计
+
+  - 鉴权逻辑均放在 api-gateway/auth 模块当中, 数据结构验证也放在 网关服务处理
+  - [ ] 设计 ak、sk 签名流程 （参考 [百度云市场](https://cloud.baidu.com/doc/Reference/s/Njwvz1wot)）
+  - [ ] ak/sk 自定义 Passport 插件编码 AkSkStrategy
+
+- rpc Exceptions 优化
+
+  - [ ] rpcExceptions 异常枚举值定义 抛出逻辑
+  - [ ] rpc 服务挂掉的异常捕获
+  - [ ] rpc 序列化 JSON.parse 的异常捕获
+
+- prisma
+
+  - [ ] prisma 中间件 （logger 异常抛出, findFirstOrThrow ）
+  - [ ] prisma 软删除设计
+  - [ ] prisma model 硬编码 成 proto3 的 message 脚本
+  - [ ] 研究下 postgresql 默认显示的时区问题, 设置为 utc-8, prisma 存储的日期格式是有记录时区偏移量[https://github.com/prisma/prisma/issues/5051]
+
+- proto
+  - [ ] proto 定义的字段为数组且值为空， 反序列化时 该字段会丢失，研究下怎么解决
+  - [ ] proto return google.protobuf.Empty 的 详细了解
 
 ## openai
 

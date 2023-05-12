@@ -1,7 +1,7 @@
 <!--
  * @Author: hsycc
  * @Date: 2023-05-05 04:04:36
- * @LastEditTime: 2023-05-11 12:45:19
+ * @LastEditTime: 2023-05-12 10:44:59
  * @Description:
  *
 -->
@@ -26,4 +26,17 @@
 
 // 定义 字段 为 数组
 //  message ChatModelList { repeated ChatModel results = 1; }
+```
+
+### 编译
+
+```bash
+  # 编译 proto
+  make proto-all
+  make proto-user
+  make ...
+
+  # 构建 proto 文档
+  bash script/generate-proto-docs.sh
+
 ```

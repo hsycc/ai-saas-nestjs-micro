@@ -44,6 +44,9 @@ services:
     # 覆盖容器启动后默认执行的命令, 支持 shell 格式和 [] 格式
     command: node ./dist/apps/gpt-svc/main
 
+    # volumes:
+    #   - ./monorepo/apps/user-svc:/app
+
   # postgres:
   #   image: postgres:13.5
   #   container_name: postgres

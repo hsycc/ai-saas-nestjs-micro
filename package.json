@@ -71,6 +71,7 @@
     "nest-winston": "^1.9.1",
     "nestjs-prisma": "^0.20.0",
     "node-rsa": "^1.1.1",
+    "openai": "^3.2.1",
     "passport": "^0.6.0",
     "passport-custom": "^1.1.1",
     "passport-jwt": "^4.0.1",
