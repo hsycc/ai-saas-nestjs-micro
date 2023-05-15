@@ -1,13 +1,12 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-07 03:44:52
- * @LastEditTime: 2023-05-11 14:34:54
+ * @LastEditTime: 2023-05-15 15:41:28
  * @Description:
  *
  */
 import { Inject, Injectable } from '@nestjs/common';
 
-import * as bcrypt from 'bcrypt';
 import { CustomPrismaService } from 'nestjs-prisma';
 
 import { UserModelList, UserModel } from '@proto/gen/user.pb';
@@ -16,10 +15,11 @@ import {
   QueryUserByNameDto,
   CreateUserDto,
   UpdateUserDto,
+  QueryUserByAccessKeyDto,
 } from './dto';
 import { GrpcInternalException } from '@lib/grpc';
 import { genSaltSync, hashSync } from 'bcrypt';
-import { AkSkUtil, getAesInstance } from '@lib/common';
+import { generateKeyPair, getAesInstance } from '@lib/common';
 import { PRISMA_CLIENT_NAME_USER } from '@prisma/scripts/constants';
 import { PrismaClient, Prisma } from '@prisma/@user-client';
 
@@ -33,7 +33,7 @@ export class UserService {
   async createUser(dto: CreateUserDto): Promise<UserModel> {
     const { username, password } = dto;
 
-    const keys = AkSkUtil.generateKeys();
+    const keys = generateKeyPair();
     keys.secretKey = getAesInstance(2).encrypt(keys.secretKey);
 
     const data: Prisma.UserCreateInput = {
@@ -79,6 +79,16 @@ export class UserService {
     } catch (error) {
       throw new GrpcInternalException();
     }
+  }
+
+  async getUserByAccessKey(
+    dto: QueryUserByAccessKeyDto,
+  ): Promise<UserModel | null> {
+    const { accessKey } = dto;
+    const user = await this.prisma.client.user.findUnique({
+      where: { accessKey },
+    });
+    return (user as unknown as UserModel) || null;
   }
 
   async getUserByName(dto: QueryUserByNameDto): Promise<UserModel | null> {

@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:08:01
- * @LastEditTime: 2023-05-11 10:25:38
+ * @LastEditTime: 2023-05-15 14:12:03
  * @Description:
  *
  */
@@ -19,6 +19,7 @@ import {
   QueryUserByIdDto,
   UpdateUserDto,
   QueryUserByNameDto,
+  QueryUserByAccessKeyDto,
 } from './dto';
 
 @Controller()
@@ -46,6 +47,13 @@ export class UserController {
   @GrpcMethod(USER_SERVICE_NAME, 'getUserById')
   private getUserById(payload: QueryUserByIdDto): Promise<UserModel> {
     return this.service.getUserById(payload);
+  }
+
+  @GrpcMethod(USER_SERVICE_NAME, 'getUserByAccessKey')
+  private getUserByAccessKey(
+    payload: QueryUserByAccessKeyDto,
+  ): Promise<UserModel> {
+    return this.service.getUserByAccessKey(payload);
   }
 
   @GrpcMethod(USER_SERVICE_NAME, 'getUserByName')

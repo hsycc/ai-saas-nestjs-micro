@@ -18,7 +18,7 @@ model User {
   password  String
   status    Int      @default(1)
   role      Int      @default(1)
-  accessKey String   @default("") @map("access_key")
+  accessKey String   @unique @default("") @map("access_key")
   secretKey String   @default("") @map("secret_key") // secret_key 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

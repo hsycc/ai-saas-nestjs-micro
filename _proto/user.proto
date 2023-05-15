@@ -12,6 +12,7 @@ service UserService {
 
   rpc updateUser(UpdateUserRequest) returns (google.protobuf.Empty);
 
+  rpc getUserByAccessKey(QueryUserByAccessKeyRequest) returns (UserModel);
   rpc getUserByName(QueryUserByNameRequest) returns (UserModel);
   rpc getUserById(QueryUserByIdRequest) returns (UserModel);
   rpc getUserModelList(google.protobuf.Empty) returns (UserModelList);
@@ -60,3 +61,5 @@ message UpdateUserRequest {
 message QueryUserByIdRequest { string id = 1; }
 
 message QueryUserByNameRequest { string username = 1; }
+
+message QueryUserByAccessKeyRequest { string accessKey = 1; }

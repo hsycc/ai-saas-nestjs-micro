@@ -1,14 +1,14 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 12:44:18
- * @LastEditTime: 2023-05-11 04:57:14
+ * @LastEditTime: 2023-05-15 13:09:19
  * @Description:
  *
  */
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
-import { JwtConfig, MicroConfig } from '@lib/config';
+import { GptConfig, JwtConfig, MicroConfig } from '@lib/config';
 import { CreateLoggerOption } from '@lib/logger';
 
 import { service } from './main';
@@ -21,7 +21,7 @@ import { AiModule } from './ai/ai.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [MicroConfig, JwtConfig],
+      load: [MicroConfig, JwtConfig, GptConfig],
       isGlobal: true,
     }),
 

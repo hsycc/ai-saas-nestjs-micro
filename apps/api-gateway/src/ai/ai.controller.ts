@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-10 23:21:34
- * @LastEditTime: 2023-05-11 18:32:16
+ * @LastEditTime: 2023-05-15 13:10:07
  * @Description:
  *
  */
@@ -18,7 +18,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiExtension, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   ApiBaseResponse,
   ApiListResponse,
@@ -40,6 +40,8 @@ import {
 } from 'apps/ai-svc/src/chat/dto';
 import { CurrentUser } from '../auth/decorators/user.decorator';
 import { Auth } from '../auth/decorators/auth.decorator';
+import { ChatDto } from './chat.dto';
+import { OpenaiService } from './open-ai.service';
 
 @ApiTags('ai')
 @Controller('ai')
@@ -50,6 +52,8 @@ export class AiController implements OnModuleInit {
   constructor(
     @Inject(AI_CHAT_MODEL_SERVICE_NAME)
     private readonly client: ClientGrpc,
+
+    private readonly openaiService: OpenaiService,
   ) {}
 
   public onModuleInit(): void {
@@ -63,7 +67,9 @@ export class AiController implements OnModuleInit {
    */
   @Post('invoke/chat')
   @Auth('ak/sk')
-  private async chat() {}
+  private async chat(@Body() chatDto: ChatDto) {
+    return this.openaiService.chat(chatDto);
+  }
 
   /**
    *  渠道设备调用 ai stt 能力
@@ -77,6 +83,7 @@ export class AiController implements OnModuleInit {
    */
   @Post('invoke/tts')
   @Auth('ak/sk')
+  @ApiExtension('x-foo', { hello: 'world' })
   private async tts() {}
 
   /**

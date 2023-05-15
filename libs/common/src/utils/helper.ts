@@ -1,3 +1,10 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-05-09 03:52:09
+ * @LastEditTime: 2023-05-15 19:04:40
+ * @Description:
+ *
+ */
 import * as process from 'process';
 import * as moment from 'moment';
 export default class Utils {

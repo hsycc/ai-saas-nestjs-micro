@@ -58,6 +58,10 @@ export interface QueryUserByNameRequest {
   username: string;
 }
 
+export interface QueryUserByAccessKeyRequest {
+  accessKey: string;
+}
+
 export const USER_PACKAGE_NAME = "user";
 
 export interface UserServiceClient {
@@ -66,6 +70,8 @@ export interface UserServiceClient {
   deleteUser(request: QueryUserByIdRequest, metadata: Metadata, ...rest: any): Observable<Empty>;
 
   updateUser(request: UpdateUserRequest, metadata: Metadata, ...rest: any): Observable<Empty>;
+
+  getUserByAccessKey(request: QueryUserByAccessKeyRequest, metadata: Metadata, ...rest: any): Observable<UserModel>;
 
   getUserByName(request: QueryUserByNameRequest, metadata: Metadata, ...rest: any): Observable<UserModel>;
 
@@ -84,6 +90,12 @@ export interface UserServiceController {
   deleteUser(request: QueryUserByIdRequest, metadata: Metadata, ...rest: any): void;
 
   updateUser(request: UpdateUserRequest, metadata: Metadata, ...rest: any): void;
+
+  getUserByAccessKey(
+    request: QueryUserByAccessKeyRequest,
+    metadata: Metadata,
+    ...rest: any
+  ): Promise<UserModel> | Observable<UserModel> | UserModel;
 
   getUserByName(
     request: QueryUserByNameRequest,
@@ -110,6 +122,7 @@ export function UserServiceControllerMethods() {
       "createUser",
       "deleteUser",
       "updateUser",
+      "getUserByAccessKey",
       "getUserByName",
       "getUserById",
       "getUserModelList",

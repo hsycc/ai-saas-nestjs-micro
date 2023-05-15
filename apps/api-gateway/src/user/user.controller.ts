@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-26 14:31:24
- * @LastEditTime: 2023-05-11 11:21:12
+ * @LastEditTime: 2023-05-15 15:41:41
  * @Description:
  *
  */
@@ -29,7 +29,7 @@ import {
   BaseApiExtraModels,
 } from '@lib/swagger';
 
-import { AkSkUtil } from '@lib/common';
+import { generateKeyPair } from '@lib/common';
 
 import { UserServiceClient, USER_SERVICE_NAME } from '@proto/gen/user.pb';
 import {
@@ -95,7 +95,7 @@ export class UserController implements OnModuleInit {
     return this.svc.updateUser(
       {
         id,
-        ...AkSkUtil.generateKeys(),
+        ...generateKeyPair(),
       },
       new Metadata(),
     );

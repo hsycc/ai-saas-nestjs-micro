@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-11 14:17:15
- * @LastEditTime: 2023-05-11 14:27:34
+ * @LastEditTime: 2023-05-15 15:42:52
  * @Description:
  *
  */
@@ -13,6 +13,7 @@ import {
 
 @ValidatorConstraint({ name: 'isValidStruct', async: false })
 export class IsValidStruct implements ValidatorConstraintInterface {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   validate(value: any, args: ValidationArguments) {
     if (value === null) {
       return true;

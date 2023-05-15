@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-10 23:21:24
- * @LastEditTime: 2023-05-11 06:22:22
+ * @LastEditTime: 2023-05-15 13:08:22
  * @Description:
  *
  */
@@ -16,6 +16,7 @@ import {
   AI_PACKAGE_NAME,
   AI_SERVICE_NAME,
 } from '@proto/gen/ai.pb';
+import { OpenaiService } from './open-ai.service';
 
 @Module({
   controllers: [AiController],
@@ -50,6 +51,7 @@ import {
       },
       inject: [ConfigService],
     },
+    OpenaiService,
   ],
 })
 export class AiModule {}

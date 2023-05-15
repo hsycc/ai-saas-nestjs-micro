@@ -1,14 +1,14 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-04 03:16:00
- * @LastEditTime: 2023-05-11 10:21:44
+ * @LastEditTime: 2023-05-15 15:41:05
  * @Description:
  *
  */
 // prisma/seed.ts
 
 import { PrismaClient } from '../@user-client';
-import { AkSkUtil, getAesInstance } from '../../libs/common/src';
+import { generateKeyPair, getAesInstance } from '../../libs/common/src';
 import { hashSync, genSaltSync } from 'bcrypt';
 
 // initialize Prisma Client
@@ -18,13 +18,13 @@ const userMap = [
     id: 'clhcwl1ybq000uau9t67z8xj0',
     username: 'hsycc3333',
     password: '12345678',
-    ...AkSkUtil.generateKeys(),
+    ...generateKeyPair(),
   },
   {
     id: 'clhcsprq10000uawc05bf2whi',
     username: 'hsycc',
     password: '12345678',
-    ...AkSkUtil.generateKeys(),
+    ...generateKeyPair(),
   },
 ];
 userMap.map((v) => {

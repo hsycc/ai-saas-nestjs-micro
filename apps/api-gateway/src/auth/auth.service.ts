@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-08 04:23:31
- * @LastEditTime: 2023-05-10 08:19:23
+ * @LastEditTime: 2023-05-15 14:12:35
  * @Description:
  *
  */
@@ -31,6 +31,19 @@ export class AuthService {
 
   public onModuleInit(): void {
     this.svc = this.client.getService<UserServiceClient>(USER_SERVICE_NAME);
+  }
+
+  async validateAccessKey(accessKey: string): Promise<UserModel | null> {
+    try {
+      const user = await lastValueFrom(
+        this.svc.getUserByAccessKey({ accessKey }, new Metadata()),
+      );
+      // 散列密码 校验
+      if (user && accessKey === user.accessKey) {
+        return user;
+      }
+      return null;
+    } catch (error) {}
   }
 
   async validateUser(
