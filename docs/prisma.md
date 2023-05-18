@@ -1,7 +1,7 @@
 <!--
  * @Author: hsycc
  * @Date: 2023-05-04 14:59:03
- * @LastEditTime: 2023-05-06 06:52:29
+ * @LastEditTime: 2023-05-19 02:10:21
  * @Description:
  *
 -->
@@ -29,24 +29,24 @@ npx prisma init
 
 # generate client
 npx prisma generate --schema=prisma/user.prisma
-npx prisma generate --schema=prisma/gpt.prisma
+npx prisma generate --schema=prisma/ai.prisma
 
 # 生成 sql 迁移命令 migrate
 # dev reset deploy status resolve diff
 npx prisma migrate dev -n user --schema=prisma/user.prisma
-npx prisma migrate dev -n gpt --schema=prisma/gpt.prisma
+npx prisma migrate dev -n ai --schema=prisma/ai.prisma
 
 npx prisma migrate deploy --schema=prisma/user.prisma
-npx prisma migrate deploy --schema=prisma/gpt.prisma
+npx prisma migrate deploy --schema=prisma/ai.prisma
 
 # studio
 npx prisma studio --schema=prisma/user.prisma -p 5555
-npx prisma studio --schema=prisma/gpt.prisma -p 5556
+npx prisma studio --schema=prisma/ai.prisma -p 5556
 
 # db [pull push seed execute]
 # 根据 migrations 文件 创建 db
-npx prisma push --schema=prisma/user.prisma
-npx prisma push --schema=prisma/gpt.prisma
+npx prisma db push --schema=prisma/user.prisma
+npx prisma db push --schema=prisma/ai.prisma
 ```
 
 ## TODO

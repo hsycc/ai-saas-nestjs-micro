@@ -1,17 +1,18 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-05-15 15:11:44
+ * @LastEditTime: 2023-05-18 20:46:42
+ * @Description:
+ *
+ */
 import crypto from 'crypto';
-
-// TODO:
-// x-cc-date 签名时间
-// x-cc-expiration 过期时间
-// headersToSign
-// 错误码 实现
 
 /**
  * 生成认证字符串
- * @param {string} authStringPrefix  cc-auth-v1/{accessKeyId}/{date}
+ * @param {string} authStringPrefix cc-auth-v1/{accessKey}/{timestamp}/{expirationPeriodInSeconds}
  * @param {string} signedHeaders 签名算法中涉及到的HTTP头域列表。HTTP头域名字一律要求小写且头域名字之间用分号（;）分隔，如host;range;x-cc-date。列表按照字典序排列。当signedHeaders为空时表示取默认值。
  * @param {string} signature 256位签名的十六进制表示，由64个小写字母组成。它由SK(Secret Access Key)和authStringPrefix哈希得到signingKey，再将canonicalRequest以signingKey为key进行哈希摘要生成，具体算法见下。
- * @returns {string} 示例: cc-auth-v1/{accessKeyId}/{date}/{signedHeaders}/{signature}
+ * @returns {string} 示例: cc-auth-v1/{accessKey}/{timestamp}/{expirationPeriodInSeconds}/{signedHeaders}/{signature}
  * cc-auth-v1 为固定值
  *
  */
@@ -26,11 +27,16 @@ function generateAuthStr(
 /**
  * 生成 authStringPrefix
  * @param {string} ak Access Key ID，
- * @param {string} date 签名的UTC日期，格式为yyyymmdd，例如：20150427。
- * @returns {string} authStringPrefix, 示例 cc-auth-v1/{accessKeyId}/{date}
+ * @param {string} timestamp 生成签名的 UTC 时间，格式为 yyyy-mm-ddThh:mm:ssZ，例如：2015-04-27T08:23:49Z，请注意请求发送时间不能晚于生成签名时间太多，否则请求到达服务端时可能已经超过签名的有效期限。
+ * @param { number } expirationPeriodInSeconds 签名有效期限，从 timestamp 所指定的时间开始计算，单位为秒。
+ * @returns {string} authStringPrefix, 示例 cc-auth-v1/{accessKeyId}/{timestamp}/{expirationPeriodInSeconds}
  */
-function generateAuthStringPrefix(ak: string, date: string) {
-  return `${version}/${sk}/${date}`;
+function generateAuthStringPrefix(
+  ak: string,
+  timestamp: string,
+  expirationPeriodInSeconds: number,
+) {
+  return `${version}/${ak}/${timestamp}/${expirationPeriodInSeconds}`;
 }
 
 /**
@@ -63,7 +69,7 @@ function generateSignature(
 /**
  * 生成 派生密钥
  * @param secretKeyId  Secret Key ID，请参看获取AK/SK来获取。
- * @param { string } authStringPrefix cc-auth-v1/{accessKeyId}/{date}
+ * @param { string } authStringPrefix cc-auth-v1/{accessKeyId}/{timestamp}
  * @returns { string }
  */
 function generateSigningKey(
@@ -83,9 +89,9 @@ function generateSigningKey(
  * @returns { string } HTTP Method + "\n" + CanonicalURI + "\n" + CanonicalQueryString + "\n" + CanonicalHeaders，
  * 
  * 返回值示例
-    GET
+    POST
     /ai/chat/v1
-    partNumber=9&uploadId=1xas
+    partNumber=9&uploadId=1xas # 如果 query 为空， 占位空行
     host:127.0.0.1
     x-cc-test:xxxx
  *   
@@ -146,32 +152,32 @@ function generateCanonicalHeaders(headers: Record<string, any>): string {
 
 const version = 'cc-auth-v1'; // 固定值
 
-const ak = '2896b491041b0b3cee7e';
+const ak = 'KqT9eO20jisK3vgmktR5';
 
-const sk = 'dcc6165155e68ad86ac7427da2da25c9db6c3a33';
+const sk = '1GH6JMiqbhBb0NgTsFcTKqT9eO20jisK3vgmktR5';
 
 const method = 'post';
 
-const url = '/ai/v1/chat';
+const url = '/ai/invoke/chat_completion';
 
-const date = '20230513';
+const timestamp = '2023-05-16T01:26:57Z';
 
 const query = {
-  test: '',
-  test1: '测试',
-  test10: 'test',
+  // test: 2,
+  // test2: 3,
 };
 
 const headers = {
-  Host: '127.0.0.1',
-  'Content-Type': 'text/plain',
-  'Content-Length': '8',
-  'Content-Md5': ' KasdcPqhviXdjRNnxcko4rw==',
-  date,
-  'x-cc-date': '2023-04-13T08:23:49Z',
+  Host: '127.0.0.1:9000',
 };
 
-const authStringPrefix = generateAuthStringPrefix(ak, date);
+const expirationPeriodInSeconds = 1800;
+
+const authStringPrefix = generateAuthStringPrefix(
+  ak,
+  timestamp,
+  expirationPeriodInSeconds,
+);
 
 console.log('======= authStringPrefix ========');
 console.log(authStringPrefix);
@@ -195,22 +201,19 @@ const signature = generateSignature(signingKey, canonicalRequest);
 console.log('======= signature ========');
 console.log(signature);
 
-console.log(
-  '最后的认证字符串',
-  generateAuthStr(authStringPrefix, signedHeaders, signature),
-);
+console.log(generateAuthStr(authStringPrefix, signedHeaders, signature));
 
-// curl -X 'POST' \
-//   'http://127.0.0.1:9000/ai/invoke/chat' \
-//   -H 'accept: */*' \
-//   -H 'x-cc-date: 2023-05-15T05:12:58.231Z' \
-//   -H 'x-cc-expiration: 2023-05-15T05:12:58.231Z' \
-//   -H 'X-authorization: cc-auth-v1/2896b491041b0b3cee7e/20230513/host;content-type;content-length;content-md5;date;x-cc-date/436bce18bdf45df329e401f79a48a04f2146d08dd480ef2581a1615287e77249' \
-//   -H 'Content-Type: application/json' \
-//   -d '{
-//   "chaModelId": "string",
-//   "question": "string",
-//   "messages": [
-//     {}
-//   ]
-// }'
+// ======= authStringPrefix ========
+// cc-auth-v1/KqT9eO20jisK3vgmktR5/2023-05-16T01:26:57Z/1800
+// ======= canonicalRequest ========
+// POST
+// /ai/invoke/chat_completion
+
+// host:127.0.0.1%3A9000
+// ======= signedHeaders ========
+// host
+// ======= signingKey ========
+// 2fd6c59d0f700d11d8ac2ac8cb8a672d1e4da4577acfd53dc50a547e7ba0c1e5
+// ======= signature ========
+// bb701fa6cbaf0ba105d9eccaf7e0f58796234ddb56c9a09084913a7c8db304b0
+// cc-auth-v1/KqT9eO20jisK3vgmktR5/2023-05-16T01:26:57Z/1800/host/bb701fa6cbaf0ba105d9eccaf7e0f58796234ddb56c9a09084913a7c8db304b0

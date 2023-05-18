@@ -1,18 +1,20 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-07 03:44:52
- * @LastEditTime: 2023-05-11 18:30:33
+ * @LastEditTime: 2023-05-19 00:41:34
  * @Description:
  *
  */
 import { Inject, Injectable } from '@nestjs/common';
 import { CustomPrismaService } from 'nestjs-prisma';
 
-import { ChatModel, ChatModelList } from '@proto/gen/ai.pb';
 import {
-  GrpcInternalException,
-  GrpcPermissionDeniedException,
-} from '@lib/grpc';
+  ChatModel,
+  ChatModelList,
+  ChatModelStructItem,
+  CreateChatCompletionChoicesResponse,
+} from '@proto/gen/ai.pb';
+import { GrpcInternalException, GrpcNotFoundException } from '@lib/grpc';
 import { PRISMA_CLIENT_NAME_AI } from '@prisma/scripts/constants';
 import { PrismaClient, Prisma } from '@prisma/@ai-client';
 import {
@@ -21,43 +23,67 @@ import {
   QueryChatModelListDto,
   UpdateChatModelDto,
 } from './dto';
+import { OpenAiService } from '@lib/open-ai';
+import {
+  CreateChatCompletionRequest,
+  ChatCompletionRequestMessageRoleEnum,
+  CreateChatCompletionResponse,
+  ChatCompletionRequestMessage,
+} from 'openai';
+import { CreateChatCompletionDto } from './dto/create-chat-completion.dto';
+import { Metadata } from '@grpc/grpc-js';
 
 @Injectable()
 export class ChatService {
   constructor(
     @Inject(PRISMA_CLIENT_NAME_AI)
     private prisma: CustomPrismaService<PrismaClient>,
+    private readonly openAiService: OpenAiService,
   ) {}
 
-  async createChatModel(dto: CreateChatModelDto): Promise<ChatModel> {
+  async createChatModel(
+    dto: CreateChatModelDto,
+    metadata: Metadata,
+  ): Promise<ChatModel> {
     // TODO: 过滤相同name的重复创建
+    const userId = metadata.get('userId')[0] as string;
+
     try {
       return this.prisma.client.chatModel.create({
         data: {
           ...dto,
+          userId,
         } as unknown as Prisma.ChatModelCreateInput,
       }) as unknown as ChatModel;
       // return _data as unknown as ChatModel;
     } catch (error) {
-      throw new GrpcInternalException();
+      throw new GrpcInternalException(error?.message);
     }
   }
 
-  async deleteChatModel(dto: QueryChatModelByIdDto): Promise<void> {
-    const { id, userId } = dto;
+  async deleteChatModel(
+    dto: QueryChatModelByIdDto,
+    metadata: Metadata,
+  ): Promise<void> {
+    const { id } = dto;
+    const userId = metadata.get('userId')[0] as string;
     try {
       await this.prisma.client.chatModel.findFirstOrThrow({
         where: { id, userId },
       });
       await this.prisma.client.chatModel.delete({ where: { id } });
     } catch (error) {
-      throw new GrpcPermissionDeniedException();
+      throw new GrpcInternalException(error?.message);
     }
   }
 
-  async updateChatModel(dto: UpdateChatModelDto): Promise<void> {
+  async updateChatModel(
+    dto: UpdateChatModelDto,
+    metadata: Metadata,
+  ): Promise<void> {
     try {
-      const { id, userId } = dto;
+      const { id } = dto;
+      const userId = metadata.get('userId')[0] as string;
 
       await this.prisma.client.chatModel.findFirstOrThrow({
         where: { id, userId },
@@ -71,38 +97,56 @@ export class ChatService {
         data: data,
       });
     } catch (error) {
-      throw new GrpcPermissionDeniedException();
+      throw new GrpcInternalException(error?.message);
     }
   }
 
-  async getChatModelById(dto: QueryChatModelByIdDto): Promise<ChatModel> {
-    const { id, userId } = dto;
+  async getChatModelById(
+    dto: QueryChatModelByIdDto,
+    metadata: Metadata,
+  ): Promise<ChatModel> {
+    const { id } = dto;
+    const userId = metadata.get('userId')[0] as string;
 
+    let where: any = { id };
+
+    if (userId) {
+      where = {
+        ...where,
+        userId,
+      };
+    }
     try {
       const data = await this.prisma.client.chatModel.findFirstOrThrow({
-        where: { id, userId },
+        where,
       });
       return data as unknown as ChatModel;
     } catch (error) {
-      throw new GrpcPermissionDeniedException();
+      throw new GrpcInternalException(error?.message);
     }
   }
 
-  async getChatModelList(dto: QueryChatModelListDto): Promise<ChatModelList> {
-    const { userId, current, pageSize } = dto;
-    // const ChatModels =
+  async getChatModelList(
+    dto: QueryChatModelListDto,
+    metadata: Metadata,
+  ): Promise<ChatModelList> {
+    const { current, pageSize } = dto;
+    const userId = metadata.get('userId')[0] as string;
+    let where: any = {};
+
+    if (userId) {
+      where = {
+        userId,
+      };
+    }
     const [results, total] = await Promise.all([
       this.prisma.client.chatModel.findMany({
-        where: {
-          userId,
-        },
+        where,
         take: pageSize,
         skip: (current - 1) * pageSize,
       }),
       this.prisma.client.chatModel.count({
-        where: {
-          userId,
-        },
+        where,
       }),
     ]);
 
@@ -114,5 +158,62 @@ export class ChatService {
       },
       results,
     } as unknown as ChatModelList;
+  }
+
+  async createChatCompletion(
+    dto: CreateChatCompletionDto,
+    metadata: Metadata,
+  ): Promise<CreateChatCompletionChoicesResponse> {
+    const { chaModelId, messages = [], question } = dto;
+    let struct: ChatModelStructItem[] = [];
+    if (chaModelId) {
+      const chatModel = await this.getChatModelById(
+        {
+          id: chaModelId,
+        },
+        metadata,
+      );
+
+      if (!chatModel) {
+        throw new GrpcNotFoundException('ChatModel Not Found');
+      }
+
+      struct = chatModel.struct;
+    }
+
+    const params: CreateChatCompletionRequest = {
+      model: 'gpt-3.5-turbo',
+      messages: [
+        ...(struct.map((v) => {
+          return {
+            role: v.key,
+            content: v.value,
+          };
+        }) as ChatCompletionRequestMessage[]),
+        ...messages,
+        { role: ChatCompletionRequestMessageRoleEnum.User, content: question },
+      ],
+    };
+
+    try {
+      const completion: CreateChatCompletionResponse = (
+        await this.openAiService.openai.createChatCompletion(params, {
+          timeout: 30000,
+        })
+      ).data;
+      // console.log('completion', completion);
+
+      const { usage, choices } = completion;
+
+      // TODO: token usage 账单记录
+      console.log(choices, 33);
+
+      return {
+        choices,
+      };
+    } catch (error) {
+      // TODO: 捕获所有的 openai 的 response error
+      throw new GrpcInternalException(error?.message);
+    }
   }
 }

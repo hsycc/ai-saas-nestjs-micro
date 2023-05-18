@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-10 23:21:34
- * @LastEditTime: 2023-05-15 13:10:07
+ * @LastEditTime: 2023-05-18 23:44:31
  * @Description:
  *
  */
@@ -18,42 +18,44 @@ import {
   Query,
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { ApiExtension, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 import {
   ApiBaseResponse,
-  ApiListResponse,
   ApiPaginatedResponse,
   ApiObjResponse,
   BaseApiExtraModels,
   PaginatedDto,
 } from '@lib/swagger';
+import Utils from '@lib/common/utils/helper';
 import { Metadata } from '@grpc/grpc-js';
-
 import {
   AI_CHAT_MODEL_SERVICE_NAME,
   AiChatModelServiceClient,
 } from '@proto/gen/ai.pb';
-import { ChatModelEntity } from 'apps/ai-svc/src/chat/entities/chat-model.entity';
-import {
-  CreateChatModelDto,
-  UpdateChatModelDto,
-} from 'apps/ai-svc/src/chat/dto';
+import { CreateChatModelDto, UpdateChatModelDto } from '@app/ai-svc/chat/dto';
+import { ChatModelEntity } from '@app/ai-svc/chat/entities/chat-model.entity';
+import { CreateChatCompletionDto } from '@app/ai-svc/chat/dto/create-chat-completion.dto';
+import { CurrentAkSkOfUser } from '../auth/decorators/ak-sk-of-user.decorator';
 import { CurrentUser } from '../auth/decorators/user.decorator';
 import { Auth } from '../auth/decorators/auth.decorator';
-import { ChatDto } from './chat.dto';
-import { OpenaiService } from './open-ai.service';
+import {
+  CreateChatCompletionChoicesDto,
+  CreateChatCompletionResponseChoicesInnerDto,
+} from '@app/ai-svc/chat/dto/create-chat-completion-choices.dto';
 
 @ApiTags('ai')
 @Controller('ai')
-@BaseApiExtraModels(ChatModelEntity)
+@BaseApiExtraModels(
+  ChatModelEntity,
+  CreateChatCompletionChoicesDto,
+  CreateChatCompletionResponseChoicesInnerDto,
+)
 export class AiController implements OnModuleInit {
   private svc: AiChatModelServiceClient;
 
   constructor(
     @Inject(AI_CHAT_MODEL_SERVICE_NAME)
     private readonly client: ClientGrpc,
-
-    private readonly openaiService: OpenaiService,
   ) {}
 
   public onModuleInit(): void {
@@ -65,12 +67,20 @@ export class AiController implements OnModuleInit {
   /**
    *  渠道设备调用 ai 会话能力
    */
-  @Post('invoke/chat')
-  @Auth('ak/sk')
-  private async chat(@Body() chatDto: ChatDto) {
-    return this.openaiService.chat(chatDto);
+  @Post('invoke/chat_completion')
+  @Auth('ak/sk', {
+    // 跳过鉴权检验
+    skipApiAuth: Utils.isDev,
+  })
+  @ApiObjResponse(CreateChatCompletionChoicesDto)
+  private async createChatCompletion(
+    @Body() dto: CreateChatCompletionDto,
+    @CurrentAkSkOfUser() userId,
+  ) {
+    const metadata = new Metadata();
+    metadata.set('userId', userId);
+    return this.svc.createChatCompletion(dto, metadata);
   }
-
   /**
    *  渠道设备调用 ai stt 能力
    */
@@ -83,7 +93,6 @@ export class AiController implements OnModuleInit {
    */
   @Post('invoke/tts')
   @Auth('ak/sk')
-  @ApiExtension('x-foo', { hello: 'world' })
   private async tts() {}
 
   /**
@@ -97,14 +106,14 @@ export class AiController implements OnModuleInit {
     @CurrentUser() userId,
     @Body() createChatModelDto: CreateChatModelDto,
   ) {
-    console.log('createChatModelDto', createChatModelDto);
+    const metadata = new Metadata();
+    metadata.set('userId', userId);
 
     return this.svc.createChatModel(
       {
-        userId,
         ...createChatModelDto,
       },
-      new Metadata(),
+      metadata,
     );
   }
 
@@ -113,12 +122,18 @@ export class AiController implements OnModuleInit {
    */
   @Delete('chat/model/:id')
   @Auth('jwt')
+  @ApiParam({
+    name: 'id',
+    example: 'clhszs0lb0000ualegqse23dg',
+  })
   @ApiBaseResponse()
   private async deleteChatModel(
     @CurrentUser() userId,
     @Param('id') id: string,
   ) {
-    return this.svc.deleteChatModel({ userId, id }, new Metadata());
+    const metadata = new Metadata();
+    metadata.set('userId', userId);
+    return this.svc.deleteChatModel({ id }, metadata);
   }
 
   /**
@@ -131,10 +146,9 @@ export class AiController implements OnModuleInit {
     @CurrentUser() userId,
     @Query() paginatedDto: PaginatedDto,
   ) {
-    return this.svc.getChatModelList(
-      { userId, ...paginatedDto },
-      new Metadata(),
-    );
+    const metadata = new Metadata();
+    metadata.set('userId', userId);
+    return this.svc.getChatModelList({ ...paginatedDto }, metadata);
   }
 
   /**
@@ -142,12 +156,18 @@ export class AiController implements OnModuleInit {
    */
   @Get('chat/model/:id')
   @Auth('jwt')
+  @ApiParam({
+    name: 'id',
+    example: 'clht05un60000uam8fc8pdcpz',
+  })
   @ApiObjResponse(ChatModelEntity)
   private async getChatModelById(
     @CurrentUser() userId,
     @Param('id') id: string,
   ) {
-    return this.svc.getChatModelById({ userId, id }, new Metadata());
+    const metadata = new Metadata();
+    metadata.set('userId', userId);
+    return this.svc.getChatModelById({ id }, metadata);
   }
 
   /**
@@ -160,12 +180,14 @@ export class AiController implements OnModuleInit {
     @CurrentUser() userId,
     @Body() updateChatModelDto: UpdateChatModelDto,
   ) {
+    const metadata = new Metadata();
+    metadata.set('userId', userId);
+
     return this.svc.updateChatModel(
       {
-        userId: userId,
         ...updateChatModelDto,
       },
-      new Metadata(),
+      metadata,
     );
   }
 }

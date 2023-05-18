@@ -51,15 +51,6 @@
         "tsConfigPath": "apps/ai-svc/tsconfig.app.json"
       }
     },
-    "gpt-svc": {
-      "type": "application",
-      "root": "apps/gpt-svc",
-      "entryFile": "main",
-      "sourceRoot": "apps/gpt-svc/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/gpt-svc/tsconfig.app.json"
-      }
-    },
     "common": {
       "type": "library",
       "root": "libs/common",
@@ -103,6 +94,15 @@
       "sourceRoot": "libs/swagger/src",
       "compilerOptions": {
         "tsConfigPath": "libs/swagger/tsconfig.lib.json"
+      }
+    },
+    "open-ai": {
+      "type": "library",
+      "root": "libs/open-ai",
+      "entryFile": "index",
+      "sourceRoot": "libs/open-ai/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/open-ai/tsconfig.lib.json"
       }
     }
   }

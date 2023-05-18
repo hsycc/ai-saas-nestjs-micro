@@ -1,3 +1,10 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-05-11 00:45:11
+ * @LastEditTime: 2023-05-19 00:33:28
+ * @Description:
+ *
+ */
 import { join } from 'path';
 import { CustomPrismaService } from 'nestjs-prisma';
 import { WinstonModule } from 'nest-winston';
@@ -28,9 +35,12 @@ async function bootstrap() {
       logger,
       transport: Transport.GRPC,
       options: {
-        url: `${MICRO_DOMAIN_AI}:${MICRO_PORT_AI}`,
+        url: `0.0.0.0:${MICRO_PORT_AI}`,
         package: protobufPackage,
         protoPath: join(process.cwd(), MICRO_PROTO_AI),
+        loader: {
+          keepCase: true,
+        },
       },
     },
   );
@@ -63,7 +73,7 @@ async function bootstrap() {
   );
   await customPrismaService.enableShutdownHooks(app);
 
-  logger.log(`NODE_ENV:${NODE_ENV || 'dev'}`, bootstrap.name);
+  logger.log(`NODE_ENV:${NODE_ENV}`, bootstrap.name);
   await app.listen();
   logger.log(
     `grpc ${MICRO_DOMAIN_AI}:${MICRO_PORT_AI} ${SVC_SERVICE_NAME} 微服务启动成功`,

@@ -5,6 +5,7 @@
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "target": "es2017",
     "sourceMap": true,
@@ -24,8 +25,9 @@
       "@app/api-gateway/*": ["apps/api-gateway/src/*"],
       "@app/user-svc": ["apps/user-svc/src"],
       "@app/user-svc/*": ["apps/user-svc/src/*"],
-      "@app/gpt-svc": ["apps/gpt-svc/src"],
-      "@app/gpt-svc/*": ["apps/gpt-svc/src/*"],
+      "@app/ai-svc": ["apps/ai-svc/src"],
+      "@app/ai-svc/*": ["apps/ai-svc/src/*"],
+
       "@lib/common": ["libs/common/src"],
       "@lib/common/*": ["libs/common/src/*"],
       "@lib/config": ["libs/config/src"],
@@ -35,7 +37,9 @@
       "@lib/logger": ["libs/logger/src"],
       "@lib/logger/*": ["libs/logger/src/*"],
       "@lib/swagger": ["libs/swagger/src"],
-      "@lib/swagger/*": ["libs/swagger/src/*"]
+      "@lib/swagger/*": ["libs/swagger/src/*"],
+      "@lib/open-ai": ["libs/open-ai/src"],
+      "@lib/open-ai/*": ["libs/open-ai/src/*"]
     }
   }
 }

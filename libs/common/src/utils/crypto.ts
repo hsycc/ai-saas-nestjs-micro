@@ -2,11 +2,11 @@
  * AES crypto util
  * @Author: hsycc
  * @Date: 2023-04-21 13:24:34
- * @LastEditTime: 2023-05-09 05:57:58
+ * @LastEditTime: 2023-05-15 20:53:00
  * @Description:
  *
  */
-import * as CryptoJS from 'crypto-js';
+import CryptoJS from 'crypto-js';
 
 export const MD5 = CryptoJS.MD5;
 

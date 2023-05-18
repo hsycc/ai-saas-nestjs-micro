@@ -12,7 +12,7 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id        String   @id @unique @default(cuid())
   username  String   @unique @db.VarChar(50)
   avatar    String   @default("")
   password  String

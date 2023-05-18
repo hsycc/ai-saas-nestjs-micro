@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-11 03:15:26
- * @LastEditTime: 2023-05-11 14:54:59
+ * @LastEditTime: 2023-05-18 22:49:22
  * @Description:
  *
  */
@@ -12,6 +12,7 @@ import {
   AI_CHAT_MODEL_SERVICE_NAME,
   ChatModel,
   ChatModelList,
+  CreateChatCompletionChoicesResponse,
 } from '@proto/gen/ai.pb';
 import {
   CreateChatModelDto,
@@ -19,35 +20,57 @@ import {
   QueryChatModelListDto,
   UpdateChatModelDto,
 } from './dto';
-
+import { Metadata } from '@grpc/grpc-js';
+import { CreateChatCompletionDto } from './dto/create-chat-completion.dto';
 @Controller()
 export class ChatController {
   constructor(private readonly service: ChatService) {}
 
   @GrpcMethod(AI_CHAT_MODEL_SERVICE_NAME, 'createChatModel')
-  private createChatModel(payload: CreateChatModelDto): Promise<ChatModel> {
-    return this.service.createChatModel(payload);
+  private createChatModel(
+    payload: CreateChatModelDto,
+    metadata: Metadata,
+  ): Promise<ChatModel> {
+    return this.service.createChatModel(payload, metadata);
   }
 
   @GrpcMethod(AI_CHAT_MODEL_SERVICE_NAME, 'deleteChatModel')
-  private deleteChatModel(payload: QueryChatModelByIdDto): Promise<void> {
-    return this.service.deleteChatModel(payload);
+  private deleteChatModel(
+    payload: QueryChatModelByIdDto,
+    metadata: Metadata,
+  ): Promise<void> {
+    return this.service.deleteChatModel(payload, metadata);
   }
 
   @GrpcMethod(AI_CHAT_MODEL_SERVICE_NAME, 'updateChatModel')
-  private updateChatModel(payload: UpdateChatModelDto): Promise<void> {
-    return this.service.updateChatModel(payload);
+  private updateChatModel(
+    payload: UpdateChatModelDto,
+    metadata: Metadata,
+  ): Promise<void> {
+    return this.service.updateChatModel(payload, metadata);
   }
 
   @GrpcMethod(AI_CHAT_MODEL_SERVICE_NAME, 'getChatModelById')
-  private getChatModelById(payload: QueryChatModelByIdDto): Promise<ChatModel> {
-    return this.service.getChatModelById(payload);
+  private getChatModelById(
+    payload: QueryChatModelByIdDto,
+    metadata: Metadata,
+  ): Promise<ChatModel> {
+    return this.service.getChatModelById(payload, metadata);
   }
 
   @GrpcMethod(AI_CHAT_MODEL_SERVICE_NAME, 'getChatModelList')
   private getChatModelList(
     payload: QueryChatModelListDto,
+    metadata: Metadata,
   ): Promise<ChatModelList> {
-    return this.service.getChatModelList(payload);
+    return this.service.getChatModelList(payload, metadata);
+  }
+
+  @GrpcMethod(AI_CHAT_MODEL_SERVICE_NAME, 'createChatCompletion')
+  private createChatCompletion(
+    payload: CreateChatCompletionDto,
+    metadata: Metadata,
+  ): Promise<CreateChatCompletionChoicesResponse> {
+    return this.service.createChatCompletion(payload, metadata);
   }
 }

@@ -1,8 +1,8 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "declaration": false,
-    "outDir": "../../dist/apps/gpt-svc"
+    "declaration": true,
+    "outDir": "../../dist/libs/open-ai"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]

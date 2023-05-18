@@ -3,6 +3,28 @@
 
 ## Table of Contents
 
+- [ai.proto](#ai-proto)
+    - [ChatCompletionRequestMessage](#ai-ChatCompletionRequestMessage)
+    - [ChatModel](#ai-ChatModel)
+    - [ChatModelList](#ai-ChatModelList)
+    - [ChatModelStructItem](#ai-ChatModelStructItem)
+    - [CreateChatCompletionChoicesResponse](#ai-CreateChatCompletionChoicesResponse)
+    - [CreateChatCompletionRequest](#ai-CreateChatCompletionRequest)
+    - [CreateChatCompletionResponseChoicesInner](#ai-CreateChatCompletionResponseChoicesInner)
+    - [CreateChatModelRequest](#ai-CreateChatModelRequest)
+    - [Pagination](#ai-Pagination)
+    - [QueryChatModelByIdRequest](#ai-QueryChatModelByIdRequest)
+    - [QueryChatModelListRequest](#ai-QueryChatModelListRequest)
+    - [UpdateChatModelRequest](#ai-UpdateChatModelRequest)
+  
+    - [StatusEnum](#ai-StatusEnum)
+  
+    - [AiChatModelService](#ai-AiChatModelService)
+    - [AiService](#ai-AiService)
+  
+- [common.proto](#common-proto)
+    - [StatusEnum](#-StatusEnum)
+  
 - [gpt.proto](#gpt-proto)
     - [FindOneRequest](#gpt-FindOneRequest)
     - [FindOneResponse](#gpt-FindOneResponse)
@@ -10,16 +32,308 @@
     - [GptService](#gpt-GptService)
   
 - [user.proto](#user-proto)
-    - [LoginRequest](#user-LoginRequest)
-    - [LoginResponse](#user-LoginResponse)
-    - [RegisterRequest](#user-RegisterRequest)
-    - [RegisterResponse](#user-RegisterResponse)
-    - [ValidateRequest](#user-ValidateRequest)
-    - [ValidateResponse](#user-ValidateResponse)
+    - [CreateUserRequest](#user-CreateUserRequest)
+    - [QueryUserByAccessKeyRequest](#user-QueryUserByAccessKeyRequest)
+    - [QueryUserByIdRequest](#user-QueryUserByIdRequest)
+    - [QueryUserByNameRequest](#user-QueryUserByNameRequest)
+    - [UpdateUserRequest](#user-UpdateUserRequest)
+    - [UserModel](#user-UserModel)
+    - [UserModelList](#user-UserModelList)
+  
+    - [UserRolesEnum](#user-UserRolesEnum)
+    - [UserStatusEnum](#user-UserStatusEnum)
   
     - [UserService](#user-UserService)
   
 - [Scalar Value Types](#scalar-value-types)
+
+
+
+<a name="ai-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## ai.proto
+
+
+
+<a name="ai-ChatCompletionRequestMessage"></a>
+
+### ChatCompletionRequestMessage
+alias openai ChatCompletionRequestMessage
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| role | [string](#string) | optional |  |
+| content | [string](#string) | optional |  |
+| name | [string](#string) | optional |  |
+
+
+
+
+
+
+<a name="ai-ChatModel"></a>
+
+### ChatModel
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| provider | [string](#string) |  |  |
+| model | [string](#string) |  |  |
+| name | [string](#string) |  |  |
+| struct | [ChatModelStructItem](#ai-ChatModelStructItem) | repeated |  |
+| questionTpl | [string](#string) |  |  |
+| status | [StatusEnum](#ai-StatusEnum) |  |  |
+| userId | [string](#string) |  |  |
+| createdAt | [double](#double) |  |  |
+| updatedAt | [double](#double) |  |  |
+
+
+
+
+
+
+<a name="ai-ChatModelList"></a>
+
+### ChatModelList
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| results | [ChatModel](#ai-ChatModel) | repeated |  |
+| pagination | [Pagination](#ai-Pagination) |  |  |
+
+
+
+
+
+
+<a name="ai-ChatModelStructItem"></a>
+
+### ChatModelStructItem
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="ai-CreateChatCompletionChoicesResponse"></a>
+
+### CreateChatCompletionChoicesResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| choices | [CreateChatCompletionResponseChoicesInner](#ai-CreateChatCompletionResponseChoicesInner) | repeated |  |
+
+
+
+
+
+
+<a name="ai-CreateChatCompletionRequest"></a>
+
+### CreateChatCompletionRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| chaModelId | [string](#string) | optional |  |
+| question | [string](#string) |  |  |
+| messages | [ChatCompletionRequestMessage](#ai-ChatCompletionRequestMessage) | repeated |  |
+
+
+
+
+
+
+<a name="ai-CreateChatCompletionResponseChoicesInner"></a>
+
+### CreateChatCompletionResponseChoicesInner
+alia openai CreateChatCompletionResponseChoicesInner
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| index | [int32](#int32) | optional |  |
+| message | [ChatCompletionRequestMessage](#ai-ChatCompletionRequestMessage) | optional |  |
+| finish_reason | [string](#string) | optional |  |
+
+
+
+
+
+
+<a name="ai-CreateChatModelRequest"></a>
+
+### CreateChatModelRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| provider | [string](#string) | optional |  |
+| model | [string](#string) | optional |  |
+| name | [string](#string) |  |  |
+| struct | [ChatModelStructItem](#ai-ChatModelStructItem) | repeated |  |
+| questionTpl | [string](#string) | optional |  |
+
+
+
+
+
+
+<a name="ai-Pagination"></a>
+
+### Pagination
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| current | [int32](#int32) |  |  |
+| pageSize | [int32](#int32) |  |  |
+| total | [int32](#int32) |  |  |
+
+
+
+
+
+
+<a name="ai-QueryChatModelByIdRequest"></a>
+
+### QueryChatModelByIdRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="ai-QueryChatModelListRequest"></a>
+
+### QueryChatModelListRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| current | [int32](#int32) | optional |  |
+| pageSize | [int32](#int32) | optional |  |
+
+
+
+
+
+
+<a name="ai-UpdateChatModelRequest"></a>
+
+### UpdateChatModelRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| name | [string](#string) | optional |  |
+| struct | [ChatModelStructItem](#ai-ChatModelStructItem) | repeated |  |
+| questionTpl | [string](#string) | optional |  |
+
+
+
+
+
+ 
+
+
+<a name="ai-StatusEnum"></a>
+
+### StatusEnum
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| DISABLE | 0 |  |
+| ENABLE | 1 |  |
+
+
+ 
+
+ 
+
+
+<a name="ai-AiChatModelService"></a>
+
+### AiChatModelService
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| createChatModel | [CreateChatModelRequest](#ai-CreateChatModelRequest) | [ChatModel](#ai-ChatModel) |  |
+| deleteChatModel | [QueryChatModelByIdRequest](#ai-QueryChatModelByIdRequest) | [.google.protobuf.Empty](#google-protobuf-Empty) |  |
+| updateChatModel | [UpdateChatModelRequest](#ai-UpdateChatModelRequest) | [.google.protobuf.Empty](#google-protobuf-Empty) |  |
+| getChatModelById | [QueryChatModelByIdRequest](#ai-QueryChatModelByIdRequest) | [ChatModel](#ai-ChatModel) |  |
+| getChatModelList | [QueryChatModelListRequest](#ai-QueryChatModelListRequest) | [ChatModelList](#ai-ChatModelList) |  |
+| createChatCompletion | [CreateChatCompletionRequest](#ai-CreateChatCompletionRequest) | [CreateChatCompletionChoicesResponse](#ai-CreateChatCompletionChoicesResponse) |  |
+
+
+<a name="ai-AiService"></a>
+
+### AiService
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| test | [.google.protobuf.Empty](#google-protobuf-Empty) | [.google.protobuf.Empty](#google-protobuf-Empty) |  |
+
+ 
+
+
+
+<a name="common-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## common.proto
+
+
+ 
+
+
+<a name="-StatusEnum"></a>
+
+### StatusEnum
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| DISABLE | 0 |  |
+| ENABLE | 1 |  |
+
+
+ 
+
+ 
+
+ 
 
 
 
@@ -86,15 +400,15 @@
 
 
 
-<a name="user-LoginRequest"></a>
+<a name="user-CreateUserRequest"></a>
 
-### LoginRequest
+### CreateUserRequest
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| email | [string](#string) |  |  |
+| username | [string](#string) |  |  |
 | password | [string](#string) |  |  |
 
 
@@ -102,87 +416,135 @@
 
 
 
-<a name="user-LoginResponse"></a>
+<a name="user-QueryUserByAccessKeyRequest"></a>
 
-### LoginResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| status | [int32](#int32) |  |  |
-| error | [string](#string) | repeated |  |
-| token | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="user-RegisterRequest"></a>
-
-### RegisterRequest
+### QueryUserByAccessKeyRequest
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| email | [string](#string) |  |  |
+| accessKey | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="user-QueryUserByIdRequest"></a>
+
+### QueryUserByIdRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="user-QueryUserByNameRequest"></a>
+
+### QueryUserByNameRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| username | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="user-UpdateUserRequest"></a>
+
+### UpdateUserRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| avatar | [string](#string) | optional |  |
+| password | [string](#string) | optional |  |
+| status | [UserStatusEnum](#user-UserStatusEnum) | optional |  |
+| role | [UserRolesEnum](#user-UserRolesEnum) | optional |  |
+| accessKey | [string](#string) | optional |  |
+| secretKey | [string](#string) | optional |  |
+
+
+
+
+
+
+<a name="user-UserModel"></a>
+
+### UserModel
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| id | [string](#string) |  |  |
+| username | [string](#string) |  |  |
+| avatar | [string](#string) |  |  |
 | password | [string](#string) |  |  |
+| status | [UserStatusEnum](#user-UserStatusEnum) |  |  |
+| role | [UserRolesEnum](#user-UserRolesEnum) |  |  |
+| accessKey | [string](#string) |  |  |
+| secretKey | [string](#string) |  |  |
+| createdAt | [double](#double) |  |  |
+| updatedAt | [double](#double) |  |  |
 
 
 
 
 
 
-<a name="user-RegisterResponse"></a>
+<a name="user-UserModelList"></a>
 
-### RegisterResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| status | [int32](#int32) |  |  |
-| error | [string](#string) | repeated |  |
-
-
-
-
-
-
-<a name="user-ValidateRequest"></a>
-
-### ValidateRequest
+### UserModelList
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| token | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="user-ValidateResponse"></a>
-
-### ValidateResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| status | [int32](#int32) |  |  |
-| error | [string](#string) | repeated |  |
-| userId | [int32](#int32) |  |  |
+| results | [UserModel](#user-UserModel) | repeated |  |
 
 
 
 
 
  
+
+
+<a name="user-UserRolesEnum"></a>
+
+### UserRolesEnum
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| ADMIN | 0 |  |
+| USER | 1 |  |
+
+
+
+<a name="user-UserStatusEnum"></a>
+
+### UserStatusEnum
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| DISABLE | 0 |  |
+| ENABLE | 1 |  |
+
 
  
 
@@ -196,9 +558,13 @@
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| Register | [RegisterRequest](#user-RegisterRequest) | [RegisterResponse](#user-RegisterResponse) |  |
-| Login | [LoginRequest](#user-LoginRequest) | [LoginResponse](#user-LoginResponse) |  |
-| Validate | [ValidateRequest](#user-ValidateRequest) | [ValidateResponse](#user-ValidateResponse) |  |
+| createUser | [CreateUserRequest](#user-CreateUserRequest) | [UserModel](#user-UserModel) |  |
+| deleteUser | [QueryUserByIdRequest](#user-QueryUserByIdRequest) | [.google.protobuf.Empty](#google-protobuf-Empty) |  |
+| updateUser | [UpdateUserRequest](#user-UpdateUserRequest) | [.google.protobuf.Empty](#google-protobuf-Empty) |  |
+| getUserByAccessKey | [QueryUserByAccessKeyRequest](#user-QueryUserByAccessKeyRequest) | [UserModel](#user-UserModel) |  |
+| getUserByName | [QueryUserByNameRequest](#user-QueryUserByNameRequest) | [UserModel](#user-UserModel) |  |
+| getUserById | [QueryUserByIdRequest](#user-QueryUserByIdRequest) | [UserModel](#user-UserModel) |  |
+| getUserModelList | [.google.protobuf.Empty](#google-protobuf-Empty) | [UserModelList](#user-UserModelList) |  |
 
  
 

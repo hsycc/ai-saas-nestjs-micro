@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-10 23:21:24
- * @LastEditTime: 2023-05-15 13:08:22
+ * @LastEditTime: 2023-05-19 00:33:34
  * @Description:
  *
  */
@@ -16,7 +16,6 @@ import {
   AI_PACKAGE_NAME,
   AI_SERVICE_NAME,
 } from '@proto/gen/ai.pb';
-import { OpenaiService } from './open-ai.service';
 
 @Module({
   controllers: [AiController],
@@ -31,6 +30,9 @@ import { OpenaiService } from './open-ai.service';
             url: MicroConfig.microDomainAi + ':' + MicroConfig.microPortAi,
             package: AI_PACKAGE_NAME,
             protoPath: MicroConfig.microProtoAi,
+            loader: {
+              keepCase: true,
+            },
           },
         });
       },
@@ -46,12 +48,14 @@ import { OpenaiService } from './open-ai.service';
             url: MicroConfig.microDomainAi + ':' + MicroConfig.microPortAi,
             package: AI_PACKAGE_NAME,
             protoPath: MicroConfig.microProtoAi,
+            loader: {
+              keepCase: true,
+            },
           },
         });
       },
       inject: [ConfigService],
     },
-    OpenaiService,
   ],
 })
 export class AiModule {}

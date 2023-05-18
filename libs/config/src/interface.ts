@@ -1,13 +1,13 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-09 03:52:25
- * @LastEditTime: 2023-05-10 23:55:41
+ * @LastEditTime: 2023-05-18 19:04:50
  * @Description:
  *
  */
 export interface ConfigType {
   JwtConfigType;
-  GptConfigType;
+  AiConfigType;
 
   MicroConfigType;
   OssConfigType;
@@ -20,9 +20,8 @@ export interface JwtConfigType {
   refreshSecretKey: string;
   expiresIn: string;
   refreshIn: string;
-  bcryptSaltOrRound: string | number;
 }
-export interface GptConfigType {
+export interface AiConfigType {
   apiKey: string;
 }
 
@@ -30,10 +29,6 @@ export interface MicroConfigType {
   microDomainUser: string;
   microPortUser: string;
   microProtoUser: string;
-
-  microDomainGpt: string;
-  microPortGpt: string;
-  microProtoGpt: string;
 
   microDomainAi: string;
   microPortAi: string;

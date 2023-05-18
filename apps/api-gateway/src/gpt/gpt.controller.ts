@@ -1,27 +1,19 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:03:20
- * @LastEditTime: 2023-05-10 22:16:44
+ * @LastEditTime: 2023-05-19 08:20:12
  * @Description:
  *
  */
 import { Controller, Inject, OnModuleInit, Get, Post } from '@nestjs/common';
-import { ClientGrpc } from '@nestjs/microservices';
-import { GptServiceClient, GPT_SERVICE_NAME } from '@proto/gen/gpt.pb';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from '../auth/decorators/auth.decorator';
 @ApiTags('gpt')
 @Controller('gpt')
 export class GptController implements OnModuleInit {
-  private svc: GptServiceClient;
-  constructor(
-    @Inject(GPT_SERVICE_NAME)
-    private readonly client: ClientGrpc,
-  ) {}
+  constructor() {}
 
-  public onModuleInit(): void {
-    this.svc = this.client.getService<GptServiceClient>(GPT_SERVICE_NAME);
-  }
+  public onModuleInit(): void {}
 
   /**
    * 列出当前可用的型号，并提供每个型号的基本信息，如所有者和可用性。

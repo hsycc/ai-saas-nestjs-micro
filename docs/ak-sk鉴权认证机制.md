@@ -250,8 +250,7 @@ Signature = HMAC-SHA256-HEX(SigningKey, CanonicalRequest)
 | InvalidVersion        | 404 NotFound              | 认证版本号不合法。                                                                           |
 | InvalidAccessKeyId    | 403 Forbidden             | Access Key ID 不存在。                                                                       |
 | AccessDenied          | 403 Forbidden             | 无权限访问对应的资源。                                                                       |
+| InvalidTimestamp      | 400 BadRequest            | timestamp 不是 utc 时间 ,utc 时间 格式为 yyyy-mm-ddThh:mm:ssZ 式                             |
 | InvalidHTTPAuthHeader | 400 BadRequest            | x-authorization 头域格式错误。                                                               |
-| RequestExpired        | 400 BadRequest            | 请求超时。                                                                                   |
+| RequestExpired        | 400 BadRequest            | 请求超时时。                                                                                 |
 | SignatureDoesNotMatch | 400 Bad Request           | x-authorization 头域中附带的签名和服务端验证不一致。                                         |
-
-<!-- | MalformedJSON         | 400 BadRequest            | JSON 格式不合法。                                                                            | -->

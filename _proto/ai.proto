@@ -20,6 +20,9 @@ service AiChatModelService {
 
   rpc getChatModelById(QueryChatModelByIdRequest) returns (ChatModel);
   rpc getChatModelList(QueryChatModelListRequest) returns (ChatModelList);
+
+  rpc createChatCompletion(CreateChatCompletionRequest)
+      returns (CreateChatCompletionChoicesResponse);
 }
 
 enum StatusEnum {
@@ -38,7 +41,7 @@ message ChatModel {
   string provider = 2;
   string model = 3;
   string name = 4;
-  repeated StructItem struct = 5;
+  repeated ChatModelStructItem struct = 5;
   string questionTpl = 6;
   StatusEnum status = 7;
   string userId = 8;
@@ -47,24 +50,22 @@ message ChatModel {
 }
 
 message CreateChatModelRequest {
-  string userId = 1;
   optional string provider = 2;
   optional string model = 3;
   string name = 4;
-  repeated StructItem struct = 5;
+  repeated ChatModelStructItem struct = 5;
   optional string questionTpl = 6;
 }
 
-message StructItem {
+message ChatModelStructItem {
   string key = 1;
   string value = 2;
 }
 
 message UpdateChatModelRequest {
   string id = 1;
-  string userId = 2;
   optional string name = 4;
-  repeated StructItem struct = 5;
+  repeated ChatModelStructItem struct = 5;
   optional string questionTpl = 6;
 }
 
@@ -73,13 +74,33 @@ message ChatModelList {
   Pagination pagination = 2;
 }
 
-message QueryChatModelByIdRequest {
-  string id = 1;
-  string userId = 2;
-}
+message QueryChatModelByIdRequest { string id = 1; }
 
 message QueryChatModelListRequest {
-  string userId = 1;
-  optional int32 current = 2;
-  optional int32 pageSize = 3;
+  optional int32 current = 1;
+  optional int32 pageSize = 2;
+}
+
+// alias openai ChatCompletionRequestMessage
+message ChatCompletionRequestMessage {
+  optional string role = 1;
+  optional string content = 2;
+  optional string name = 3;
+}
+
+message CreateChatCompletionRequest {
+  optional string chaModelId = 1;
+  string question = 2;
+  repeated ChatCompletionRequestMessage messages = 3;
+}
+
+// alia openai CreateChatCompletionResponseChoicesInner
+message CreateChatCompletionResponseChoicesInner {
+  optional int32 index = 1;
+  optional ChatCompletionRequestMessage message = 2;
+  optional string finish_reason = 3;
+}
+
+message CreateChatCompletionChoicesResponse {
+  repeated CreateChatCompletionResponseChoicesInner choices = 1;
 }

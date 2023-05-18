@@ -30,8 +30,8 @@ services:
       - .env
     # 覆盖容器启动后默认执行的命令, 支持 shell 格式和 [] 格式
     command: node ./dist/apps/user-svc/main
-  gpt-svc:
-    container_name: gpt-svc
+  ai-svc:
+    container_name: ai-svc
     build:
       context: .
       dockerfile: Dockerfile
@@ -42,7 +42,7 @@ services:
     env_file:
       - .env
     # 覆盖容器启动后默认执行的命令, 支持 shell 格式和 [] 格式
-    command: node ./dist/apps/gpt-svc/main
+    command: node ./dist/apps/ai-svc/main
 
     # volumes:
     #   - ./monorepo/apps/user-svc:/app

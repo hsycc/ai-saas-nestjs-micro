@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-11 05:26:24
- * @LastEditTime: 2023-05-11 19:08:30
+ * @LastEditTime: 2023-05-18 23:04:39
  * @Description:
  *
  */
@@ -12,7 +12,7 @@ import { PickType } from '@nestjs/swagger';
 import { CreateChatModelDto } from './create-chat-model.dto';
 
 export class UpdateChatModelDto
-  extends PickType(CreateChatModelDto, ['struct', 'userId'] as const)
+  extends PickType(CreateChatModelDto, ['struct'] as const)
   implements UpdateChatModelRequest
 {
   @IsString()

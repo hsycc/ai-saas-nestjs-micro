@@ -1,11 +1,16 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-04 03:16:00
- * @LastEditTime: 2023-05-15 15:41:05
+ * @LastEditTime: 2023-05-18 18:26:01
  * @Description:
  *
  */
 // prisma/seed.ts
+
+// cspell:disable
+
+// cspell:disable-line -- disables checking for the current line.
+// cspell:disable-next-line -- disables checking till the end of the next line.
 
 import { PrismaClient } from '../@user-client';
 import { generateKeyPair, getAesInstance } from '../../libs/common/src';
@@ -15,16 +20,20 @@ import { hashSync, genSaltSync } from 'bcrypt';
 const prisma = new PrismaClient();
 const userMap = [
   {
-    id: 'clhcwl1ybq000uau9t67z8xj0',
-    username: 'hsycc3333',
-    password: '12345678',
-    ...generateKeyPair(),
-  },
-  {
     id: 'clhcsprq10000uawc05bf2whi',
     username: 'hsycc',
     password: '12345678',
-    ...generateKeyPair(),
+    // ...generateKeyPair(),
+    accessKey: 'KqT9eO20jisK3vgmktR5',
+    secretKey: '1GH6JMiqbhBb0NgTsFcTKqT9eO20jisK3vgmktR5',
+  },
+  {
+    id: 'clhcwl1ybq000uau9t67z8xj0',
+    username: 'hsycc3333',
+    password: '12345678',
+    // ...generateKeyPair(),
+    accessKey: 'T4EaunHkEm2IZ0gE6pHo',
+    secretKey: 'AovJzGpKZ7U2WGxle87cT4EaunHkEm2IZ0gE6pHo',
   },
 ];
 userMap.map((v) => {
@@ -43,6 +52,9 @@ async function main() {
 
   console.log({ post2 });
 }
+
+console.log(generateKeyPair());
+console.log(generateKeyPair());
 
 // execute the main function
 main()

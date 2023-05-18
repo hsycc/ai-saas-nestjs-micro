@@ -1,11 +1,8 @@
-# .PHONY: proto-gen-only clean-gen proto-all proto-user proto-ai proto-gpt 
+# .PHONY: proto-gen-only clean-gen proto-all proto-user proto-ai 
 
 DIRNAME = _proto
 DIRNAME_GEN = _proto/gen
 
-SVC_USER = user
-SVC_GPT = gpt
-SVC_AI = ai
 
 define proto-gen 
     mkdir -p $(2)
@@ -19,7 +16,9 @@ define proto-gen
 			--ts_proto_opt=addGrpcMetadata=true \
 			--ts_proto_opt=addNestjsRestParameter=true  \
 			--ts_proto_opt=esModuleInterop=true \
-			--ts_proto_opt=returnObservable=false
+			--ts_proto_opt=returnObservable=false \
+			--ts_proto_opt=snakeToCamel=false 
+
 endef
 
 clean-gen:
@@ -29,7 +28,5 @@ proto-gen-only:
 
 proto-user:
 		$(call proto-gen,user,$(DIRNAME_GEN)) 
-proto-gpt:
-		$(call proto-gen,gpt,$(DIRNAME_GEN)) 
 proto-ai:
 		$(call proto-gen,ai,$(DIRNAME_GEN))

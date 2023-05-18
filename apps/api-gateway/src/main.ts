@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 12:44:18
- * @LastEditTime: 2023-05-09 22:27:11
+ * @LastEditTime: 2023-05-16 09:10:51
  * @Description:
  *
  */
@@ -42,6 +42,31 @@ async function bootstrap() {
     logger,
   });
 
+  if (swaggerEnable) {
+    /* Swagger */
+    const config = new DocumentBuilder()
+      .setTitle('ai-saas')
+      .setDescription('API服务管理')
+      .setVersion('1.0.0')
+      .addBearerAuth({ type: 'http', bearerFormat: 'JWT', scheme: 'bearer' })
+      .build();
+    const options: SwaggerDocumentOptions = {
+      // 去掉 moduleController 前缀
+      operationIdFactory: (controllerKey: string, methodKey: string) =>
+        methodKey,
+    };
+    const document = SwaggerModule.createDocument(app, config, options);
+
+    // ExpressSwaggerCustomOptions 可以再 customOptions 配置Swagger自定义UI
+    const customOptions: SwaggerCustomOptions = {
+      swaggerOptions: {
+        // 刷新页面后保留身份验证令牌
+        persistAuthorization: true,
+      },
+    };
+    SwaggerModule.setup('api', app, document, customOptions);
+  }
+
   /* 设置接口请求频率 */
   app.use(
     rateLimit({
@@ -74,35 +99,7 @@ async function bootstrap() {
   /* HttpClientExceptionFilter 异常过滤器 */
   app.useGlobalFilters(new HttpClientExceptionFilter(logger, service));
 
-  if (swaggerEnable) {
-    /* Swagger */
-    const config = new DocumentBuilder()
-      .setTitle('ai-saas')
-      .setDescription('API服务管理')
-      .setVersion('1.0.0')
-      .addBearerAuth({ type: 'http', bearerFormat: 'JWT', scheme: 'bearer' })
-      .build();
-    const options: SwaggerDocumentOptions = {
-      // 去掉 moduleController 前缀
-      operationIdFactory: (controllerKey: string, methodKey: string) =>
-        methodKey,
-    };
-    const document = SwaggerModule.createDocument(app, config, options);
-
-    // ExpressSwaggerCustomOptions 可以再 customOptions 配置Swagger自定义UI
-    const customOptions: SwaggerCustomOptions = {
-      swaggerOptions: {
-        // 刷新页面后保留身份验证令牌
-        persistAuthorization: true,
-      },
-    };
-    SwaggerModule.setup('api', app, document, customOptions);
-  }
-
-  logger.log(
-    `process.env.NODE_ENV:${process.env.NODE_ENV || 'dev'}`,
-    bootstrap.name,
-  );
+  logger.log(`NODE_ENV:${process.env.NODE_ENV}`, bootstrap.name);
   await app.listen(port);
   logger.log(
     `http://localhost:${port} ${service} 服务启动成功`,

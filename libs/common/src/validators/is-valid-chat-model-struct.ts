@@ -1,20 +1,22 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-11 14:17:15
- * @LastEditTime: 2023-05-15 15:42:52
+ * @LastEditTime: 2023-05-16 20:03:30
  * @Description:
  *
  */
+import { ChatModelStructItem } from '@proto/gen/ai.pb';
 import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
   ValidationArguments,
 } from 'class-validator';
+import { ChatCompletionRequestMessageRoleEnum } from 'openai';
 
-@ValidatorConstraint({ name: 'isValidStruct', async: false })
-export class IsValidStruct implements ValidatorConstraintInterface {
+@ValidatorConstraint({ name: 'IsValidChatModelStruct', async: false })
+export class IsValidChatModelStruct implements ValidatorConstraintInterface {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  validate(value: any, args: ValidationArguments) {
+  validate(value: ChatModelStructItem, args: ValidationArguments) {
     if (value === null) {
       return true;
     }
@@ -24,9 +26,11 @@ export class IsValidStruct implements ValidatorConstraintInterface {
       return value.every((item) => {
         return (
           typeof item === 'object' &&
-          item.key !== undefined &&
+          Object.values(ChatCompletionRequestMessageRoleEnum).includes(
+            item.key,
+          ) &&
           typeof item.key === 'string' &&
-          item.value !== undefined &&
+          item.value &&
           typeof item.value === 'string'
         );
       });
@@ -34,8 +38,8 @@ export class IsValidStruct implements ValidatorConstraintInterface {
 
     return false;
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   defaultMessage(args: ValidationArguments) {
-    return 'The struct field must be null, an empty array, or an array with elements structured with a key and value field.';
+    return 'Invalid ChatModelStruct';
   }
 }

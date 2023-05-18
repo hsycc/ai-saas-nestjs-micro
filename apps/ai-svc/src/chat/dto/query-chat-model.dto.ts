@@ -1,11 +1,11 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-10 02:29:04
- * @LastEditTime: 2023-05-11 14:54:19
+ * @LastEditTime: 2023-05-18 22:56:36
  * @Description:
  *
  */
-import { IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import {
   QueryChatModelByIdRequest,
   QueryChatModelListRequest,
@@ -13,17 +13,16 @@ import {
 
 export class QueryChatModelByIdDto implements QueryChatModelByIdRequest {
   @IsString()
+  @IsNotEmpty()
   id: string;
-
-  /**
-   * @example clhcsprq10000uawc05bf2whi
-   */
-  @IsString()
-  userId: string;
 }
 
 export class QueryChatModelListDto implements QueryChatModelListRequest {
-  userId: string;
+  @IsOptional()
+  @IsNumber()
   current?: number;
+
+  @IsOptional()
+  @IsNumber()
   pageSize?: number;
 }

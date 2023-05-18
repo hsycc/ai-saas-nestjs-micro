@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:08:01
- * @LastEditTime: 2023-05-11 02:07:26
+ * @LastEditTime: 2023-05-16 09:09:08
  * @Description:
  *
  */
@@ -34,7 +34,7 @@ async function bootstrap() {
       logger,
       transport: Transport.GRPC,
       options: {
-        url: `${MICRO_DOMAIN_USER}:${MICRO_PORT_USER}`,
+        url: `0.0.0.0:${MICRO_PORT_USER}`,
         package: protobufPackage,
         protoPath: join(process.cwd(), MICRO_PROTO_USER),
       },
@@ -56,7 +56,7 @@ async function bootstrap() {
   );
   await customPrismaService.enableShutdownHooks(app);
 
-  logger.log(`NODE_ENV:${NODE_ENV || 'dev'}`, bootstrap.name);
+  logger.log(`NODE_ENV:${NODE_ENV}`, bootstrap.name);
 
   await app.listen();
 

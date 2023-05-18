@@ -1,12 +1,14 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-09 03:52:09
- * @LastEditTime: 2023-05-15 19:04:40
+ * @LastEditTime: 2023-05-15 21:14:35
  * @Description:
  *
  */
-import * as process from 'process';
-import * as moment from 'moment';
+import process from 'process';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 export default class Utils {
   /**
    * 超时操作的封装
@@ -51,9 +53,13 @@ export default class Utils {
    *
    * UTC time && without Zone flag
    */
-  static timeWithoutZone(time?: moment.MomentInput): string {
-    return moment
-      .utc(time ? time : new Date())
-      .format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
+  static timeWithoutZone(time?: dayjs.ConfigType): string {
+    // return moment
+    //   .utc(time ? time : new Date())
+    //   .format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
+
+    return dayjs(time ? time : new Date())
+      .utc()
+      .format('YYYY-MM-DDTHH:mm:ss.SSS');
   }
 }

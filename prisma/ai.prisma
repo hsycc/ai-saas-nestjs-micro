@@ -9,14 +9,14 @@ datasource db {
 }
 
 model ChatModel {
-  id          String   @id @default(cuid())
-  provider    String?  @default("chatgpt") @db.VarChar(50)
-  model       String?  @default("gpt-3.5-turbo'") @db.VarChar(50)
+  id          String   @id @unique @default(cuid())
+  provider    String   @default("chatgpt") @db.VarChar(50)
+  model       String   @default("gpt-3.5-turbo") @db.VarChar(50)
   name        String   @db.VarChar(50) /// 会话形象名称
-  struct      Json?    @default("[]")
-  questionTpl String?  @default("%question%") @map("question_tpl")
+  struct      Json     @default("[]")
+  questionTpl String   @default("%question%") @map("question_tpl")
   status      Int      @default(1) /// 启用状态
-  userId      String?  @map("user_id")
+  userId      String   @map("user_id")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 

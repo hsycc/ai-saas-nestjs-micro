@@ -1,0 +1,37 @@
+{
+  "apps": [
+    {
+      "name": "ai-saas-user-svc",
+      "script": "./dist/apps/user-svc/main.js",
+      "exec_mode": "fork",
+      "merge_logs": true,
+      "log_date_format": "YYYY-MM-DD HH:mm:ss Z",
+      "out_file": "./logs/ai-user/out.log",
+      "error_file": "./logs/ai-user/error.log",
+      "ignore_watch": ["logs", "upload"],
+      "env": {}
+    },
+    {
+      "name": "ai-saas-ai-svc",
+      "script": "./dist/apps/ai-svc/main.js",
+      "exec_mode": "fork",
+      "merge_logs": true,
+      "log_date_format": "YYYY-MM-DD HH:mm:ss Z",
+      "out_file": "./logs/ai-svc/out.log",
+      "error_file": "./logs/ai-svc/error.log",
+      "ignore_watch": ["logs", "upload"],
+      "env": {}
+    },
+    {
+      "name": "ai-saas-api-gateway",
+      "script": "./dist/apps/api-gateway/main.js",
+      "exec_mode": "fork",
+      "merge_logs": true,
+      "log_date_format": "YYYY-MM-DD HH:mm:ss Z",
+      "out_file": "./logs/api-gateway/out.log",
+      "error_file": "./logs/api-gateway/error.log",
+      "ignore_watch": ["logs", "upload"],
+      "env": {}
+    }
+  ]
+}

@@ -1,14 +1,30 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-11 05:19:17
- * @LastEditTime: 2023-05-11 18:59:41
+ * @LastEditTime: 2023-05-16 19:42:55
  * @Description:
  *
  */
-import { IsValidStruct } from '@lib/common';
+import { IsValidChatModelStruct } from '@lib/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { ChatModel, StatusEnum, StructItem } from '@proto/gen/ai.pb';
-import { Validate } from 'class-validator';
+import { ChatModel, StatusEnum, ChatModelStructItem } from '@proto/gen/ai.pb';
+import { IsEnum, IsNotEmpty, IsString, Validate } from 'class-validator';
+import { ChatCompletionRequestMessageRoleEnum } from 'openai';
+
+export class ChatModelStructItemDto implements ChatModelStructItem {
+  @IsNotEmpty()
+  @IsString()
+  @IsEnum(ChatCompletionRequestMessageRoleEnum)
+  @ApiProperty({
+    enum: ChatCompletionRequestMessageRoleEnum,
+  })
+  key: string;
+
+  @IsNotEmpty()
+  @IsString()
+  value: string;
+}
+
 export class ChatModelEntity implements ChatModel {
   /** id */
   id: string;
@@ -20,20 +36,14 @@ export class ChatModelEntity implements ChatModel {
   name: string;
 
   @ApiProperty({
-    type: 'array',
-    items: {
-      properties: {
-        key: { type: 'string' },
-        value: { type: 'string' },
-      },
-    },
+    type: [ChatModelStructItemDto],
     example: [
       { key: 'system', value: '请用中文和我讲话' },
       { key: 'assistant', value: '你是一只猫~' },
     ],
   })
-  @Validate(IsValidStruct) // 约束 struct 结构
-  struct: StructItem[];
+  @Validate(IsValidChatModelStruct) // 约束 struct 结构
+  struct: ChatModelStructItem[];
 
   /** 预设问题模板 */
   questionTpl: string;
