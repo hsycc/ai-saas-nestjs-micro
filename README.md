@@ -1,7 +1,7 @@
 <!--
  * @Author: hsycc
  * @Date: 2023-04-19 12:43:27
- * @LastEditTime: 2023-05-12 12:06:26
+ * @LastEditTime: 2023-05-19 11:03:51
  * @Description:
  *
 -->
@@ -10,10 +10,17 @@
 
 基于 nestjs prisma grpc 的分布式微服务系统架构设计
 
+- [代码仓库](https://github.com/hsycc/ai-saas-nestjs-micro/tree/main)
+- [文档-架构设计](https://cx0mxc554e.feishu.cn/docx/WjpPdDxcdoJv4hxTjeGcTWeOnXf)
+- [文档-业务设计-潦草版](https://cx0mxc554e.feishu.cn/docx/To9JdneosoGUebxGLtrcVOrFnBc)
+- [ak-sk 鉴权认证机制](./docs/ak-sk%E9%89%B4%E6%9D%83%E8%AE%A4%E8%AF%81%E6%9C%BA%E5%88%B6.md)
+  - [ak-sk 鉴权 typescript 实现示例](./docs/ak-sk%E9%89%B4%E6%9D%83typescript%E5%AE%9E%E7%8E%B0%E7%A4%BA%E4%BE%8B.ts)
+- [其他文档]('./docs')
+
 ## 环境依赖
 
 - git
-- pnpm
+- pnpm 8.5.1
 - node 16.19.1
 - docker 20.10.7
 - docker-compose 1.29.2
@@ -27,37 +34,44 @@
 - [x] proto 编译管理以及文档生成
 - [x] prisma 数据库查询器
 - [x] swagger
-- [x] docker (配置脚本待优化)
+- [x] docker (配置脚本待优化, 管理 postgresql/redis, 微服务)
   - [x] dockerfile
   - [x] docker-compose
   - [ ] docker Swarm 集群部署
-- [x] jwt (安全拓展待完善)
-  - [ ] accessToken & refresh 刷新
-  - [ ] logout redis remove jwt sign
-- [x] 鉴权设计
-  - [x] local 本地化策略
+- [x] jwt 登录
+  - 安全拓展待完善
+    - [ ] accessToken & refresh 刷新
+    - [ ] 登出 logout redis remove jwt sign
+- [x] [鉴权设计](./apps/api-gateway/src/auth/)
+  - [x] local 本地化策略(登录策略)
   - [x] jwt 登录鉴权
-  - [ ] ak/ks 调用鉴权
-- [ ] 接口调用的幂等设计
+  - [x] ak/ks ai 调用鉴权
+- [ ] 新服务以及新模块的快速快发
+  - [x] [shell 脚本编码 ]('./scripts/develop-cli.md')
+  - [ ] cli-配置化（待完成）
 - [ ] 权限设计
 - [ ] 网关监控 健康检查 熔断限流
+- [ ] 接口调用的幂等设计
 - [ ] 缓存
 - [ ] 日志管理
 - [ ] 链路追踪 (skywalking or other)
 - [ ] 配置中心 (nacos or other)
-- [ ] 运维以及容灾设计
+- [ ] 运维以及容灾设
+  - [x] shell 脚本，pm2 管理 (后面切换 docker 管理)
 
 ## 业务设计
 
 - [ ] 账号体系(待完善)
   - [x] 渠道用户管理
   - [ ] 用户权限
-  - [ ] 接入 sms 短信 以及验证码服务
+  - [ ] 接入 sms 短信 以及验证码 登录注册
 - [ ] ai 服务
   - [x] 会话模型管理
   - [ ] openai(chat-gpt) 能力封装
-  - [ ] 引入 redis 做 gpt 接口调用的限制管理
-  - [ ] 引入 mongo 做 gpt token 消耗的 的账单记录
+    - [x] /ai/invoke/chat_completion 会话聊天接口
+      - [ ] 引入 redis 做 gpt 接口调用的限制管理
+      - [ ] 引入 mongo 做 gpt token 消耗的 的账单记录
+    - [ ] /ai/invoke/stt 语音转文字
 
 ## 如何运行(开发环境)
 
@@ -102,7 +116,7 @@ pnpm run start ai-svc
       │ ├── grpc                      封装 rpc 异常抛出拦截、管道数据校验
       │ ├── logger                    logger 日志打印器的封装
       │ ├── swagger                   swagger ApiResponse 泛型封装
-      │ └── openai                    open-ai(chat-gpt) 的能力封装
+      │ └── open-ai                   open-ai(chat-gpt) 的能力封装
 
 ```
 
@@ -111,8 +125,8 @@ pnpm run start ai-svc
 - 鉴权设计
 
   - 鉴权逻辑均放在 api-gateway/auth 模块当中, 数据结构验证也放在 网关服务处理
-  - [ ] 设计 ak、sk 签名流程 （参考 [百度云市场](https://cloud.baidu.com/doc/Reference/s/Njwvz1wot)）
-  - [ ] ak/sk 自定义 Passport 插件编码 AkSkStrategy
+  - [x] 设计 ak、sk 签名流程 （参考 [百度云市场](https://cloud.baidu.com/doc/Reference/s/Njwvz1wot)）
+  - [x] ak/sk 自定义 Passport 插件编码 AkSkStrategy
 
 - rpc Exceptions 优化
 
@@ -129,7 +143,6 @@ pnpm run start ai-svc
 
 - proto
   - [ ] proto 定义的字段为数组且值为空， 反序列化时 该字段会丢失，研究下怎么解决
-  - [ ] proto return google.protobuf.Empty 的 详细了解
 
 ## openai
 
