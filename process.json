@@ -9,7 +9,9 @@
       "out_file": "./logs/ai-user/out.log",
       "error_file": "./logs/ai-user/error.log",
       "ignore_watch": ["logs", "upload"],
-      "env": {}
+      "env": {
+        "NODE_ENV": "production"
+      }
     },
     {
       "name": "ai-saas-ai-svc",
@@ -20,7 +22,9 @@
       "out_file": "./logs/ai-svc/out.log",
       "error_file": "./logs/ai-svc/error.log",
       "ignore_watch": ["logs", "upload"],
-      "env": {}
+      "env": {
+        "NODE_ENV": "production"
+      }
     },
     {
       "name": "ai-saas-api-gateway",
@@ -31,7 +35,9 @@
       "out_file": "./logs/api-gateway/out.log",
       "error_file": "./logs/api-gateway/error.log",
       "ignore_watch": ["logs", "upload"],
-      "env": {}
+      "env": {
+        "NODE_ENV": "production"
+      }
     }
   ]
 }

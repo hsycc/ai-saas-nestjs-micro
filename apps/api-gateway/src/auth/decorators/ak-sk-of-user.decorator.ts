@@ -1,36 +1,25 @@
 /*
- * 获取当前用户jwt登录信息
+ * 获取当 ak/sk 鉴权的所属渠道用户信息
  * @Author: hsycc
  * @Date: 2023-02-21 13:24:34
- * @LastEditTime: 2023-05-18 22:00:09
+ * @LastEditTime: 2023-05-24 22:34:17
  * @Description:
  *
  */
-import {
-  createParamDecorator,
-  UnauthorizedException,
-  ExecutionContext,
-} from '@nestjs/common';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { CONSTANT_AK_OF_USER } from '../strategy/ak-sk.strategy';
+import Utils from '@lib/common/utils/helper';
 
 export interface CurrentUserDecoratorData {
-  /** 想要获取的属性 */
   property?: string;
-  options?: {
-    /** 是否强求要有登录信息, 未登录会抛出异常 */
-    required?: boolean;
-  };
 }
 
-/**
- * 可以指定装饰器参数
- * 如果没有指定, 默认获取 `user.id`
- * 如果有指定, 参考 `CurrentUserDecoratorData`
- */
 export const CurrentAkSkOfUser = createParamDecorator(
   (data: CurrentUserDecoratorData | string = 'id', ctx: ExecutionContext) => {
     const req = ctx.switchToHttp().getRequest();
-
+    if (!req[CONSTANT_AK_OF_USER] && Utils.isDev) {
+      return '';
+    }
     let result;
     if (typeof data === 'string') {
       result = req[CONSTANT_AK_OF_USER][data];
@@ -38,9 +27,6 @@ export const CurrentAkSkOfUser = createParamDecorator(
       result = data.property
         ? req[CONSTANT_AK_OF_USER][data.property]
         : req[CONSTANT_AK_OF_USER];
-      if (data.options.required && !result) {
-        throw new UnauthorizedException();
-      }
     }
     return result;
   },

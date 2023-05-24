@@ -1,7 +1,7 @@
 <!--
  * @Author: hsycc
  * @Date: 2023-05-04 14:59:03
- * @LastEditTime: 2023-05-19 02:10:21
+ * @LastEditTime: 2023-05-24 15:27:30
  * @Description:
  *
 -->
@@ -21,6 +21,8 @@ Prisma Studio: GUI to view and edit data in your database
 - [nestjs-prisma](https://nestjs-prisma.dev/docs/installation/)
 - [Error message reference](https://www.prisma.io/docs/reference/api-reference/error-reference#prisma-client-query-engine)
 
+- [快速入手-面向 Node.js 和 TypeScript 的下一代 ORM 工具 Prisma](https://mdnice.com/writing/3ef20876125847e08e9e6977394fc2fe)
+
 ## 使用多个 prisma 客户端管理
 
 ```bash
@@ -32,7 +34,12 @@ npx prisma generate --schema=prisma/user.prisma
 npx prisma generate --schema=prisma/ai.prisma
 
 # 生成 sql 迁移命令 migrate
-# dev reset deploy status resolve diff
+## dev 开发环境 生成 migrations sql 命令 文件
+## reset
+## deploy 根据 migrations sql 命令 文件 同步数据库
+## status
+## resolve
+## diff
 npx prisma migrate dev -n user --schema=prisma/user.prisma
 npx prisma migrate dev -n ai --schema=prisma/ai.prisma
 
@@ -43,8 +50,10 @@ npx prisma migrate deploy --schema=prisma/ai.prisma
 npx prisma studio --schema=prisma/user.prisma -p 5555
 npx prisma studio --schema=prisma/ai.prisma -p 5556
 
-# db [pull push seed execute]
-# 根据 migrations 文件 创建 db
+# db
+## push 同步远程数据库， 可能会造成数据丢失， 不与迁移交互或依赖迁移。不会更新迁移表，也不会生成迁移文件。 推荐用 prisma migrate deploy 同步数据库
+## pull 远程数据库 同步生成 .prisma 文件
+## seed  直接 用 pnpm run seed 替代， 推送数据
 npx prisma db push --schema=prisma/user.prisma
 npx prisma db push --schema=prisma/ai.prisma
 ```

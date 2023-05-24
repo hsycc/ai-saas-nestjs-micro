@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-10 23:21:24
- * @LastEditTime: 2023-05-19 00:33:34
+ * @LastEditTime: 2023-05-24 19:49:58
  * @Description:
  *
  */
@@ -11,17 +11,13 @@ import { ConfigService } from '@nestjs/config';
 import { MicroConfigType } from '@lib/config';
 
 import { AiController } from './ai.controller';
-import {
-  AI_CHAT_MODEL_SERVICE_NAME,
-  AI_PACKAGE_NAME,
-  AI_SERVICE_NAME,
-} from '@proto/gen/ai.pb';
+import { AI_PACKAGE_NAME } from '@proto/gen/ai.pb';
 
 @Module({
   controllers: [AiController],
   providers: [
     {
-      provide: AI_CHAT_MODEL_SERVICE_NAME,
+      provide: AI_PACKAGE_NAME,
       useFactory: (config: ConfigService) => {
         const MicroConfig = config.get<MicroConfigType>('MicroConfig');
         return ClientProxyFactory.create({
@@ -38,24 +34,24 @@ import {
       },
       inject: [ConfigService],
     },
-    {
-      provide: AI_SERVICE_NAME,
-      useFactory: (config: ConfigService) => {
-        const MicroConfig = config.get<MicroConfigType>('MicroConfig');
-        return ClientProxyFactory.create({
-          transport: Transport.GRPC,
-          options: {
-            url: MicroConfig.microDomainAi + ':' + MicroConfig.microPortAi,
-            package: AI_PACKAGE_NAME,
-            protoPath: MicroConfig.microProtoAi,
-            loader: {
-              keepCase: true,
-            },
-          },
-        });
-      },
-      inject: [ConfigService],
-    },
+    // {
+    //   provide: AI_SPEECH_SERVICE_NAME,
+    //   useFactory: (config: ConfigService) => {
+    //     const MicroConfig = config.get<MicroConfigType>('MicroConfig');
+    //     return ClientProxyFactory.create({
+    //       transport: Transport.GRPC,
+    //       options: {
+    //         url: MicroConfig.microDomainAi + ':' + MicroConfig.microPortAi,
+    //         package: AI_PACKAGE_NAME,
+    //         protoPath: MicroConfig.microProtoAi,
+    //         loader: {
+    //           keepCase: true,
+    //         },
+    //       },
+    //     });
+    //   },
+    //   inject: [ConfigService],
+    // },
   ],
 })
 export class AiModule {}

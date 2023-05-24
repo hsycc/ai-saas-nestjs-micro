@@ -16,6 +16,7 @@ import { PrismaClient } from '@prisma/@ai-client';
 import { OpenAiModule } from '@lib/open-ai';
 import { ChatModule } from './chat/chat.module';
 import { SVC_SERVICE_NAME } from './constants';
+import { SpeechModule } from './speech/speech.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -32,6 +33,7 @@ import { SVC_SERVICE_NAME } from './constants';
     }),
     ChatModule,
     OpenAiModule,
+    SpeechModule,
   ],
   controllers: [],
   providers: [],

@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-10 23:21:34
- * @LastEditTime: 2023-05-18 23:44:31
+ * @LastEditTime: 2023-05-24 23:01:33
  * @Description:
  *
  */
@@ -16,9 +16,11 @@ import {
   Param,
   Body,
   Query,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
 import {
   ApiBaseResponse,
   ApiPaginatedResponse,
@@ -30,7 +32,10 @@ import Utils from '@lib/common/utils/helper';
 import { Metadata } from '@grpc/grpc-js';
 import {
   AI_CHAT_MODEL_SERVICE_NAME,
+  AI_SPEECH_SERVICE_NAME,
+  AI_PACKAGE_NAME,
   AiChatModelServiceClient,
+  AiSpeechServiceClient,
 } from '@proto/gen/ai.pb';
 import { CreateChatModelDto, UpdateChatModelDto } from '@app/ai-svc/chat/dto';
 import { ChatModelEntity } from '@app/ai-svc/chat/entities/chat-model.entity';
@@ -42,6 +47,11 @@ import {
   CreateChatCompletionChoicesDto,
   CreateChatCompletionResponseChoicesInnerDto,
 } from '@app/ai-svc/chat/dto/create-chat-completion-choices.dto';
+import { SpeechFileInterceptor } from '@lib/common';
+import {
+  CreateTranscriptionRequestDto,
+  CreateTranscriptionResponseDto,
+} from '@app/ai-svc/speech/dto';
 
 @ApiTags('ai')
 @Controller('ai')
@@ -49,18 +59,27 @@ import {
   ChatModelEntity,
   CreateChatCompletionChoicesDto,
   CreateChatCompletionResponseChoicesInnerDto,
+  CreateTranscriptionResponseDto,
+  CreateChatCompletionDto,
 )
 export class AiController implements OnModuleInit {
-  private svc: AiChatModelServiceClient;
+  private aiChatModelServiceClient: AiChatModelServiceClient;
+
+  private aiSpeechServiceClient: AiSpeechServiceClient;
 
   constructor(
-    @Inject(AI_CHAT_MODEL_SERVICE_NAME)
+    @Inject(AI_PACKAGE_NAME)
     private readonly client: ClientGrpc,
   ) {}
 
   public onModuleInit(): void {
-    this.svc = this.client.getService<AiChatModelServiceClient>(
-      AI_CHAT_MODEL_SERVICE_NAME,
+    this.aiChatModelServiceClient =
+      this.client.getService<AiChatModelServiceClient>(
+        AI_CHAT_MODEL_SERVICE_NAME,
+      );
+
+    this.aiSpeechServiceClient = this.client.getService<AiSpeechServiceClient>(
+      AI_SPEECH_SERVICE_NAME,
     );
   }
 
@@ -79,14 +98,35 @@ export class AiController implements OnModuleInit {
   ) {
     const metadata = new Metadata();
     metadata.set('userId', userId);
-    return this.svc.createChatCompletion(dto, metadata);
+    return this.aiChatModelServiceClient.createChatCompletion(dto, metadata);
   }
   /**
    *  渠道设备调用 ai stt 能力
    */
   @Post('invoke/stt')
-  @Auth('ak/sk')
-  private async stt() {}
+  @Auth('ak/sk', {
+    // 跳过鉴权检验
+    skipApiAuth: Utils.isDev,
+  })
+  @UseInterceptors(SpeechFileInterceptor())
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: CreateTranscriptionRequestDto,
+  })
+  @ApiObjResponse(CreateTranscriptionResponseDto)
+  private async stt(
+    @UploadedFile() file: Express.Multer.File,
+    @CurrentAkSkOfUser() userId,
+  ) {
+    const metadata = new Metadata();
+    metadata.set('userId', userId);
+    return this.aiSpeechServiceClient.createTranscription(
+      {
+        buffer: file.buffer,
+      },
+      metadata,
+    );
+  }
 
   /**
    *  渠道设备调用 ai tts 能力
@@ -97,7 +137,6 @@ export class AiController implements OnModuleInit {
 
   /**
    * 渠道用户创建会话模型
-   * TODO: 去掉相同name的重复创建
    */
   @Post('chat/model')
   @Auth('jwt')
@@ -109,7 +148,7 @@ export class AiController implements OnModuleInit {
     const metadata = new Metadata();
     metadata.set('userId', userId);
 
-    return this.svc.createChatModel(
+    return this.aiChatModelServiceClient.createChatModel(
       {
         ...createChatModelDto,
       },
@@ -133,7 +172,7 @@ export class AiController implements OnModuleInit {
   ) {
     const metadata = new Metadata();
     metadata.set('userId', userId);
-    return this.svc.deleteChatModel({ id }, metadata);
+    return this.aiChatModelServiceClient.deleteChatModel({ id }, metadata);
   }
 
   /**
@@ -148,7 +187,10 @@ export class AiController implements OnModuleInit {
   ) {
     const metadata = new Metadata();
     metadata.set('userId', userId);
-    return this.svc.getChatModelList({ ...paginatedDto }, metadata);
+    return this.aiChatModelServiceClient.getChatModelList(
+      { ...paginatedDto },
+      metadata,
+    );
   }
 
   /**
@@ -167,7 +209,7 @@ export class AiController implements OnModuleInit {
   ) {
     const metadata = new Metadata();
     metadata.set('userId', userId);
-    return this.svc.getChatModelById({ id }, metadata);
+    return this.aiChatModelServiceClient.getChatModelById({ id }, metadata);
   }
 
   /**
@@ -183,7 +225,7 @@ export class AiController implements OnModuleInit {
     const metadata = new Metadata();
     metadata.set('userId', userId);
 
-    return this.svc.updateChatModel(
+    return this.aiChatModelServiceClient.updateChatModel(
       {
         ...updateChatModelDto,
       },

@@ -20,5 +20,7 @@ model ChatModel {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
+  @@unique([name, userId], name: "name_userId")
+  @@unique([id, userId], name: "idx_useId")
   @@map("chat_model")
 }

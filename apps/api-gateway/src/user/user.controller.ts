@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-26 14:31:24
- * @LastEditTime: 2023-05-15 15:41:41
+ * @LastEditTime: 2023-05-24 19:48:59
  * @Description:
  *
  */
@@ -31,7 +31,11 @@ import {
 
 import { generateKeyPair } from '@lib/common';
 
-import { UserServiceClient, USER_SERVICE_NAME } from '@proto/gen/user.pb';
+import {
+  UserServiceClient,
+  USER_SERVICE_NAME,
+  USER_PACKAGE_NAME,
+} from '@proto/gen/user.pb';
 import {
   CreateUserDto,
   UpdateUserPublicDto,
@@ -45,15 +49,16 @@ import { CurrentUser } from '../auth/decorators/user.decorator';
 @Controller('user')
 @BaseApiExtraModels(UserEntity)
 export class UserController implements OnModuleInit {
-  private svc: UserServiceClient;
+  private userServiceClient: UserServiceClient;
 
   constructor(
-    @Inject(USER_SERVICE_NAME)
+    @Inject(USER_PACKAGE_NAME)
     private readonly client: ClientGrpc,
   ) {}
 
   public onModuleInit(): void {
-    this.svc = this.client.getService<UserServiceClient>(USER_SERVICE_NAME);
+    this.userServiceClient =
+      this.client.getService<UserServiceClient>(USER_SERVICE_NAME);
   }
 
   /**
@@ -63,7 +68,7 @@ export class UserController implements OnModuleInit {
   @Auth('jwt')
   @ApiObjResponse(UserEntity)
   private async current(@CurrentUser() id) {
-    return this.svc.getUserById({ id }, new Metadata());
+    return this.userServiceClient.getUserById({ id }, new Metadata());
   }
 
   /**
@@ -76,7 +81,7 @@ export class UserController implements OnModuleInit {
     @CurrentUser() id,
     @Body() updateUserPublicDto: UpdateUserPublicDto,
   ) {
-    return this.svc.updateUser(
+    return this.userServiceClient.updateUser(
       {
         id,
         ...updateUserPublicDto,
@@ -92,7 +97,7 @@ export class UserController implements OnModuleInit {
   @Auth('jwt')
   @ApiBaseResponse()
   private async updateKeys(@CurrentUser() id) {
-    return this.svc.updateUser(
+    return this.userServiceClient.updateUser(
       {
         id,
         ...generateKeyPair(),
@@ -107,7 +112,7 @@ export class UserController implements OnModuleInit {
   @Post('register')
   @ApiObjResponse(UserEntity)
   async register(@Body() createUserDto: CreateUserDto) {
-    return this.svc.createUser(createUserDto, new Metadata());
+    return this.userServiceClient.createUser(createUserDto, new Metadata());
   }
 
   /**
@@ -120,7 +125,7 @@ export class UserController implements OnModuleInit {
     example: 'clhcsprq10000uawc05bf2whi',
   })
   private async deleteUser(@Param('id') id: string) {
-    return this.svc.deleteUser({ id }, new Metadata());
+    return this.userServiceClient.deleteUser({ id }, new Metadata());
   }
 
   /**
@@ -131,7 +136,10 @@ export class UserController implements OnModuleInit {
   private async updateSecurity(
     @Body() updateUserPrivateDto: UpdateUserPrivateDto,
   ) {
-    return this.svc.updateUser(updateUserPrivateDto, new Metadata());
+    return this.userServiceClient.updateUser(
+      updateUserPrivateDto,
+      new Metadata(),
+    );
   }
 
   /**
@@ -140,7 +148,7 @@ export class UserController implements OnModuleInit {
   @Get()
   @ApiListResponse(UserEntity)
   private async userList() {
-    return this.svc.getUserModelList({}, new Metadata());
+    return this.userServiceClient.getUserModelList({}, new Metadata());
   }
 
   /**
@@ -153,6 +161,6 @@ export class UserController implements OnModuleInit {
     example: 'clhcsprq10000uawc05bf2whi',
   })
   private async getUserById(@Param('id') id: string) {
-    return this.svc.getUserById({ id }, new Metadata());
+    return this.userServiceClient.getUserById({ id }, new Metadata());
   }
 }

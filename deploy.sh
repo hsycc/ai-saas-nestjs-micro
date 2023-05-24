@@ -2,7 +2,7 @@
 ###
  # @Author: hsycc
  # @Date: 2023-05-09 03:52:09
- # @LastEditTime: 2023-05-19 10:01:30
+ # @LastEditTime: 2023-05-24 23:09:48
  # @Description: 
  # 
 ### 
@@ -27,8 +27,14 @@ pnpm run build api-gateway
 
 pnpm run prisma:generate
 
-pnpm run prisma:push
+# db push 可能造成 数据的丢失 , 用 migrate deploy 替代
+# pnpm run prisma:push
+# 预设数据
+# pnpm run seed
 
+
+# 根据生成的sql命令同步数据库
+pnpm run prisma:deploy
 
 pm2 reload process.json 
 

@@ -1,15 +1,27 @@
 /* eslint-disable */
-import { Metadata } from '@grpc/grpc-js';
-import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
-import { Empty } from './google/protobuf/empty.pb';
+import { Metadata } from "@grpc/grpc-js";
+import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { Observable } from "rxjs";
+import { Empty } from "./google/protobuf/empty.pb";
 
-export const protobufPackage = 'ai';
+export const protobufPackage = "ai";
 
 export enum StatusEnum {
   DISABLE = 0,
   ENABLE = 1,
   UNRECOGNIZED = -1,
+}
+
+export interface CreateTranscriptionRequest {
+  buffer: Uint8Array;
+  prompt?: string | undefined;
+  temperature?: number | undefined;
+  language_code?: string | undefined;
+}
+
+/** alias openai CreateTranscriptionResponse */
+export interface CreateTranscriptionResponse {
+  text: string;
 }
 
 export interface Pagination {
@@ -78,7 +90,7 @@ export interface CreateChatCompletionRequest {
   messages: ChatCompletionRequestMessage[];
 }
 
-/** alia openai CreateChatCompletionResponseChoicesInner */
+/** alias openai CreateChatCompletionResponseChoicesInner */
 export interface CreateChatCompletionResponseChoicesInner {
   index?: number | undefined;
   message?: ChatCompletionRequestMessage | undefined;
@@ -89,77 +101,51 @@ export interface CreateChatCompletionChoicesResponse {
   choices: CreateChatCompletionResponseChoicesInner[];
 }
 
-export const AI_PACKAGE_NAME = 'ai';
+export const AI_PACKAGE_NAME = "ai";
 
-export interface AiServiceClient {
-  test(request: Empty, metadata: Metadata, ...rest: any): Observable<Empty>;
+export interface AiSpeechServiceClient {
+  createTranscription(
+    request: CreateTranscriptionRequest,
+    metadata: Metadata,
+    ...rest: any
+  ): Observable<CreateTranscriptionResponse>;
 }
 
-export interface AiServiceController {
-  test(request: Empty, metadata: Metadata, ...rest: any): void;
+export interface AiSpeechServiceController {
+  createTranscription(
+    request: CreateTranscriptionRequest,
+    metadata: Metadata,
+    ...rest: any
+  ): Promise<CreateTranscriptionResponse> | Observable<CreateTranscriptionResponse> | CreateTranscriptionResponse;
 }
 
-export function AiServiceControllerMethods() {
+export function AiSpeechServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ['test'];
+    const grpcMethods: string[] = ["createTranscription"];
     for (const method of grpcMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method,
-      );
-      GrpcMethod('AiService', method)(
-        constructor.prototype[method],
-        method,
-        descriptor,
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod("AiSpeechService", method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method,
-      );
-      GrpcStreamMethod('AiService', method)(
-        constructor.prototype[method],
-        method,
-        descriptor,
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("AiSpeechService", method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const AI_SERVICE_NAME = 'AiService';
+export const AI_SPEECH_SERVICE_NAME = "AiSpeechService";
 
 export interface AiChatModelServiceClient {
-  createChatModel(
-    request: CreateChatModelRequest,
-    metadata: Metadata,
-    ...rest: any
-  ): Observable<ChatModel>;
+  createChatModel(request: CreateChatModelRequest, metadata: Metadata, ...rest: any): Observable<ChatModel>;
 
-  deleteChatModel(
-    request: QueryChatModelByIdRequest,
-    metadata: Metadata,
-    ...rest: any
-  ): Observable<Empty>;
+  deleteChatModel(request: QueryChatModelByIdRequest, metadata: Metadata, ...rest: any): Observable<Empty>;
 
-  updateChatModel(
-    request: UpdateChatModelRequest,
-    metadata: Metadata,
-    ...rest: any
-  ): Observable<Empty>;
+  updateChatModel(request: UpdateChatModelRequest, metadata: Metadata, ...rest: any): Observable<Empty>;
 
-  getChatModelById(
-    request: QueryChatModelByIdRequest,
-    metadata: Metadata,
-    ...rest: any
-  ): Observable<ChatModel>;
+  getChatModelById(request: QueryChatModelByIdRequest, metadata: Metadata, ...rest: any): Observable<ChatModel>;
 
-  getChatModelList(
-    request: QueryChatModelListRequest,
-    metadata: Metadata,
-    ...rest: any
-  ): Observable<ChatModelList>;
+  getChatModelList(request: QueryChatModelListRequest, metadata: Metadata, ...rest: any): Observable<ChatModelList>;
 
   createChatCompletion(
     request: CreateChatCompletionRequest,
@@ -175,17 +161,9 @@ export interface AiChatModelServiceController {
     ...rest: any
   ): Promise<ChatModel> | Observable<ChatModel> | ChatModel;
 
-  deleteChatModel(
-    request: QueryChatModelByIdRequest,
-    metadata: Metadata,
-    ...rest: any
-  ): void;
+  deleteChatModel(request: QueryChatModelByIdRequest, metadata: Metadata, ...rest: any): void;
 
-  updateChatModel(
-    request: UpdateChatModelRequest,
-    metadata: Metadata,
-    ...rest: any
-  ): void;
+  updateChatModel(request: UpdateChatModelRequest, metadata: Metadata, ...rest: any): void;
 
   getChatModelById(
     request: QueryChatModelByIdRequest,
@@ -212,37 +190,23 @@ export interface AiChatModelServiceController {
 export function AiChatModelServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      'createChatModel',
-      'deleteChatModel',
-      'updateChatModel',
-      'getChatModelById',
-      'getChatModelList',
-      'createChatCompletion',
+      "createChatModel",
+      "deleteChatModel",
+      "updateChatModel",
+      "getChatModelById",
+      "getChatModelList",
+      "createChatCompletion",
     ];
     for (const method of grpcMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method,
-      );
-      GrpcMethod('AiChatModelService', method)(
-        constructor.prototype[method],
-        method,
-        descriptor,
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod("AiChatModelService", method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method,
-      );
-      GrpcStreamMethod('AiChatModelService', method)(
-        constructor.prototype[method],
-        method,
-        descriptor,
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("AiChatModelService", method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const AI_CHAT_MODEL_SERVICE_NAME = 'AiChatModelService';
+export const AI_CHAT_MODEL_SERVICE_NAME = "AiChatModelService";

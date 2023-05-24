@@ -19,15 +19,11 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "@app/ai-svc/*": ["apps/ai-svc/src/*"],
+      "@app/user-svc/*": ["apps/user-svc/src/*"],
+      "@app/api-gateway/*": ["apps/api-gateway/src/*"],
       "@proto/*": ["_proto/*"],
       "@prisma/*": ["prisma/*"],
-      "@app/api-gateway": ["apps/api-gateway/src"],
-      "@app/api-gateway/*": ["apps/api-gateway/src/*"],
-      "@app/user-svc": ["apps/user-svc/src"],
-      "@app/user-svc/*": ["apps/user-svc/src/*"],
-      "@app/ai-svc": ["apps/ai-svc/src"],
-      "@app/ai-svc/*": ["apps/ai-svc/src/*"],
-
       "@lib/common": ["libs/common/src"],
       "@lib/common/*": ["libs/common/src/*"],
       "@lib/config": ["libs/config/src"],

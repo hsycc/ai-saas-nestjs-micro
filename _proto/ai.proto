@@ -6,9 +6,20 @@ import "google/protobuf/empty.proto";
 
 package ai;
 
-service AiService {
-  rpc test(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+service AiSpeechService {
+  rpc createTranscription(CreateTranscriptionRequest)
+      returns (CreateTranscriptionResponse) {}
 }
+
+message CreateTranscriptionRequest {
+  bytes buffer = 1;
+  optional string prompt = 2;
+  optional int32 temperature = 3;
+  optional string language_code = 4;
+}
+
+// alias openai CreateTranscriptionResponse
+message CreateTranscriptionResponse { string text = 1; }
 
 service AiChatModelService {
   rpc createChatModel(CreateChatModelRequest) returns (ChatModel);
@@ -94,7 +105,7 @@ message CreateChatCompletionRequest {
   repeated ChatCompletionRequestMessage messages = 3;
 }
 
-// alia openai CreateChatCompletionResponseChoicesInner
+// alias openai CreateChatCompletionResponseChoicesInner
 message CreateChatCompletionResponseChoicesInner {
   optional int32 index = 1;
   optional ChatCompletionRequestMessage message = 2;

@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-09 03:52:25
- * @LastEditTime: 2023-05-18 19:04:50
+ * @LastEditTime: 2023-05-25 16:51:14
  * @Description:
  *
  */
@@ -33,6 +33,8 @@ export interface MicroConfigType {
   microDomainAi: string;
   microPortAi: string;
   microProtoAi: string;
+
+  // sedMicroConfigUnRemove
 }
 
 export interface OssConfigType {

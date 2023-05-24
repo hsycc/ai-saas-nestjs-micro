@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
   output   = "../prisma/@user-client"
@@ -19,7 +16,7 @@ model User {
   status    Int      @default(1)
   role      Int      @default(1)
   accessKey String   @unique @default("") @map("access_key")
-  secretKey String   @default("") @map("secret_key") // secret_key 
+  secretKey String   @default("") @map("secret_key")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

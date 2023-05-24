@@ -25,3 +25,9 @@ CREATE TABLE "chat_model" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "chat_model_id_key" ON "chat_model"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "chat_model_name_user_id_key" ON "chat_model"("name", "user_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "chat_model_id_user_id_key" ON "chat_model"("id", "user_id");

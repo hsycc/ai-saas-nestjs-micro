@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-06 09:54:31
- * @LastEditTime: 2023-05-18 20:47:34
+ * @LastEditTime: 2023-05-24 21:08:02
  * @Description:
  *
  */
@@ -39,8 +39,8 @@ export function Auth(
 
             description: `ak/sk 认证字符串, 示例cc-auth-v1/KqT9eO20jisK3vgmktR5/2023-05-16T01:26:57Z/1800/host/bb701fa6cbaf0ba105d9eccaf7e0f58796234ddb56c9a09084913a7c8db304b0`,
             schema: {
-              default:
-                'cc-auth-v1/KqT9eO20jisK3vgmktR5/2023-05-16T01:26:57Z/1800/host/bb701fa6cbaf0ba105d9eccaf7e0f58796234ddb56c9a09084913a7c8db304b0',
+              // default:
+              //   'cc-auth-v1/KqT9eO20jisK3vgmktR5/2023-05-16T01:26:57Z/1800/host/bb701fa6cbaf0ba105d9eccaf7e0f58796234ddb56c9a09084913a7c8db304b0',
             },
           },
         ]),

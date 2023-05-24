@@ -1,7 +1,7 @@
 <!--
  * @Author: hsycc
  * @Date: 2023-04-19 12:43:27
- * @LastEditTime: 2023-05-19 11:03:51
+ * @LastEditTime: 2023-05-24 14:23:28
  * @Description:
  *
 -->
@@ -15,7 +15,7 @@
 - [文档-业务设计-潦草版](https://cx0mxc554e.feishu.cn/docx/To9JdneosoGUebxGLtrcVOrFnBc)
 - [ak-sk 鉴权认证机制](./docs/ak-sk%E9%89%B4%E6%9D%83%E8%AE%A4%E8%AF%81%E6%9C%BA%E5%88%B6.md)
   - [ak-sk 鉴权 typescript 实现示例](./docs/ak-sk%E9%89%B4%E6%9D%83typescript%E5%AE%9E%E7%8E%B0%E7%A4%BA%E4%BE%8B.ts)
-- [其他文档]('./docs')
+- [其他文档](./docs)
 
 ## 环境依赖
 
@@ -136,7 +136,7 @@ pnpm run start ai-svc
 
 - prisma
 
-  - [ ] prisma 中间件 （logger 异常抛出, findFirstOrThrow ）
+  - [ ] prisma 中间件 （logger 异常抛出 ）
   - [ ] prisma 软删除设计
   - [ ] prisma model 硬编码 成 proto3 的 message 脚本
   - [ ] 研究下 postgresql 默认显示的时区问题, 设置为 utc-8, prisma 存储的日期格式是有记录时区偏移量[https://github.com/prisma/prisma/issues/5051]

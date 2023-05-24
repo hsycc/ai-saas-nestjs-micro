@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-07 03:44:52
- * @LastEditTime: 2023-05-19 00:41:34
+ * @LastEditTime: 2023-05-24 23:00:31
  * @Description:
  *
  */
@@ -14,7 +14,11 @@ import {
   ChatModelStructItem,
   CreateChatCompletionChoicesResponse,
 } from '@proto/gen/ai.pb';
-import { GrpcInternalException, GrpcNotFoundException } from '@lib/grpc';
+import {
+  GrpcAlreadyExistsException,
+  GrpcInternalException,
+  GrpcNotFoundException,
+} from '@lib/grpc';
 import { PRISMA_CLIENT_NAME_AI } from '@prisma/scripts/constants';
 import { PrismaClient, Prisma } from '@prisma/@ai-client';
 import {
@@ -45,19 +49,19 @@ export class ChatService {
     dto: CreateChatModelDto,
     metadata: Metadata,
   ): Promise<ChatModel> {
-    // TODO: 过滤相同name的重复创建
     const userId = metadata.get('userId')[0] as string;
 
     try {
-      return this.prisma.client.chatModel.create({
+      const _data = await this.prisma.client.chatModel.create({
         data: {
           ...dto,
           userId,
         } as unknown as Prisma.ChatModelCreateInput,
-      }) as unknown as ChatModel;
-      // return _data as unknown as ChatModel;
+      });
+
+      return _data as unknown as ChatModel;
     } catch (error) {
-      throw new GrpcInternalException(error?.message);
+      throw new GrpcAlreadyExistsException();
     }
   }
 
@@ -68,8 +72,13 @@ export class ChatService {
     const { id } = dto;
     const userId = metadata.get('userId')[0] as string;
     try {
-      await this.prisma.client.chatModel.findFirstOrThrow({
-        where: { id, userId },
+      await this.prisma.client.chatModel.findUniqueOrThrow({
+        where: {
+          idx_useId: {
+            id,
+            userId,
+          },
+        },
       });
       await this.prisma.client.chatModel.delete({ where: { id } });
     } catch (error) {
@@ -85,8 +94,13 @@ export class ChatService {
       const { id } = dto;
       const userId = metadata.get('userId')[0] as string;
 
-      await this.prisma.client.chatModel.findFirstOrThrow({
-        where: { id, userId },
+      await this.prisma.client.chatModel.findUniqueOrThrow({
+        where: {
+          idx_useId: {
+            id,
+            userId,
+          },
+        },
       });
 
       const data = {
@@ -108,16 +122,18 @@ export class ChatService {
     const { id } = dto;
     const userId = metadata.get('userId')[0] as string;
 
-    let where: any = { id };
+    let where: Prisma.ChatModelWhereUniqueInput = { id };
 
     if (userId) {
       where = {
-        ...where,
-        userId,
+        idx_useId: {
+          userId,
+          id,
+        },
       };
     }
     try {
-      const data = await this.prisma.client.chatModel.findFirstOrThrow({
+      const data = await this.prisma.client.chatModel.findUniqueOrThrow({
         where,
       });
       return data as unknown as ChatModel;
@@ -201,12 +217,10 @@ export class ChatService {
           timeout: 30000,
         })
       ).data;
-      // console.log('completion', completion);
 
       const { usage, choices } = completion;
 
       // TODO: token usage 账单记录
-      console.log(choices, 33);
 
       return {
         choices,

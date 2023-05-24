@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-20 18:07:23
- * @LastEditTime: 2023-05-19 08:14:45
+ * @LastEditTime: 2023-05-25 16:50:35
  * @Description:
  *
  */
@@ -15,4 +15,6 @@ export const MicroConfig = registerAs('MicroConfig', () => ({
   microDomainAi: process.env.MICRO_DOMAIN_AI,
   microPortAi: process.env.MICRO_PORT_AI,
   microProtoAi: process.env.MICRO_PROTO_AI,
+
+  // sedMicroConfigUnRemove
 }));

@@ -1,5 +1,3 @@
-# .PHONY: proto-gen-only clean-gen proto-all proto-user proto-ai 
-
 DIRNAME = _proto
 DIRNAME_GEN = _proto/gen
 
