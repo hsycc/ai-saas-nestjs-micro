@@ -38,7 +38,3 @@ lerna-debug.log*
 /documentation
 /.prisma
 /prisma/@*-client
-
-scripts/develop-cli.md
-
-scripts/gen-*

@@ -1,7 +1,7 @@
 <!--
  * @Author: hsycc
  * @Date: 2023-04-19 12:43:27
- * @LastEditTime: 2023-05-24 14:23:28
+ * @LastEditTime: 2023-05-26 11:30:53
  * @Description:
  *
 -->
@@ -39,25 +39,21 @@
   - [x] docker-compose
   - [ ] docker Swarm 集群部署
 - [x] jwt 登录
-  - 安全拓展待完善
-    - [ ] accessToken & refresh 刷新
-    - [ ] 登出 logout redis remove jwt sign
+  - [ ] jwt 主动注销实现 （ 借助 redis 实现 ）
+  - ~~accessToken & refreshToken 双 token 设计~~ 标准的 oauth2.0 rfc 里面。refreshToken 是放在第三方服务器端的，accessToken 是放在第三方客户端的。出于对第三方客户端和链路安全的不信任。所以设计了双 token 机制，并且 accessToken 有效期很短。
+    业务场景并不涉及三方鉴权授权，只使用单 token 设计
 - [x] [鉴权设计](./apps/api-gateway/src/auth/)
   - [x] local 本地化策略(登录策略)
   - [x] jwt 登录鉴权
   - [x] ak/ks ai 调用鉴权
-- [ ] 新服务以及新模块的快速快发
-  - [x] [shell 脚本编码 ]('./scripts/develop-cli.md')
-  - [ ] cli-配置化（待完成）
-- [ ] 权限设计
-- [ ] 网关监控 健康检查 熔断限流
-- [ ] 接口调用的幂等设计
-- [ ] 缓存
-- [ ] 日志管理
-- [ ] 链路追踪 (skywalking or other)
-- [ ] 配置中心 (nacos or other)
-- [ ] 运维以及容灾设
-  - [x] shell 脚本，pm2 管理 (后面切换 docker 管理)
+- [x] [nestjs-grpc-prisma 微服务架构 gen-cli 快速开发新服务的工具库](./scripts/gen-cli.md)
+- [ ] 用户权限设计
+- [ ] nacos 配置中心 网关监控 健康检查 熔断限流
+- [ ] 日志管理 和 链路追踪 (skywalking or other)
+- [ ] 接口幂等设计 和 缓存
+- [x] 运维部署
+  - [x] pm2 管理
+  - [ ] 切换成 docker-compose
 
 ## 业务设计
 
