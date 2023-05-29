@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-07 03:44:52
- * @LastEditTime: 2023-05-15 15:41:28
+ * @LastEditTime: 2023-05-30 01:23:05
  * @Description:
  *
  */
@@ -53,7 +53,6 @@ export class UserService {
 
   async deleteUser(dto: QueryUserByIdDto): Promise<void> {
     const { id } = dto;
-    // TODO: 拦截 prisma 的异常抛出
     try {
       await this.prisma.client.user.delete({ where: { id } });
     } catch (error) {

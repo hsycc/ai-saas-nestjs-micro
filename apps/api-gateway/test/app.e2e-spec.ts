@@ -1,14 +1,21 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-05-09 03:52:09
+ * @LastEditTime: 2023-05-29 07:17:36
+ * @Description:
+ *
+ */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 // import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { GwModule } from '../src/gw.module';
 
-describe('AppController (e2e)', () => {
+describe('GwController (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [GwModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();

@@ -1,11 +1,10 @@
 ###
  # @Author: hsycc
  # @Date: 2023-05-11 01:29:45
- # @LastEditTime: 2023-05-25 02:09:36
+ # @LastEditTime: 2023-05-30 00:55:55
  # @Description: 
  # 
 ### 
-
 current_dir=$(dirname "$(readlink -f "$0")")
 
 work_dir=$(dirname "$current_dir")
@@ -27,8 +26,9 @@ import { ConfigModule } from '@nestjs/config';
 import { PRISMA_CLIENT_NAME_$(echo "$module" | tr '[:lower:]' '[:upper:]') } from '@prisma/scripts/constants';
 import { WinstonModule } from 'nest-winston';
 import { CustomPrismaModule } from 'nestjs-prisma';
-import { SVC_SERVICE_NAME } from './constants';
+import { MICRO_SERVER_NAME_$(echo "$module" | tr '[:lower:]' '[:upper:]') } from './constants';
 import { PrismaClient } from '@prisma/@$module-client';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -36,7 +36,9 @@ import { PrismaClient } from '@prisma/@$module-client';
       load: [MicroConfig],
       isGlobal: true,
     }),
-    WinstonModule.forRoot(CreateLoggerOption({ service: SVC_SERVICE_NAME })),
+    WinstonModule.forRoot(
+      CreateLoggerOption({ service: MICRO_SERVER_NAME_$(echo "$module" | tr '[:lower:]' '[:upper:]') }),
+    ),
     CustomPrismaModule.forRootAsync({
       isGlobal: true,
       name: PRISMA_CLIENT_NAME_$(echo "$module" | tr '[:lower:]' '[:upper:]'), // 👈 must be unique for each PrismaClient
@@ -44,6 +46,7 @@ import { PrismaClient } from '@prisma/@$module-client';
         return new PrismaClient(); // create new instance of PrismaClient
       },
     }),
+    HealthModule,
   ],
   controllers: [],
   providers: [],

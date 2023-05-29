@@ -35,7 +35,9 @@
       "@lib/swagger": ["libs/swagger/src"],
       "@lib/swagger/*": ["libs/swagger/src/*"],
       "@lib/open-ai": ["libs/open-ai/src"],
-      "@lib/open-ai/*": ["libs/open-ai/src/*"]
+      "@lib/open-ai/*": ["libs/open-ai/src/*"],
+      "@lib/nacos": ["libs/nacos/src"],
+      "@lib/nacos/*": ["libs/nacos/src/*"]
     }
   }
 }

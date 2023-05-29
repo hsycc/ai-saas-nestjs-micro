@@ -1,11 +1,12 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-24 21:49:25
- * @LastEditTime: 2023-05-24 22:16:39
+ * @LastEditTime: 2023-05-27 20:27:34
  * @Description:
  *
  */
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { CreateTranscriptionRequest } from '@proto/gen/ai.pb';
 
 import { UploadedFileDto } from '@lib/common';

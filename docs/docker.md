@@ -1,3 +1,11 @@
+<!--
+ * @Author: hsycc
+ * @Date: 2023-05-09 03:52:25
+ * @LastEditTime: 2023-05-30 01:30:30
+ * @Description:
+ *
+-->
+
 # docker
 
 Docker Machine 为本地，私有数据中心及公有云平台提供 Docker 引擎，实现从零到 Docker 的一键部署。
@@ -47,3 +55,27 @@ docker-compose restart
 #删除compose服务
 docker-compose rm
 ```
+
+## docker 容器 健康检查
+
+http
+
+```yaml docker-compose
+healthcheck:
+  test: ['CMD', 'curl', '-f', 'http://localhost']
+  interval: 30s
+  timeout: 5s
+  retries: 3
+```
+
+grpc
+
+```yaml docker-compose
+healthcheck:
+  test: ['CMD', 'grpc_health_probe', '-addr=localhost:50051']
+  interval: 5s
+  timeout: 3s
+  retries: 3
+```
+
+<!-- https://github.com/grpc-ecosystem/grpc-health-probe/releases -->

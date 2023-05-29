@@ -1,11 +1,11 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:03:20
- * @LastEditTime: 2023-05-19 08:20:12
+ * @LastEditTime: 2023-05-27 20:27:03
  * @Description:
  *
  */
-import { Controller, Inject, OnModuleInit, Get, Post } from '@nestjs/common';
+import { Controller, OnModuleInit, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from '../auth/decorators/auth.decorator';
 @ApiTags('gpt')

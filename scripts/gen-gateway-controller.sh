@@ -2,11 +2,10 @@
 ###
  # @Author: hsycc
  # @Date: 2023-05-11 00:11:14
- # @LastEditTime: 2023-05-25 17:18:16
+ # @LastEditTime: 2023-05-30 00:13:18
  # @Description: 
  # 
 ### 
-
 #!/bin/bash
 current_dir=$(dirname "$(readlink -f "$0")")
 
@@ -27,8 +26,8 @@ echo "import {
   Post,
   Patch,
   Delete,
-  OnModuleInit,
   Inject,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
@@ -40,26 +39,30 @@ import {
 } from '@lib/swagger';
 import { Metadata } from '@grpc/grpc-js';
 
-import {} from '../auth/guard';
-
-import { $(echo "$module" | tr '[:lower:]' '[:upper:]')_SERVICE_NAME, $(echo "$module" | tr '[:lower:]' '[:upper:]')_PACKAGE_NAME, $(echo "$module" | awk '{print toupper(substr($0, 1, 1)) substr($0, 2)}')ServiceClient } from '@proto/gen/$module.pb';
-// import {} from '@app/svc//dto';
-// import {} from '@app/svc/entities/.entity
+import { 
+  $(echo "$module" | tr '[:lower:]' '[:upper:]')_SERVICE_NAME,
+  GRPC_$(echo "$module" | tr '[:lower:]' '[:upper:]')_V1_PACKAGE_NAME,
+  $(echo "$module" | awk '{print toupper(substr($0, 1, 1)) substr($0, 2)}')ServiceClient,
+} from '@proto/gen/$module.pb';
 
 @ApiTags('$module')
 @Controller('$module')
 @BaseApiExtraModels()
-export class $(echo "$module" | awk '{print toupper(substr($0, 1, 1)) substr($0, 2)}')Controller implements OnModuleInit {
-  private ${module}ServiceClient: $(echo "$module" | awk '{print toupper(substr($0, 1, 1)) substr($0, 2)}')ServiceClient;
-
+export class $(echo "$module" | awk '{print toupper(substr($0, 1, 1)) substr($0, 2)}')Controller {
   constructor(
-    @Inject($(echo "$module" | tr '[:lower:]' '[:upper:]')_PACKAGE_NAME)
-    private readonly client: ClientGrpc,
+    @Inject(GRPC_$(echo "$module" | tr '[:lower:]' '[:upper:]')_V1_PACKAGE_NAME)
+    private readonly clients: ClientGrpc[],
   ) {}
 
-  public onModuleInit(): void {
-    this.${module}ServiceClient =
-      this.client.getService<$(echo "$module" | awk '{print toupper(substr($0, 1, 1)) substr($0, 2)}')ServiceClient>($(echo "$module" | tr '[:lower:]' '[:upper:]')_SERVICE_NAME);
+  get ${module}ServiceClient(): $(echo "$module" | awk '{print toupper(substr($0, 1, 1)) substr($0, 2)}')ServiceClient {
+    if (this.clients.length === 0) {
+      throw new ServiceUnavailableException();
+    }
+    // 软负载均衡
+    const randomIndex = Math.floor(Math.random() * this.clients.length);
+    return this.clients[randomIndex].getService<$(echo "$module" | awk '{print toupper(substr($0, 1, 1)) substr($0, 2)}')ServiceClient>(
+      $(echo "$module" | tr '[:lower:]' '[:upper:]')_SERVICE_NAME,
+    );
   }
 
   /**

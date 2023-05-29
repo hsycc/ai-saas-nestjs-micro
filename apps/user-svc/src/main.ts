@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:08:01
- * @LastEditTime: 2023-05-16 09:09:08
+ * @LastEditTime: 2023-05-28 04:49:02
  * @Description:
  *
  */
@@ -15,15 +15,14 @@ import { protobufPackage } from '@proto/gen/user.pb';
 import { CreateLoggerOption, GrpcLoggingInterceptor } from '@lib/logger';
 import { UserSvcModule } from './user-svc.module';
 import { GrpcServerExceptionFilter, GrpcBodyValidationPipe } from '@lib/grpc';
-import { SVC_SERVICE_NAME } from './constants';
+import { MICRO_PROTO_USER, MICRO_SERVER_NAME_USER } from './constants';
 
 import { PRISMA_CLIENT_NAME_USER } from '@prisma/scripts/constants';
 import { PrismaClient } from '@prisma/@user-client';
-const { NODE_ENV, MICRO_DOMAIN_USER, MICRO_PORT_USER, MICRO_PROTO_USER } =
-  process.env;
+const { NODE_ENV, MICRO_PORT_USER } = process.env;
 
 const logger = WinstonModule.createLogger(
-  CreateLoggerOption({ service: SVC_SERVICE_NAME }),
+  CreateLoggerOption({ service: MICRO_SERVER_NAME_USER }),
 );
 
 async function bootstrap() {
@@ -48,7 +47,9 @@ async function bootstrap() {
   app.useGlobalInterceptors(new GrpcLoggingInterceptor(logger));
 
   /** 全局 RpcException 异常抛出 */
-  app.useGlobalFilters(new GrpcServerExceptionFilter(logger, SVC_SERVICE_NAME));
+  app.useGlobalFilters(
+    new GrpcServerExceptionFilter(logger, MICRO_SERVER_NAME_USER),
+  );
 
   /*  prisma shutdown hook */
   const customPrismaService: CustomPrismaService<PrismaClient> = app.get(
@@ -58,10 +59,12 @@ async function bootstrap() {
 
   logger.log(`NODE_ENV:${NODE_ENV}`, bootstrap.name);
 
+  // 开启shutdownHooks
+  app.enableShutdownHooks();
   await app.listen();
 
   logger.log(
-    `grpc ${MICRO_DOMAIN_USER}:${MICRO_PORT_USER} ${SVC_SERVICE_NAME} 微服务启动成功`,
+    `grpc 0.0.0.0:${MICRO_PORT_USER} ${MICRO_SERVER_NAME_USER} 微服务启动成功`,
     bootstrap.name,
   );
 }

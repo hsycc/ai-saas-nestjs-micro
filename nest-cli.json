@@ -104,6 +104,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/open-ai/tsconfig.lib.json"
       }
+    },
+    "nacos": {
+      "type": "library",
+      "root": "libs/nacos",
+      "entryFile": "index",
+      "sourceRoot": "libs/nacos/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/nacos/tsconfig.lib.json"
+      }
     }
   }
 }

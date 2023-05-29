@@ -1,7 +1,7 @@
 <!--
  * @Author: hsycc
  * @Date: 2023-05-10 22:49:02
- * @LastEditTime: 2023-05-26 11:25:46
+ * @LastEditTime: 2023-05-29 07:09:54
  * @Description:
  *
 -->
@@ -35,7 +35,7 @@ nest g resource ${module} --project ${project}`
 
 ```
 
-## TODOLIST
+## TODO LIST
 
 - prisma 预设 seed.ts
-- proto 预设 message service 和 svc moudle 预设 service 方法
+- proto 预设 message service 和 svc module 预设 service 方法

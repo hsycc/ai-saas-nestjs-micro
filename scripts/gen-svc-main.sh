@@ -1,11 +1,10 @@
 ###
  # @Author: hsycc
  # @Date: 2023-05-11 01:29:45
- # @LastEditTime: 2023-05-25 02:20:15
+ # @LastEditTime: 2023-05-29 23:41:13
  # @Description: 
  # 
 ### 
-
 #!/bin/bash
 
 current_dir=$(dirname "$(readlink -f "$0")")
@@ -33,14 +32,13 @@ import { protobufPackage } from '@proto/gen/$module.pb';
 import { PRISMA_CLIENT_NAME_$(echo "$module" | tr '[:lower:]' '[:upper:]') } from '@prisma/scripts/constants';
 
 import { $(echo "$module" | awk '{print toupper(substr($0, 1, 1)) substr($0, 2)}')SvcModule } from './$module-svc.module';
-import { SVC_SERVICE_NAME } from './constants';
+import { MICRO_PROTO_$(echo "$module" | tr '[:lower:]' '[:upper:]'), MICRO_SERVER_NAME_$(echo "$module" | tr '[:lower:]' '[:upper:]') } from './constants';
 import { PrismaClient } from '@prisma/@$module-client';
 
-const { NODE_ENV, MICRO_DOMAIN_$(echo "$module" | tr '[:lower:]' '[:upper:]'), MICRO_PORT_$(echo "$module" | tr '[:lower:]' '[:upper:]'), MICRO_PROTO_$(echo "$module" | tr '[:lower:]' '[:upper:]') } =
-  process.env;
+const { NODE_ENV, MICRO_SERVER_ADDR_$(echo "$module" | tr '[:lower:]' '[:upper:]'), MICRO_PORT_$(echo "$module" | tr '[:lower:]' '[:upper:]') } = process.env;
 
 const logger = WinstonModule.createLogger(
-  CreateLoggerOption({ service: SVC_SERVICE_NAME }),
+  CreateLoggerOption({ service: MICRO_SERVER_NAME_$(echo "$module" | tr '[:lower:]' '[:upper:]') }),
 );
 
 async function bootstrap() {
@@ -51,7 +49,7 @@ async function bootstrap() {
       logger,
       transport: Transport.GRPC,
       options: {
-        url: \`\${MICRO_DOMAIN_$(echo "$module" | tr '[:lower:]' '[:upper:]')}:\${MICRO_PORT_$(echo "$module" | tr '[:lower:]' '[:upper:]')}\`,
+        url: \`\${MICRO_SERVER_ADDR_$(echo "$module" | tr '[:lower:]' '[:upper:]')}\`,
         package: protobufPackage,
         protoPath: join(process.cwd(), MICRO_PROTO_$(echo "$module" | tr '[:lower:]' '[:upper:]')),
       },
@@ -65,7 +63,9 @@ async function bootstrap() {
   app.useGlobalInterceptors(new GrpcLoggingInterceptor(logger));
 
   /** 全局 RpcException 异常抛出 */
-  app.useGlobalFilters(new GrpcServerExceptionFilter(logger, SVC_SERVICE_NAME));
+  app.useGlobalFilters(
+    new GrpcServerExceptionFilter(logger, MICRO_SERVER_NAME_$(echo "$module" | tr '[:lower:]' '[:upper:]')),
+  );
 
   /*  prisma shutdown hook */
   const customPrismaService: CustomPrismaService<PrismaClient> = app.get(
@@ -74,9 +74,12 @@ async function bootstrap() {
   await customPrismaService.enableShutdownHooks(app);
 
   logger.log(\`NODE_ENV:\${NODE_ENV || 'dev'}\`, bootstrap.name);
+
+  // 开启shutdownHooks
+  // app.enableShutdownHooks();
   await app.listen();
   logger.log(
-    \`grpc \${MICRO_DOMAIN_$(echo "$module" | tr '[:lower:]' '[:upper:]')}:\${MICRO_PORT_$(echo "$module" | tr '[:lower:]' '[:upper:]')} \${SVC_SERVICE_NAME} 微服务启动成功\`,
+    \`grpc 0.0.0.0:\${MICRO_PORT_$(echo "$module" | tr '[:lower:]' '[:upper:]')} \${MICRO_SERVER_NAME_$(echo "$module" | tr '[:lower:]' '[:upper:]')} 微服务启动成功\`,
     bootstrap.name,
   );
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 12:44:18
- * @LastEditTime: 2023-05-16 09:10:51
+ * @LastEditTime: 2023-05-29 07:16:48
  * @Description:
  *
  */
@@ -22,27 +22,27 @@ import {
   HttpBodyValidationPipe,
 } from '@lib/grpc';
 
-import { AppModule } from './app.module';
+import { GwModule } from './gw.module';
 import { HttpTransformInterceptor } from '@lib/swagger';
-
-export const service = 'api-gateway';
-
-const port = process.env.PORT || 9000;
-
-const swaggerEnable = process.env.SWAGGER_ENABLE || false;
-const logger = WinstonModule.createLogger(
-  CreateLoggerOption({
-    service,
-  }),
-);
+import { MICRO_SERVER_NAME_GW } from './constants';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const { PORT, SWAGGER_ENABLE, NODE_ENV } = process.env;
+
+  const logger = WinstonModule.createLogger(
+    CreateLoggerOption({
+      service: MICRO_SERVER_NAME_GW,
+    }),
+  );
+
+  const app = await NestFactory.create(GwModule, {
     // https://github.com/gremo/nest-winston#use-as-the-main-nest-logger-also-for-bootstrapping
     logger,
   });
 
-  if (swaggerEnable) {
+  // const configService = app.get(ConfigService);
+
+  if (SWAGGER_ENABLE === 'true') {
     /* Swagger */
     const config = new DocumentBuilder()
       .setTitle('ai-saas')
@@ -97,13 +97,20 @@ async function bootstrap() {
   app.useGlobalInterceptors(new GrpcToHttpInterceptor(logger));
 
   /* HttpClientExceptionFilter 异常过滤器 */
-  app.useGlobalFilters(new HttpClientExceptionFilter(logger, service));
+  app.useGlobalFilters(
+    new HttpClientExceptionFilter(logger, MICRO_SERVER_NAME_GW),
+  );
 
-  logger.log(`NODE_ENV:${process.env.NODE_ENV}`, bootstrap.name);
-  await app.listen(port);
+  logger.log(`NODE_ENV:${NODE_ENV}`, bootstrap.name);
+
+  // 开启shutdownHooks
+  app.enableShutdownHooks();
+  await app.listen(PORT);
   logger.log(
-    `http://localhost:${port} ${service} 服务启动成功`,
+    `http://localhost:${PORT} ${MICRO_SERVER_NAME_GW} 服务启动成功`,
     bootstrap.name,
   );
+
+  // 热更新
 }
 bootstrap();

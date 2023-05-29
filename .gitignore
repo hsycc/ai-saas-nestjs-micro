@@ -34,7 +34,9 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-.env
+.env.production
 /documentation
 /.prisma
 /prisma/@*-client
+
+nacos/*

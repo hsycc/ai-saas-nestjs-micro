@@ -2,7 +2,7 @@
  * 本地化登录 认证策略
  * @Author: hsycc
  * @Date: 2023-05-08 06:10:42
- * @LastEditTime: 2023-05-08 09:23:18
+ * @LastEditTime: 2023-05-30 01:22:10
  * @Description:
  *
  */
@@ -32,6 +32,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     const authService = await this.moduleRef.resolve(AuthService, contextId);
     const user = await authService.validateUser(username, password);
     if (!user) {
+      // TODO: check use-svc 服务是否在线
       throw new UnauthorizedException();
     }
     return user;

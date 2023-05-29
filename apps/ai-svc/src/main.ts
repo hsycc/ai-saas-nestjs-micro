@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-11 00:45:11
- * @LastEditTime: 2023-05-19 00:33:28
+ * @LastEditTime: 2023-05-28 04:43:19
  * @Description:
  *
  */
@@ -17,14 +17,13 @@ import { protobufPackage } from '@proto/gen/ai.pb';
 import { PRISMA_CLIENT_NAME_AI } from '@prisma/scripts/constants';
 
 import { AiSvcModule } from './ai-svc.module';
-import { SVC_SERVICE_NAME } from './constants';
+import { MICRO_PROTO_AI, MICRO_SERVER_NAME_AI } from './constants';
 import { PrismaClient } from '@prisma/@ai-client';
 
-const { NODE_ENV, MICRO_DOMAIN_AI, MICRO_PORT_AI, MICRO_PROTO_AI } =
-  process.env;
+const { NODE_ENV, MICRO_PORT_AI } = process.env;
 
 const logger = WinstonModule.createLogger(
-  CreateLoggerOption({ service: SVC_SERVICE_NAME }),
+  CreateLoggerOption({ service: MICRO_SERVER_NAME_AI }),
 );
 
 async function bootstrap() {
@@ -65,7 +64,9 @@ async function bootstrap() {
   app.useGlobalInterceptors(new GrpcLoggingInterceptor(logger));
 
   /** 全局 RpcException 异常抛出 */
-  app.useGlobalFilters(new GrpcServerExceptionFilter(logger, SVC_SERVICE_NAME));
+  app.useGlobalFilters(
+    new GrpcServerExceptionFilter(logger, MICRO_SERVER_NAME_AI),
+  );
 
   /*  prisma shutdown hook */
   const customPrismaService: CustomPrismaService<PrismaClient> = app.get(
@@ -74,9 +75,12 @@ async function bootstrap() {
   await customPrismaService.enableShutdownHooks(app);
 
   logger.log(`NODE_ENV:${NODE_ENV}`, bootstrap.name);
+
+  // 开启shutdownHooks
+  app.enableShutdownHooks();
   await app.listen();
   logger.log(
-    `grpc ${MICRO_DOMAIN_AI}:${MICRO_PORT_AI} ${SVC_SERVICE_NAME} 微服务启动成功`,
+    `grpc 0.0.0.0:${MICRO_PORT_AI} ${MICRO_SERVER_NAME_AI} 微服务启动成功`,
     bootstrap.name,
   );
 }

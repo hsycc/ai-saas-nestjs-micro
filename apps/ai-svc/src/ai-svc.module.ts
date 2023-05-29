@@ -1,11 +1,11 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-11 02:33:22
- * @LastEditTime: 2023-05-18 14:12:13
+ * @LastEditTime: 2023-05-29 07:05:59
  * @Description:
  *
  */
-import { AiConfig, MicroConfig } from '@lib/config';
+import { AiConfig, MicroConfig, NacosConfig } from '@lib/config';
 import { CreateLoggerOption } from '@lib/logger';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -15,15 +15,19 @@ import { CustomPrismaModule } from 'nestjs-prisma';
 import { PrismaClient } from '@prisma/@ai-client';
 import { OpenAiModule } from '@lib/open-ai';
 import { ChatModule } from './chat/chat.module';
-import { SVC_SERVICE_NAME } from './constants';
+import { MICRO_SERVER_NAME_AI } from './constants';
 import { SpeechModule } from './speech/speech.module';
+import { HealthModule } from './health/health.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [MicroConfig, AiConfig],
+      load: [MicroConfig, AiConfig, NacosConfig],
       isGlobal: true,
     }),
-    WinstonModule.forRoot(CreateLoggerOption({ service: SVC_SERVICE_NAME })),
+    WinstonModule.forRoot(
+      CreateLoggerOption({ service: MICRO_SERVER_NAME_AI }),
+    ),
     CustomPrismaModule.forRootAsync({
       isGlobal: true,
       name: PRISMA_CLIENT_NAME_AI, // 👈 must be unique for each PrismaClient
@@ -31,9 +35,11 @@ import { SpeechModule } from './speech/speech.module';
         return new PrismaClient(); // create new instance of PrismaClient
       },
     }),
+
     ChatModule,
     OpenAiModule,
     SpeechModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [],

@@ -1,20 +1,20 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-26 14:31:24
- * @LastEditTime: 2023-05-24 19:48:59
+ * @LastEditTime: 2023-05-29 07:00:20
  * @Description:
  *
  */
 import {
   Body,
   Controller,
-  Inject,
-  OnModuleInit,
   Get,
   Post,
   Delete,
   Patch,
   Param,
+  ServiceUnavailableException,
+  Inject,
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -34,31 +34,38 @@ import { generateKeyPair } from '@lib/common';
 import {
   UserServiceClient,
   USER_SERVICE_NAME,
-  USER_PACKAGE_NAME,
+  GRPC_USER_V1_PACKAGE_NAME,
 } from '@proto/gen/user.pb';
+
 import {
   CreateUserDto,
   UpdateUserPublicDto,
   UpdateUserPrivateDto,
 } from '@app/user-svc/user/dto';
+
 import { UserEntity } from '@app/user-svc/user/entities/user.entity';
+
 import { Auth } from '../auth/decorators/auth.decorator';
 import { CurrentUser } from '../auth/decorators/user.decorator';
 
 @ApiTags('user')
 @Controller('user')
 @BaseApiExtraModels(UserEntity)
-export class UserController implements OnModuleInit {
-  private userServiceClient: UserServiceClient;
-
+export class UserController {
   constructor(
-    @Inject(USER_PACKAGE_NAME)
-    private readonly client: ClientGrpc,
+    @Inject(GRPC_USER_V1_PACKAGE_NAME)
+    private readonly clients: ClientGrpc[],
   ) {}
 
-  public onModuleInit(): void {
-    this.userServiceClient =
-      this.client.getService<UserServiceClient>(USER_SERVICE_NAME);
+  get userServiceClient(): UserServiceClient {
+    // 软负载均衡
+    if (this.clients.length === 0) {
+      throw new ServiceUnavailableException();
+    }
+    const randomIndex = Math.floor(Math.random() * this.clients.length);
+    return this.clients[randomIndex].getService<UserServiceClient>(
+      USER_SERVICE_NAME,
+    );
   }
 
   /**

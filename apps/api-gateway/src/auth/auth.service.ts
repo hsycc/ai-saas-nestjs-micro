@@ -1,42 +1,54 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-08 04:23:31
- * @LastEditTime: 2023-05-15 14:12:35
+ * @LastEditTime: 2023-05-29 07:02:49
  * @Description:
  *
  */
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
+import { JwtService } from '@nestjs/jwt';
 import { lastValueFrom } from 'rxjs';
-
 import { compareSync } from 'bcrypt';
 import {
   UserServiceClient,
   USER_SERVICE_NAME,
   UserModel,
+  GRPC_USER_V1_PACKAGE_NAME,
 } from '@proto/gen/user.pb';
 import { Metadata } from '@grpc/grpc-js';
-import { JwtService } from '@nestjs/jwt';
-import { JwtPayload } from './interface';
 
+import { JwtPayload } from './interface';
 @Injectable()
 export class AuthService {
-  private svc: UserServiceClient;
-
   constructor(
-    @Inject(USER_SERVICE_NAME)
-    private readonly client: ClientGrpc,
+    @Inject(GRPC_USER_V1_PACKAGE_NAME)
+    private readonly clients: ClientGrpc[],
     private readonly jwtService: JwtService,
   ) {}
 
-  public onModuleInit(): void {
-    this.svc = this.client.getService<UserServiceClient>(USER_SERVICE_NAME);
+  get userServiceClient(): UserServiceClient {
+    // 软负载均衡
+    if (this.clients.length === 0) {
+      throw new ServiceUnavailableException();
+    }
+    const randomIndex = Math.floor(Math.random() * this.clients.length);
+    return this.clients[randomIndex].getService<UserServiceClient>(
+      USER_SERVICE_NAME,
+    );
   }
 
   async validateAccessKey(accessKey: string): Promise<UserModel | null> {
     try {
       const user = await lastValueFrom(
-        this.svc.getUserByAccessKey({ accessKey }, new Metadata()),
+        this.userServiceClient.getUserByAccessKey(
+          { accessKey },
+          new Metadata(),
+        ),
       );
       // 散列密码 校验
       if (user && accessKey === user.accessKey) {
@@ -52,7 +64,7 @@ export class AuthService {
   ): Promise<UserModel | null> {
     try {
       const user = await lastValueFrom(
-        this.svc.getUserByName({ username }, new Metadata()),
+        this.userServiceClient.getUserByName({ username }, new Metadata()),
       );
       // 散列密码 校验
       if (user && compareSync(pass, user.password)) {

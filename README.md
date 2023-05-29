@@ -1,7 +1,7 @@
 <!--
  * @Author: hsycc
  * @Date: 2023-04-19 12:43:27
- * @LastEditTime: 2023-05-26 11:30:53
+ * @LastEditTime: 2023-05-29 05:16:25
  * @Description:
  *
 -->
@@ -14,7 +14,7 @@
 - [文档-架构设计](https://cx0mxc554e.feishu.cn/docx/WjpPdDxcdoJv4hxTjeGcTWeOnXf)
 - [文档-业务设计-潦草版](https://cx0mxc554e.feishu.cn/docx/To9JdneosoGUebxGLtrcVOrFnBc)
 - [ak-sk 鉴权认证机制](./docs/ak-sk%E9%89%B4%E6%9D%83%E8%AE%A4%E8%AF%81%E6%9C%BA%E5%88%B6.md)
-  - [ak-sk 鉴权 typescript 实现示例](./docs/ak-sk%E9%89%B4%E6%9D%83typescript%E5%AE%9E%E7%8E%B0%E7%A4%BA%E4%BE%8B.ts)
+- [ak-sk 鉴权 typescript 实现示例](./docs/ak-sk%E9%89%B4%E6%9D%83typescript%E5%AE%9E%E7%8E%B0%E7%A4%BA%E4%BE%8B.ts)
 - [其他文档](./docs)
 
 ## 环境依赖
@@ -34,10 +34,6 @@
 - [x] proto 编译管理以及文档生成
 - [x] prisma 数据库查询器
 - [x] swagger
-- [x] docker (配置脚本待优化, 管理 postgresql/redis, 微服务)
-  - [x] dockerfile
-  - [x] docker-compose
-  - [ ] docker Swarm 集群部署
 - [x] jwt 登录
   - [ ] jwt 主动注销实现 （ 借助 redis 实现 ）
   - ~~accessToken & refreshToken 双 token 设计~~ 标准的 oauth2.0 rfc 里面。refreshToken 是放在第三方服务器端的，accessToken 是放在第三方客户端的。出于对第三方客户端和链路安全的不信任。所以设计了双 token 机制，并且 accessToken 有效期很短。
@@ -48,12 +44,24 @@
   - [x] ak/ks ai 调用鉴权
 - [x] [nestjs-grpc-prisma 微服务架构 gen-cli 快速开发新服务的工具库](./scripts/gen-cli.md)
 - [ ] 用户权限设计
-- [ ] nacos 配置中心 网关监控 健康检查 熔断限流
 - [ ] 日志管理 和 链路追踪 (skywalking or other)
 - [ ] 接口幂等设计 和 缓存
 - [x] 运维部署
-  - [x] pm2 管理
-  - [ ] 切换成 docker-compose
+
+- [x] pm2 管理
+- [x] 切换成 docker (配置脚本待优化, 管理 postgresql/redis, 微服务)
+
+  - [x] dockerfile
+  - [x] docker-compose
+  - [ ] docker Swarm 集群部署
+
+- [x] [nacos](./docs/nacos.md)
+  - [x] 配置中心 (可修改的动态配置管理， 服务运行的静态配置用.env 管理)
+  - [x] 健康检查 (自带心跳检测)
+  - [x] 软负载均衡
+  - [ ] 网关监控 grafana
+  - [ ] 熔断限流
+  - 使用的 docker Swarm 可以处理服务的健康管理、负载均衡， nacos 服务就不是很有必要
 
 ## 业务设计
 
@@ -139,13 +147,3 @@ pnpm run start ai-svc
 
 - proto
   - [ ] proto 定义的字段为数组且值为空， 反序列化时 该字段会丢失，研究下怎么解决
-
-## openai
-
-chat/completions
-
-system 类的聊天消息通常是指代当前聊天会话的全局信息，例如聊天会话的 ID、当前的时间戳、当前的聊天主题等。这些信息对于聊天机器人来说非常重要，因为它们可以帮助聊天机器人更好地理解当前聊天上下文，从而生成更准确的自动补全建议。
-
-另一方面，assistant 类的聊天消息通常是指代聊天机器人自身的信息，例如聊天机器人的名称、聊天机器人的介绍、聊天机器人的提示等。这些信息通常是由聊天机器人自己发出的，用于与用户进行互动，并帮助用户更好地了解聊天机器人。
-
-因此，system 和 assistant 这两个类别的聊天消息在 OpenAI 聊天接口中扮演着非常重要的角色，它们可以帮助聊天机器人更好地理解当前聊天上下文，从而生成更准确的自动补全建议。

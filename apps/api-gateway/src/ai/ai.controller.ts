@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-10 23:21:34
- * @LastEditTime: 2023-05-24 23:01:33
+ * @LastEditTime: 2023-05-29 06:54:24
  * @Description:
  *
  */
@@ -11,16 +11,17 @@ import {
   Post,
   Patch,
   Delete,
-  OnModuleInit,
-  Inject,
   Param,
   Body,
   Query,
   UseInterceptors,
+  ServiceUnavailableException,
   UploadedFile,
+  Inject,
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Metadata } from '@grpc/grpc-js';
 import {
   ApiBaseResponse,
   ApiPaginatedResponse,
@@ -29,11 +30,11 @@ import {
   PaginatedDto,
 } from '@lib/swagger';
 import Utils from '@lib/common/utils/helper';
-import { Metadata } from '@grpc/grpc-js';
+
 import {
   AI_CHAT_MODEL_SERVICE_NAME,
   AI_SPEECH_SERVICE_NAME,
-  AI_PACKAGE_NAME,
+  GRPC_AI_V1_PACKAGE_NAME,
   AiChatModelServiceClient,
   AiSpeechServiceClient,
 } from '@proto/gen/ai.pb';
@@ -62,23 +63,31 @@ import {
   CreateTranscriptionResponseDto,
   CreateChatCompletionDto,
 )
-export class AiController implements OnModuleInit {
-  private aiChatModelServiceClient: AiChatModelServiceClient;
-
-  private aiSpeechServiceClient: AiSpeechServiceClient;
-
+export class AiController {
   constructor(
-    @Inject(AI_PACKAGE_NAME)
-    private readonly client: ClientGrpc,
+    @Inject(GRPC_AI_V1_PACKAGE_NAME)
+    private readonly clients: ClientGrpc[],
   ) {}
+  get aiChatModelServiceClient(): AiChatModelServiceClient {
+    if (this.clients.length === 0) {
+      throw new ServiceUnavailableException();
+    }
+    // 软负载均衡
+    const randomIndex = Math.floor(Math.random() * this.clients.length);
+    return this.clients[randomIndex].getService<AiChatModelServiceClient>(
+      AI_CHAT_MODEL_SERVICE_NAME,
+    );
+  }
 
-  public onModuleInit(): void {
-    this.aiChatModelServiceClient =
-      this.client.getService<AiChatModelServiceClient>(
-        AI_CHAT_MODEL_SERVICE_NAME,
-      );
+  get aiSpeechServiceClient(): AiSpeechServiceClient {
+    // 软负载均衡
 
-    this.aiSpeechServiceClient = this.client.getService<AiSpeechServiceClient>(
+    if (this.clients.length === 0) {
+      throw new ServiceUnavailableException();
+    }
+
+    const randomIndex = Math.floor(Math.random() * this.clients.length);
+    return this.clients[randomIndex].getService<AiSpeechServiceClient>(
       AI_SPEECH_SERVICE_NAME,
     );
   }
@@ -187,6 +196,7 @@ export class AiController implements OnModuleInit {
   ) {
     const metadata = new Metadata();
     metadata.set('userId', userId);
+
     return this.aiChatModelServiceClient.getChatModelList(
       { ...paginatedDto },
       metadata,

@@ -2,7 +2,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-24 23:46:42
- * @LastEditTime: 2023-05-26 11:31:37
+ * @LastEditTime: 2023-05-30 01:20:08
  * @Description:
  *
  */
@@ -29,6 +29,8 @@ program
   .option('-p, --port <port>', 'grpc 服务端口')
   .option(`-db, --db <db>', '数据库名称`)
   .action(async (options) => {
+    console.log('create new svc server...');
+
     const name = options.name;
 
     const port = options.port || 50050;
@@ -65,7 +67,7 @@ program
 
       // 创建 svc 服务所依赖的环境变量
       execSync(
-        `node ${workDir}/scripts/gen-cli.js gen-svc-env -n ${name}} -p ${port}`,
+        `node ${workDir}/scripts/gen-cli.js gen-svc-env -n ${name} -p ${port}`,
       );
 
       // 创建 grpc 微服务 svc
@@ -75,7 +77,7 @@ program
       execSync(`node ${workDir}/scripts/gen-cli.js gen-gw -n ${name}`);
 
       //
-      console.log('done...');
+      console.log('create new svc server successful.');
     } catch (error) {
       console.error('执行出错:', error);
       process.exit(1);
@@ -87,6 +89,8 @@ program
   .description('创建 proto 相关')
   .requiredOption('-n, --name <name>', '服务名称')
   .action((options) => {
+    console.log('start gen-proto ...');
+
     const name = options.name;
 
     // 添加 proto 相关
@@ -98,6 +102,8 @@ program
 
     // 编译
     execSync(`make proto-${name}`);
+
+    console.log('gen-proto successful.');
   });
 
 program
@@ -106,6 +112,8 @@ program
   .requiredOption('-n, --name <name>', '服务名称')
   .option(`-db, --db <db>', '数据库名称`)
   .action((options) => {
+    console.log('start gen-prisma ...');
+
     const name = options.name;
     const db = options.db || `micro_${name}`;
 
@@ -130,6 +138,7 @@ program
 
     //  创建 seed.ts 预设
     // execSync()
+    console.log('gen-prisma successful.');
   });
 
 program
@@ -138,14 +147,22 @@ program
   .requiredOption('-n, --name <name>', '服务名称')
   .option('-p, --port <port>', 'grpc 服务端口')
   .action((options) => {
+    console.log('start gen-svc-env ...');
+
     const name = options.name;
 
     const port = options.port || 50050;
 
     // update .env file  抽象封装
     execSync(
-      `echo "MICRO_DOMAIN_${name.toUpperCase()} = 0.0.0.0 \nMICRO_PORT_${name.toUpperCase()} = ${port}\nMICRO_PROTO_${name.toUpperCase()} = _proto/${name}.proto" >> ${workDir}/.env`,
+      `echo "MICRO_SERVER_ADDR_${name.toUpperCase()} = 127.0.0.1:${port}" >> ${workDir}/.env`,
     );
+
+    execSync(
+      `echo "MICRO_PORT_${name.toUpperCase()} = ${port}" >> ${workDir}/.env`,
+    );
+
+    console.log('gen-svc-env  successful.');
   });
 
 program
@@ -153,6 +170,7 @@ program
   .description(' 在 api-gateway(网关服务) 挂载微服务 svc')
   .requiredOption('-n, --name <name>', '服务名称')
   .action((options) => {
+    console.log('start gen-gw ...');
     const name = options.name;
 
     try {
@@ -174,25 +192,29 @@ program
 
       //  修改 libs/config interface
       execSync(
-        `sed -i '' "s#// sedMicroConfigUnRemove#microDomain${capitalizeFirstLetter(
+        `sed -i '' "s#// sedMicroConfigUnRemove#microServerAddr${capitalizeFirstLetter(
           name,
         )}: string;\\n  microPort${capitalizeFirstLetter(
-          name,
-        )}: string;\\n  microProto${capitalizeFirstLetter(
           name,
         )}: string;\\n  // sedMicroConfigUnRemove#g" ${workDir}/libs/config/src/interface.ts`,
       );
 
       //  修改 libs/config micro.ts
       execSync(
-        `sed -i '' "s#// sedMicroConfigUnRemove#microDomain${capitalizeFirstLetter(
+        `sed -i '' "s#// sedMicroConfigUnRemove#microServerAddr${capitalizeFirstLetter(
           name,
-        )}: process.env.MICRO_DOMAIN_${name.toUpperCase()},\\n  microPort${capitalizeFirstLetter(
-          name,
-        )}: process.env.MICRO_PORT_${name.toUpperCase()},\\n  microProto${capitalizeFirstLetter(
+        )}: process.env.MICRO_SERVER_ADDR_${name.toUpperCase()},\\n  microPort${capitalizeFirstLetter(
           name,
         )}: process.env.MICRO_PROTO_${name.toUpperCase()},\\n  // sedMicroConfigUnRemove#g" ${workDir}/libs/config/src/micro.ts`,
       );
+
+      execSync(`bash ${workDir}/scripts/gen-gateway-controller.sh ${name}`);
+
+      execSync(`bash ${workDir}/scripts/gen-gateway-module.sh ${name}`);
+
+      // TODO: replace api-gateway healthModule healthService
+
+      console.log('gen-gw  successful.');
     } catch (error) {
       console.error('执行出错:', error);
       process.exit(1);
@@ -204,6 +226,7 @@ program
   .description('只创建 grpc 微服务 svc')
   .requiredOption('-n, --name <name>', '服务名称')
   .action(async (options) => {
+    console.log('start gen-svc ...');
     const name = options.name;
     try {
       // nest-cli 创建 new app
@@ -222,8 +245,18 @@ program
       execSync(`rm -rf ${workDir}/apps/${name}-svc/test/app.e2e-spec.ts`);
 
       // 定义 服务 常量名
+
       execSync(
-        `echo "export const SVC_SERVICE_NAME = '${name}-svc';" > ${workDir}/apps/${name}-svc/src/constants.ts`,
+        `echo "export const MICRO_SERVER_NAME_${name.toUpperCase()} = 'ai-sass-${name}-svc';" >> ${workDir}/apps/${name}-svc/src/constants.ts`,
+      );
+
+      execSync(
+        `echo "export const MICRO_PROTO_${name.toUpperCase()} = '_proto/${name}.proto';" >> ${workDir}/apps/${name}-svc/src/constants.ts`,
+      );
+
+      // 复制 健康检查模块 healthModule
+      execSync(
+        `cp -r  ${workDir}/apps/ai-svc/src/health  ${workDir}/apps/${name}-svc/src/`,
       );
 
       // svc-module.ts 模板替换
@@ -241,6 +274,8 @@ program
       ];
       const updatedData = JSON.stringify(jsonData, null, 2);
       fs.writeFileSync(tsconfigPath, updatedData);
+
+      console.log('gen-svc  successful.');
     } catch (error) {
       console.error('执行出错:', error);
       process.exit(1);
