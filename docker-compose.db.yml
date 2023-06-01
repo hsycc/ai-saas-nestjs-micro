@@ -2,18 +2,19 @@ version: '3.8'
 services:
   postgres:
     image: postgres:13.5
-    container_name: postgres
     restart: always
     networks:
-      - ai_app_backend
+      - ai_saas_app_backend
     ports:
       - '5432:5432'
     env_file:
       - .env
+    volumes:
+      - postgres:/var/lib/postgresql/data
 
 networks:
-  ai_app_backend:
+  ai_saas_app_backend:
 
 volumes:
   postgres:
-    name: ai-postgres
+    name: ai-saas-postgres

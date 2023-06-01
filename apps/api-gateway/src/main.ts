@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 12:44:18
- * @LastEditTime: 2023-05-29 07:16:48
+ * @LastEditTime: 2023-06-04 23:36:57
  * @Description:
  *
  */
@@ -25,22 +25,20 @@ import {
 import { GwModule } from './gw.module';
 import { HttpTransformInterceptor } from '@lib/swagger';
 import { MICRO_SERVER_NAME_GW } from './constants';
+import { INestApplication } from '@nestjs/common';
+
+const logger = WinstonModule.createLogger(
+  CreateLoggerOption({
+    defaultMeta: { application: MICRO_SERVER_NAME_GW },
+  }),
+);
 
 async function bootstrap() {
   const { PORT, SWAGGER_ENABLE, NODE_ENV } = process.env;
 
-  const logger = WinstonModule.createLogger(
-    CreateLoggerOption({
-      service: MICRO_SERVER_NAME_GW,
-    }),
-  );
-
-  const app = await NestFactory.create(GwModule, {
-    // https://github.com/gremo/nest-winston#use-as-the-main-nest-logger-also-for-bootstrapping
-    logger,
+  const app: INestApplication = await NestFactory.create(GwModule, {
+    logger, // https://github.com/gremo/nest-winston#use-as-the-main-nest-logger-also-for-bootstrapping
   });
-
-  // const configService = app.get(ConfigService);
 
   if (SWAGGER_ENABLE === 'true') {
     /* Swagger */

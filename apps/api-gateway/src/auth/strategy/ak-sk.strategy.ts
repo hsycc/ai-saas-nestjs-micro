@@ -3,7 +3,7 @@
  * 第三方无用户状态调用 ai 服务 api 的鉴权
  * @Author: hsycc
  * @Date: 2023-05-08 06:10:42
- * @LastEditTime: 2023-05-18 21:56:20
+ * @LastEditTime: 2023-06-02 06:08:06
  * @Description:
  *
  */
@@ -32,15 +32,13 @@ import utc from 'dayjs/plugin/utc';
 import Utils from '@lib/common/utils/helper';
 dayjs.extend(utc);
 
-export const CONSTANT_AK_OF_USER = 'ak_of_user';
-
 @Injectable()
 export class AkSkStrategy extends PassportStrategy(Strategy, 'ak/sk') {
   constructor(private readonly authService: AuthService) {
     super();
   }
 
-  async validate(req: Request): Promise<any> {
+  async validate(req: Request & { tenant: any }): Promise<any> {
     const { method, url, query, headers } = req;
 
     // 兼容 header and query
@@ -133,10 +131,8 @@ export class AkSkStrategy extends PassportStrategy(Strategy, 'ak/sk') {
       throw new BadRequestException('SignatureDoesNotMatch');
     }
 
-    //  自定义的渠道用户相关信息 挂载到 req
-    req[CONSTANT_AK_OF_USER] = user;
-
-    req.user = user;
+    // 租户信息挂载到 req
+    req.tenant = user;
 
     return true;
   }

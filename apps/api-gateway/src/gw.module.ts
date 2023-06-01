@@ -1,16 +1,23 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 12:44:18
- * @LastEditTime: 2023-05-29 21:52:38
+ * @LastEditTime: 2023-06-05 01:24:05
  * @Description:
  *
  */
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { WinstonModule } from 'nest-winston';
-import { AiConfig, JwtConfig, MicroConfig, NacosConfig } from '@lib/config';
-import { CreateLoggerOption } from '@lib/logger';
 
+import { Request } from 'express';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import {
+  AiConfig,
+  JwtConfig,
+  MicroConfig,
+  NacosConfig,
+  OpentelemetryConfig,
+  OpentelemetryConfigType,
+} from '@lib/config';
+import { ClsMiddleware, ClsModule } from 'nestjs-cls';
 import { GwController } from './gw.controller';
 import { GwService } from './gw.service';
 import { UserModule } from './user/user.module';
@@ -20,22 +27,87 @@ import { GptModule } from './gpt/gpt.module';
 
 import { HealthModule } from './health/health.module';
 
-import { MICRO_SERVER_NAME_GW } from './constants';
+import { v4 as uuid } from 'uuid';
+import { FormatClsMetadata } from './auth/decorators/cls-metadata.decorator';
+import {
+  OpenTelemetryModule,
+  ControllerInjector,
+  GuardInjector,
+  EventEmitterInjector,
+  ScheduleInjector,
+  PipeInjector,
+} from '@metinseylan/nestjs-opentelemetry';
+import { ZipkinExporter } from '@opentelemetry/exporter-zipkin';
+import {
+  SimpleSpanProcessor,
+  BatchSpanProcessor,
+} from '@opentelemetry/sdk-trace-base';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [AiConfig, JwtConfig, MicroConfig, NacosConfig],
+      load: [
+        AiConfig,
+        JwtConfig,
+        MicroConfig,
+        NacosConfig,
+        OpentelemetryConfig,
+      ],
       expandVariables: true,
       envFilePath: ['.env.production', '.env'],
     }),
 
-    WinstonModule.forRoot(
-      CreateLoggerOption({
-        service: MICRO_SERVER_NAME_GW,
-      }),
-    ),
+    ClsModule.forRoot({
+      global: true,
+      middleware: {
+        mount: true,
+        generateId: true,
+        idGenerator: (req: Request) => req.headers['x-request-id'] ?? uuid(),
+        // setup: () => {},
+      },
+      interceptor: {
+        mount: true,
+        setup: (cls, context) => {
+          const req = context
+            .switchToHttp()
+            .getRequest<Request & FormatClsMetadata>();
+
+          cls.set('userId', req.user?.id || -1);
+
+          cls.set('tenantId', req?.tenant?.id || -1);
+        },
+      },
+    }),
+
+    OpenTelemetryModule.forRootAsync({
+      imports: [],
+      useFactory: async (configService: ConfigService) => {
+        return {
+          serviceName:
+            'ai-saas-api-gateway-' + process.env.NODE_ENV
+              ? process.env.NODE_ENV
+              : 'local',
+          traceAutoInjectors: [
+            ControllerInjector,
+            GuardInjector,
+            EventEmitterInjector,
+            ScheduleInjector,
+            PipeInjector,
+          ],
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          spanProcessor: new SimpleSpanProcessor(
+            new ZipkinExporter({
+              url: configService.get<OpentelemetryConfigType>(
+                'OpentelemetryConfig',
+              ).zipkinUrl,
+            }),
+          ),
+        } as any;
+      },
+      inject: [ConfigService],
+    }),
 
     HealthModule,
     AuthModule,
@@ -46,4 +118,8 @@ import { MICRO_SERVER_NAME_GW } from './constants';
   controllers: [GwController],
   providers: [GwService],
 })
-export class GwModule {}
+export class GwModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ClsMiddleware).forRoutes('*');
+  }
+}

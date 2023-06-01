@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-08 04:23:31
- * @LastEditTime: 2023-05-27 20:01:12
+ * @LastEditTime: 2023-06-02 03:29:37
  * @Description:
  *
  */
@@ -13,6 +13,7 @@ import { ApiBaseResponse, BaseApiExtraModels } from '@lib/swagger';
 import { AuthService } from './auth.service';
 import { AccessTokenDto } from './dto';
 import { Auth } from './decorators/auth.decorator';
+import { GenerateClsMetadata } from './decorators/cls-metadata.decorator';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -37,7 +38,7 @@ export class AuthController {
   @Delete('logout')
   @Auth('jwt')
   @ApiBaseResponse()
-  private async logout() {
-    // return 'logout';
+  private async logout(@GenerateClsMetadata() generateClsMetadata) {
+    console.log(generateClsMetadata);
   }
 }

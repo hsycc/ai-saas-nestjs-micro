@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-10 23:21:34
- * @LastEditTime: 2023-05-29 06:54:24
+ * @LastEditTime: 2023-06-02 07:17:22
  * @Description:
  *
  */
@@ -21,7 +21,6 @@ import {
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
-import { Metadata } from '@grpc/grpc-js';
 import {
   ApiBaseResponse,
   ApiPaginatedResponse,
@@ -41,8 +40,7 @@ import {
 import { CreateChatModelDto, UpdateChatModelDto } from '@app/ai-svc/chat/dto';
 import { ChatModelEntity } from '@app/ai-svc/chat/entities/chat-model.entity';
 import { CreateChatCompletionDto } from '@app/ai-svc/chat/dto/create-chat-completion.dto';
-import { CurrentAkSkOfUser } from '../auth/decorators/ak-sk-of-user.decorator';
-import { CurrentUser } from '../auth/decorators/user.decorator';
+import { CurrentTenant } from '../auth/decorators/tenant.decorator';
 import { Auth } from '../auth/decorators/auth.decorator';
 import {
   CreateChatCompletionChoicesDto,
@@ -53,6 +51,7 @@ import {
   CreateTranscriptionRequestDto,
   CreateTranscriptionResponseDto,
 } from '@app/ai-svc/speech/dto';
+import { GenerateClsMetadata } from '../auth/decorators/cls-metadata.decorator';
 
 @ApiTags('ai')
 @Controller('ai')
@@ -103,11 +102,12 @@ export class AiController {
   @ApiObjResponse(CreateChatCompletionChoicesDto)
   private async createChatCompletion(
     @Body() dto: CreateChatCompletionDto,
-    @CurrentAkSkOfUser() userId,
+    @GenerateClsMetadata() generateClsMetadata,
   ) {
-    const metadata = new Metadata();
-    metadata.set('userId', userId);
-    return this.aiChatModelServiceClient.createChatCompletion(dto, metadata);
+    return this.aiChatModelServiceClient.createChatCompletion(
+      dto,
+      generateClsMetadata,
+    );
   }
   /**
    *  渠道设备调用 ai stt 能力
@@ -125,15 +125,14 @@ export class AiController {
   @ApiObjResponse(CreateTranscriptionResponseDto)
   private async stt(
     @UploadedFile() file: Express.Multer.File,
-    @CurrentAkSkOfUser() userId,
+
+    @GenerateClsMetadata() generateClsMetadata,
   ) {
-    const metadata = new Metadata();
-    metadata.set('userId', userId);
     return this.aiSpeechServiceClient.createTranscription(
       {
         buffer: file.buffer,
       },
-      metadata,
+      generateClsMetadata,
     );
   }
 
@@ -151,17 +150,14 @@ export class AiController {
   @Auth('jwt')
   @ApiObjResponse(ChatModelEntity)
   private async createChatModel(
-    @CurrentUser() userId,
     @Body() createChatModelDto: CreateChatModelDto,
+    @GenerateClsMetadata() generateClsMetadata,
   ) {
-    const metadata = new Metadata();
-    metadata.set('userId', userId);
-
     return this.aiChatModelServiceClient.createChatModel(
       {
         ...createChatModelDto,
       },
-      metadata,
+      generateClsMetadata,
     );
   }
 
@@ -176,12 +172,13 @@ export class AiController {
   })
   @ApiBaseResponse()
   private async deleteChatModel(
-    @CurrentUser() userId,
+    @GenerateClsMetadata() generateClsMetadata,
     @Param('id') id: string,
   ) {
-    const metadata = new Metadata();
-    metadata.set('userId', userId);
-    return this.aiChatModelServiceClient.deleteChatModel({ id }, metadata);
+    return this.aiChatModelServiceClient.deleteChatModel(
+      { id },
+      generateClsMetadata,
+    );
   }
 
   /**
@@ -191,15 +188,12 @@ export class AiController {
   @Auth('jwt')
   @ApiPaginatedResponse(ChatModelEntity)
   private async getChatModelList(
-    @CurrentUser() userId,
+    @GenerateClsMetadata() generateClsMetadata,
     @Query() paginatedDto: PaginatedDto,
   ) {
-    const metadata = new Metadata();
-    metadata.set('userId', userId);
-
     return this.aiChatModelServiceClient.getChatModelList(
       { ...paginatedDto },
-      metadata,
+      generateClsMetadata,
     );
   }
 
@@ -214,12 +208,13 @@ export class AiController {
   })
   @ApiObjResponse(ChatModelEntity)
   private async getChatModelById(
-    @CurrentUser() userId,
+    @GenerateClsMetadata() generateClsMetadata,
     @Param('id') id: string,
   ) {
-    const metadata = new Metadata();
-    metadata.set('userId', userId);
-    return this.aiChatModelServiceClient.getChatModelById({ id }, metadata);
+    return this.aiChatModelServiceClient.getChatModelById(
+      { id },
+      generateClsMetadata,
+    );
   }
 
   /**
@@ -229,17 +224,14 @@ export class AiController {
   @Auth('jwt')
   @ApiBaseResponse()
   private async updateUser(
-    @CurrentUser() userId,
+    @GenerateClsMetadata() generateClsMetadata,
     @Body() updateChatModelDto: UpdateChatModelDto,
   ) {
-    const metadata = new Metadata();
-    metadata.set('userId', userId);
-
     return this.aiChatModelServiceClient.updateChatModel(
       {
         ...updateChatModelDto,
       },
-      metadata,
+      generateClsMetadata,
     );
   }
 }

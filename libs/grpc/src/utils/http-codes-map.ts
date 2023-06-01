@@ -1,8 +1,15 @@
+/*
+ * @Author: hsycc
+ * @Date: 2023-05-09 15:09:29
+ * @LastEditTime: 2023-05-31 11:07:36
+ * @Description:
+ *
+ */
 import { status as Status } from '@grpc/grpc-js';
 import { HttpStatus } from '@nestjs/common';
 
 // https://github.com/mohsenbostan/nestjs-grpc-exceptions
-// list of supported http status codes: 401 - 403 - 502 - 404 - 405 - 409 - 422 - 429 - 500
+// list of supported http status codes: 401 - 403 - 502 - 404 - 405 - 409 - 422 - 429 - 500 - 503
 // https:skyao.gitbooks.io/learning-grpc/content/server/status/class_Status.html
 export const HTTP_CODE_FROM_GRPC: Record<number, number> = {
   [Status.OK]: HttpStatus.OK,
@@ -19,7 +26,7 @@ export const HTTP_CODE_FROM_GRPC: Record<number, number> = {
   [Status.OUT_OF_RANGE]: HttpStatus.PAYLOAD_TOO_LARGE,
   [Status.UNIMPLEMENTED]: HttpStatus.NOT_IMPLEMENTED,
   [Status.INTERNAL]: HttpStatus.INTERNAL_SERVER_ERROR,
-  [Status.UNAVAILABLE]: HttpStatus.NOT_FOUND,
+  [Status.UNAVAILABLE]: HttpStatus.SERVICE_UNAVAILABLE,
   [Status.DATA_LOSS]: HttpStatus.INTERNAL_SERVER_ERROR,
   [Status.UNAUTHENTICATED]: HttpStatus.UNAUTHORIZED,
 };

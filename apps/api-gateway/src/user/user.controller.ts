@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-26 14:31:24
- * @LastEditTime: 2023-05-29 07:00:20
+ * @LastEditTime: 2023-06-02 06:49:12
  * @Description:
  *
  */
@@ -19,8 +19,6 @@ import {
 import { ClientGrpc } from '@nestjs/microservices';
 
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-
-import { Metadata } from '@grpc/grpc-js';
 
 import {
   ApiBaseResponse,
@@ -47,6 +45,7 @@ import { UserEntity } from '@app/user-svc/user/entities/user.entity';
 
 import { Auth } from '../auth/decorators/auth.decorator';
 import { CurrentUser } from '../auth/decorators/user.decorator';
+import { GenerateClsMetadata } from '../auth/decorators/cls-metadata.decorator';
 
 @ApiTags('user')
 @Controller('user')
@@ -74,8 +73,11 @@ export class UserController {
   @Get('current')
   @Auth('jwt')
   @ApiObjResponse(UserEntity)
-  private async current(@CurrentUser() id) {
-    return this.userServiceClient.getUserById({ id }, new Metadata());
+  private async current(
+    @CurrentUser() id,
+    @GenerateClsMetadata() generateClsMetadata,
+  ) {
+    return this.userServiceClient.getUserById({ id }, generateClsMetadata);
   }
 
   /**
@@ -87,13 +89,14 @@ export class UserController {
   private async updateUser(
     @CurrentUser() id,
     @Body() updateUserPublicDto: UpdateUserPublicDto,
+    @GenerateClsMetadata() generateClsMetadata,
   ) {
     return this.userServiceClient.updateUser(
       {
         id,
         ...updateUserPublicDto,
       },
-      new Metadata(),
+      generateClsMetadata,
     );
   }
 
@@ -103,13 +106,16 @@ export class UserController {
   @Patch('update_keys')
   @Auth('jwt')
   @ApiBaseResponse()
-  private async updateKeys(@CurrentUser() id) {
+  private async updateKeys(
+    @CurrentUser() id,
+    @GenerateClsMetadata() generateClsMetadata,
+  ) {
     return this.userServiceClient.updateUser(
       {
         id,
         ...generateKeyPair(),
       },
-      new Metadata(),
+      generateClsMetadata,
     );
   }
 
@@ -118,8 +124,14 @@ export class UserController {
    */
   @Post('register')
   @ApiObjResponse(UserEntity)
-  async register(@Body() createUserDto: CreateUserDto) {
-    return this.userServiceClient.createUser(createUserDto, new Metadata());
+  async register(
+    @Body() createUserDto: CreateUserDto,
+    @GenerateClsMetadata() generateClsMetadata,
+  ) {
+    return this.userServiceClient.createUser(
+      createUserDto,
+      generateClsMetadata,
+    );
   }
 
   /**
@@ -131,8 +143,11 @@ export class UserController {
     name: 'id',
     example: 'clhcsprq10000uawc05bf2whi',
   })
-  private async deleteUser(@Param('id') id: string) {
-    return this.userServiceClient.deleteUser({ id }, new Metadata());
+  private async deleteUser(
+    @Param('id') id: string,
+    @GenerateClsMetadata() generateClsMetadata,
+  ) {
+    return this.userServiceClient.deleteUser({ id }, generateClsMetadata);
   }
 
   /**
@@ -142,10 +157,11 @@ export class UserController {
   @ApiBaseResponse()
   private async updateSecurity(
     @Body() updateUserPrivateDto: UpdateUserPrivateDto,
+    @GenerateClsMetadata() generateClsMetadata,
   ) {
     return this.userServiceClient.updateUser(
       updateUserPrivateDto,
-      new Metadata(),
+      generateClsMetadata,
     );
   }
 
@@ -154,8 +170,8 @@ export class UserController {
    */
   @Get()
   @ApiListResponse(UserEntity)
-  private async userList() {
-    return this.userServiceClient.getUserModelList({}, new Metadata());
+  private async userList(@GenerateClsMetadata() generateClsMetadata) {
+    return this.userServiceClient.getUserModelList({}, generateClsMetadata);
   }
 
   /**
@@ -167,7 +183,10 @@ export class UserController {
     name: 'id',
     example: 'clhcsprq10000uawc05bf2whi',
   })
-  private async getUserById(@Param('id') id: string) {
-    return this.userServiceClient.getUserById({ id }, new Metadata());
+  private async getUserById(
+    @Param('id') id: string,
+    @GenerateClsMetadata() generateClsMetadata,
+  ) {
+    return this.userServiceClient.getUserById({ id }, generateClsMetadata);
   }
 }

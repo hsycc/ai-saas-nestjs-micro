@@ -1,11 +1,14 @@
+#! /usr/bin/env node
+
 /* eslint-disable @typescript-eslint/no-var-requires */
 /*
  * @Author: hsycc
  * @Date: 2023-05-24 23:46:42
- * @LastEditTime: 2023-05-30 01:20:08
+ * @LastEditTime: 2023-06-01 08:28:46
  * @Description:
  *
  */
+
 const { Command } = require('commander');
 const { execSync } = require('child_process');
 

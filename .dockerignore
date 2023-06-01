@@ -1,6 +1,14 @@
 .vscode/
+.husky/
 node_modules/
 npm-debug.log
 dist/
 graphql/
 test/
+documentation/
+logs/
+nacos/
+scripts/
+error.log
+combined.log
+

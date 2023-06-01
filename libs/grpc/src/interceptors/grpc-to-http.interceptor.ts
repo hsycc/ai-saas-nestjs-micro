@@ -3,7 +3,7 @@
  * grpc-server 封装RpcException异常错误抛出 http-client
  * @Author: hsycc
  * @Date: 2023-04-24 15:19:42
- * @LastEditTime: 2023-04-26 18:12:59
+ * @LastEditTime: 2023-05-31 10:50:32
  * @Description:
  *
  */
@@ -41,15 +41,21 @@ export class GrpcToHttpInterceptor implements NestInterceptor {
           return throwError(() => err);
         }
 
-        const exception = JSON.parse(err.details) as {
-          error: string | object;
-          type: string;
-          exceptionName: string;
-        };
+        let message = err.details;
 
-        if (exception.exceptionName !== RpcException.name) {
-          return throwError(() => err);
-        }
+        try {
+          const exception = JSON.parse(err.details) as {
+            error: string | object;
+            type: string;
+            exceptionName: string;
+          };
+
+          if (exception.exceptionName !== RpcException.name) {
+            return throwError(() => err);
+          }
+
+          message = exception.error;
+        } catch (error) {}
 
         const statusCode =
           HTTP_CODE_FROM_GRPC[err.code] || HttpStatus.INTERNAL_SERVER_ERROR;
@@ -58,7 +64,7 @@ export class GrpcToHttpInterceptor implements NestInterceptor {
           () =>
             new HttpException(
               {
-                message: exception.error,
+                message,
                 statusCode,
                 error: HttpStatus[statusCode],
               },

@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-09 01:59:15
- * @LastEditTime: 2023-05-12 08:13:51
+ * @LastEditTime: 2023-06-15 19:13:44
  * @Description:
  *
  */
@@ -13,7 +13,7 @@ module.exports = {
   // skip any questions you want
   skipQuestions: ['body', 'footer'],
 
-  subjectLimit: 100,
+  subjectLimit: 200,
   breaklineChar: '|',
 
   // footerPrefix : 'ISSUES CLOSED:'

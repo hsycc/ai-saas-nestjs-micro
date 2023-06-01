@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-04 03:16:00
- * @LastEditTime: 2023-05-18 18:26:01
+ * @LastEditTime: 2023-05-31 11:52:35
  * @Description:
  *
  */
@@ -14,7 +14,7 @@
 
 import { PrismaClient } from '../@user-client';
 import { generateKeyPair, getAesInstance } from '../../libs/common/src';
-import { hashSync, genSaltSync } from 'bcrypt';
+import { hashSync, genSaltSync } from 'bcryptjs';
 
 // initialize Prisma Client
 const prisma = new PrismaClient();

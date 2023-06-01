@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-24 18:12:06
- * @LastEditTime: 2023-05-24 23:12:01
+ * @LastEditTime: 2023-06-01 03:13:54
  * @Description:
  *
  */
@@ -10,10 +10,10 @@ import { FfmpegUtils } from '@lib/common/utils/ffmpeg';
 import { GrpcInternalException } from '@lib/grpc';
 import { OpenAiService } from '@lib/open-ai';
 import { Inject, Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/@ai-client';
 import { PRISMA_CLIENT_NAME_AI } from '@prisma/scripts/constants';
 import { CreateTranscriptionRequest } from '@proto/gen/ai.pb';
-import { CustomPrismaService } from 'nestjs-prisma';
+import { CustomPrismaService } from 'nestjs-prisma/dist/custom';
 import { CreateTranscriptionResponse } from 'openai';
 
 @Injectable()

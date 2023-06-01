@@ -1,18 +1,18 @@
+#!/bin/bash
 
 ###
  # @Author: hsycc
  # @Date: 2023-05-11 00:11:14
- # @LastEditTime: 2023-05-30 00:13:18
+ # @LastEditTime: 2023-06-02 07:19:57
  # @Description: 
  # 
-### 
-#!/bin/bash
+###
+
 current_dir=$(dirname "$(readlink -f "$0")")
 
 work_dir=$(dirname "$current_dir")
 
 
-#!/bin/bash
 if [ -z "$1" ]; then
   echo "Missing moudule name"
   exit 1
@@ -38,6 +38,7 @@ import {
   BaseApiExtraModels,
 } from '@lib/swagger';
 import { Metadata } from '@grpc/grpc-js';
+import { GenerateClsMetadata } from '../auth/decorators/cls-metadata.decorator';
 
 import { 
   $(echo "$module" | tr '[:lower:]' '[:upper:]')_SERVICE_NAME,
@@ -69,7 +70,9 @@ export class $(echo "$module" | awk '{print toupper(substr($0, 1, 1)) substr($0,
    * 测试接口
    */
   @Get()
-  test() {
-    return this.${module}ServiceClient.test({}, new Metadata())
+  test(
+    @GenerateClsMetadata() generateClsMetadata,
+  ) {
+    return this.${module}ServiceClient.test({}, generateClsMetadata)
   }
 }" > $work_dir/apps/api-gateway/src/$module/$module.controller.ts

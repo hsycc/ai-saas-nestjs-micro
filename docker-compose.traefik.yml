@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  traefik:
+    image: traefik:latest
+    restart: always
+    ports:
+      - '80:80'
+      - '8080:8080'
+    volumes:
+      - ./traefik/traefik.toml:/etc/traefik/traefik.toml
+      - /var/run/docker.sock:/var/run/docker.sock
+    container_name: traefik
+    networks:
+      - traefik_default
+    labels:
+      - 'traefik.http.routers.api.rule=Host(`traefik.shanyue.local`)'
+      - 'traefik.http.routers.api.service=api@internal'
+
+  # 该镜像会暴露出自身的 `header` 信息
+  whoami:
+    image: containous/whoami
+    networks:
+      - traefik_default
+    labels:
+      # 设置Host 为 whoami.docker.localhost 进行域名访问
+      - 'traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)'
+
+networks:
+  traefik_default:

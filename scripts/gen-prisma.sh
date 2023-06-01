@@ -1,7 +1,9 @@
+#!/bin/bash
+
 ###
  # @Author: hsycc
  # @Date: 2023-05-11 00:59:54
- # @LastEditTime: 2023-05-25 15:25:49
+ # @LastEditTime: 2023-06-01 08:29:34
  # @Description: 
  # 
 ### 
@@ -12,7 +14,6 @@ current_dir=$(dirname "$(readlink -f "$0")")
 work_dir=$(dirname "$current_dir")
 
 
-#!/bin/bash
 if [ -z "$1" ]; then
   echo "Missing moudule name"
   exit 1

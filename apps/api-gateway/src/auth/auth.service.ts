@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-08 04:23:31
- * @LastEditTime: 2023-05-29 07:02:49
+ * @LastEditTime: 2023-06-02 07:12:57
  * @Description:
  *
  */
@@ -13,16 +13,16 @@ import {
 import { ClientGrpc } from '@nestjs/microservices';
 import { JwtService } from '@nestjs/jwt';
 import { lastValueFrom } from 'rxjs';
-import { compareSync } from 'bcrypt';
+import { compareSync } from 'bcryptjs';
 import {
   UserServiceClient,
   USER_SERVICE_NAME,
   UserModel,
   GRPC_USER_V1_PACKAGE_NAME,
 } from '@proto/gen/user.pb';
-import { Metadata } from '@grpc/grpc-js';
 
 import { JwtPayload } from './interface';
+import { FormatClsMetadataToMetadata } from './decorators/cls-metadata.decorator';
 @Injectable()
 export class AuthService {
   constructor(
@@ -47,7 +47,7 @@ export class AuthService {
       const user = await lastValueFrom(
         this.userServiceClient.getUserByAccessKey(
           { accessKey },
-          new Metadata(),
+          FormatClsMetadataToMetadata(),
         ),
       );
       // 散列密码 校验
@@ -64,7 +64,10 @@ export class AuthService {
   ): Promise<UserModel | null> {
     try {
       const user = await lastValueFrom(
-        this.userServiceClient.getUserByName({ username }, new Metadata()),
+        this.userServiceClient.getUserByName(
+          { username },
+          FormatClsMetadataToMetadata(),
+        ),
       );
       // 散列密码 校验
       if (user && compareSync(pass, user.password)) {

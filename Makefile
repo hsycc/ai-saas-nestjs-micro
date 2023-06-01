@@ -15,7 +15,8 @@ define proto-gen
 			--ts_proto_opt=addNestjsRestParameter=true  \
 			--ts_proto_opt=returnObservable=false \
 			--ts_proto_opt=esModuleInterop=true \
-			--ts_proto_opt=snakeToCamel=false 
+			--ts_proto_opt=snakeToCamel=false \
+			--ts_proto_opt=lowerCaseServiceMethods=true
 
 endef
 

@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-08 04:23:31
- * @LastEditTime: 2023-05-29 07:07:31
+ * @LastEditTime: 2023-05-30 13:46:38
  * @Description:
  *
  */
@@ -44,8 +44,8 @@ import { MICRO_PROTO_USER } from '@app/user-svc/constants';
             transport: Transport.GRPC,
             options: {
               url: v,
-              package: GRPC_USER_V1_PACKAGE_NAME,
-              protoPath: join(process.cwd(), MICRO_PROTO_USER),
+              package: [GRPC_USER_V1_PACKAGE_NAME],
+              protoPath: [join(process.cwd(), MICRO_PROTO_USER)],
               loader: {
                 keepCase: true,
               },

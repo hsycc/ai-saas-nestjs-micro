@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-09 03:52:09
- * @LastEditTime: 2023-05-15 21:14:35
+ * @LastEditTime: 2023-06-05 01:22:58
  * @Description:
  *
  */
@@ -28,6 +28,20 @@ export default class Utils {
    * @type {boolean}
    */
   static isDev = process.env.NODE_ENV !== 'production';
+
+  /**
+   * 是否是生产环境
+   * @type {boolean}
+   */
+  static isProd = process.env.NODE_ENV === 'production';
+
+  /**
+   * 获取环境
+   * @type {string}
+   */
+  static getEnv() {
+    return process.env.NODE_ENV || 'local';
+  }
 
   /**
    * 获取当前时间戳

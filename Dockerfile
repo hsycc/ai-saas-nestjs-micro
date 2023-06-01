@@ -1,37 +1,51 @@
-# Install pnpm 
-FROM node:16-alpine AS base 
+##  Install pnpm and app dependencies
+FROM node:16-alpine as base
+
+RUN npm config set registry https://registry.npmmirror.com
+
 RUN npm install -g pnpm
 
-# Install app dependencies
-FROM base AS dependencies
 WORKDIR /app
+
 COPY package*.json pnpm-lock.yaml ./
-RUN pnpm install --silent
 
-# proto and prisma
-COPY _proto prisma ./ 
-RUN npx prisma generate --schema=prisma/user.prisma && \
-    npx prisma generate --schema=prisma/ai.prisma
+COPY .env* ./
 
-# Build
+COPY _proto/*.proto ./_proto/
+
+COPY prisma/*.prisma ./prisma/
+
+
+RUN pnpm config set registry https://registry.npmmirror.com
+
+RUN pnpm install --prod --frozen-lockfile
+# --silent
+
+## Generate proto and prisma files
+RUN pnpm run prisma:generate
+
+
+## install grpc_health_probe
+RUN wget -qO /usr/local/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/latest/download/grpc_health_probe-linux-amd64 \
+    && chmod +x /usr/local/bin/grpc_health_probe
+
+
+##  TODO： 同步数据库  
+
+
+##  Build the app
 FROM base AS build
-WORKDIR /app
-COPY . .
-COPY --from=dependencies /app/node_modules ./node_modules
+
+COPY . ./
+
 RUN pnpm run build api-gateway && \
     pnpm run build user-svc && \
-    pnpm run build ai-svc && \
-    pnpm prune --prod
+    pnpm run build ai-svc 
 
+## Final deployment 
 FROM base AS deploy
-WORKDIR /app
-COPY --from=build /app/_proto ./_proto
+
 COPY --from=build /app/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
-EXPOSE 9000 50051-50061
 
+EXPOSE 9000 50051-50061 5432
 
-# CMD ["node", "dist/apps/api-gateway/main"]
-# CMD node ./dist/apps/api-gateway/main 
-# CMD node ./dist/apps/user-svc/main 
-# CMD node ./dist/apps/ai-svc/main 

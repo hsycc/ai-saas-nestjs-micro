@@ -1,12 +1,12 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-07 03:44:52
- * @LastEditTime: 2023-05-24 23:00:31
+ * @LastEditTime: 2023-06-02 07:16:51
  * @Description:
  *
  */
 import { Inject, Injectable } from '@nestjs/common';
-import { CustomPrismaService } from 'nestjs-prisma';
+import { CustomPrismaService } from 'nestjs-prisma/dist/custom';
 
 import {
   ChatModel,
@@ -35,7 +35,7 @@ import {
   ChatCompletionRequestMessage,
 } from 'openai';
 import { CreateChatCompletionDto } from './dto/create-chat-completion.dto';
-import { Metadata } from '@grpc/grpc-js';
+import { FormatClsMetadata } from '@app/api-gateway/auth/decorators/cls-metadata.decorator';
 
 @Injectable()
 export class ChatService {
@@ -45,11 +45,8 @@ export class ChatService {
     private readonly openAiService: OpenAiService,
   ) {}
 
-  async createChatModel(
-    dto: CreateChatModelDto,
-    metadata: Metadata,
-  ): Promise<ChatModel> {
-    const userId = metadata.get('userId')[0] as string;
+  async createChatModel(dto: CreateChatModelDto): Promise<ChatModel> {
+    const userId = FormatClsMetadata().userId;
 
     try {
       const _data = await this.prisma.client.chatModel.create({
@@ -65,12 +62,9 @@ export class ChatService {
     }
   }
 
-  async deleteChatModel(
-    dto: QueryChatModelByIdDto,
-    metadata: Metadata,
-  ): Promise<void> {
+  async deleteChatModel(dto: QueryChatModelByIdDto): Promise<void> {
     const { id } = dto;
-    const userId = metadata.get('userId')[0] as string;
+    const userId = FormatClsMetadata().userId;
     try {
       await this.prisma.client.chatModel.findUniqueOrThrow({
         where: {
@@ -86,13 +80,10 @@ export class ChatService {
     }
   }
 
-  async updateChatModel(
-    dto: UpdateChatModelDto,
-    metadata: Metadata,
-  ): Promise<void> {
+  async updateChatModel(dto: UpdateChatModelDto): Promise<void> {
     try {
       const { id } = dto;
-      const userId = metadata.get('userId')[0] as string;
+      const userId = FormatClsMetadata().userId;
 
       await this.prisma.client.chatModel.findUniqueOrThrow({
         where: {
@@ -115,12 +106,9 @@ export class ChatService {
     }
   }
 
-  async getChatModelById(
-    dto: QueryChatModelByIdDto,
-    metadata: Metadata,
-  ): Promise<ChatModel> {
+  async getChatModelById(dto: QueryChatModelByIdDto): Promise<ChatModel> {
     const { id } = dto;
-    const userId = metadata.get('userId')[0] as string;
+    const userId = FormatClsMetadata().userId;
 
     let where: Prisma.ChatModelWhereUniqueInput = { id };
 
@@ -142,12 +130,9 @@ export class ChatService {
     }
   }
 
-  async getChatModelList(
-    dto: QueryChatModelListDto,
-    metadata: Metadata,
-  ): Promise<ChatModelList> {
+  async getChatModelList(dto: QueryChatModelListDto): Promise<ChatModelList> {
     const { current, pageSize } = dto;
-    const userId = metadata.get('userId')[0] as string;
+    const userId = FormatClsMetadata().userId;
     let where: any = {};
 
     if (userId) {
@@ -178,17 +163,13 @@ export class ChatService {
 
   async createChatCompletion(
     dto: CreateChatCompletionDto,
-    metadata: Metadata,
   ): Promise<CreateChatCompletionChoicesResponse> {
     const { chaModelId, messages = [], question } = dto;
     let struct: ChatModelStructItem[] = [];
     if (chaModelId) {
-      const chatModel = await this.getChatModelById(
-        {
-          id: chaModelId,
-        },
-        metadata,
-      );
+      const chatModel = await this.getChatModelById({
+        id: chaModelId,
+      });
 
       if (!chatModel) {
         throw new GrpcNotFoundException('ChatModel Not Found');

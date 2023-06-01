@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-04-19 15:03:20
- * @LastEditTime: 2023-05-27 20:27:03
+ * @LastEditTime: 2023-05-31 09:19:30
  * @Description:
  *
  */
@@ -13,7 +13,7 @@ import { Auth } from '../auth/decorators/auth.decorator';
 export class GptController implements OnModuleInit {
   constructor() {}
 
-  public onModuleInit(): void {}
+  onModuleInit(): void {}
 
   /**
    * 列出当前可用的型号，并提供每个型号的基本信息，如所有者和可用性。

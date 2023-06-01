@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-09 03:52:25
- * @LastEditTime: 2023-05-29 06:05:40
+ * @LastEditTime: 2023-06-05 01:12:15
  * @Description:
  *
  */
@@ -60,4 +60,9 @@ export interface NacosConfigType {
   group: string;
   username: string;
   password: string;
+}
+
+export interface OpentelemetryConfigType {
+  enable: boolean;
+  zipkinUrl: string;
 }

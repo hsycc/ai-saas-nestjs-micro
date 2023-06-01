@@ -1,31 +1,11 @@
 syntax = "proto3";
 
 import "google/protobuf/empty.proto";
-// import "google/protobuf/struct.proto";
-// import "google/protobuf/wrappers.proto";
 
 package grpc.ai.v1;
 
-message HealthCheckRequest { string service = 1; }
-
-message HealthCheckResponse {
-  enum ServingStatus {
-    UNKNOWN = 0;
-    SERVING = 1;
-    NOT_SERVING = 2;
-    SERVICE_UNKNOWN = 3; // Used only by the Watch method.
-  }
-  ServingStatus status = 1;
-}
-
-service Health {
-  rpc check(HealthCheckRequest) returns (HealthCheckResponse);
-
-  rpc watch(HealthCheckRequest) returns (stream HealthCheckResponse);
-}
-
 service AiSpeechService {
-  rpc createTranscription(CreateTranscriptionRequest)
+  rpc CreateTranscription(CreateTranscriptionRequest)
       returns (CreateTranscriptionResponse) {}
 }
 
@@ -40,17 +20,17 @@ message CreateTranscriptionRequest {
 message CreateTranscriptionResponse { string text = 1; }
 
 service AiChatModelService {
-  rpc createChatModel(CreateChatModelRequest) returns (ChatModel);
+  rpc CreateChatModel(CreateChatModelRequest) returns (ChatModel);
 
-  rpc deleteChatModel(QueryChatModelByIdRequest)
+  rpc DeleteChatModel(QueryChatModelByIdRequest)
       returns (google.protobuf.Empty);
 
-  rpc updateChatModel(UpdateChatModelRequest) returns (google.protobuf.Empty);
+  rpc UpdateChatModel(UpdateChatModelRequest) returns (google.protobuf.Empty);
 
-  rpc getChatModelById(QueryChatModelByIdRequest) returns (ChatModel);
-  rpc getChatModelList(QueryChatModelListRequest) returns (ChatModelList);
+  rpc GetChatModelById(QueryChatModelByIdRequest) returns (ChatModel);
+  rpc GetChatModelList(QueryChatModelListRequest) returns (ChatModelList);
 
-  rpc createChatCompletion(CreateChatCompletionRequest)
+  rpc CreateChatCompletion(CreateChatCompletionRequest)
       returns (CreateChatCompletionChoicesResponse);
 }
 

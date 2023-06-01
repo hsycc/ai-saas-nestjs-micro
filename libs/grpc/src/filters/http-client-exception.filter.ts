@@ -2,7 +2,7 @@
  * 全局过滤器 - 处理 http-client to grpc-server 错误信息
  * @Author: hsycc
  * @Date: 2023-04-24 18:48:48
- * @LastEditTime: 2023-05-09 22:22:27
+ * @LastEditTime: 2023-06-02 08:41:40
  * @Description:
  *
  */
@@ -18,11 +18,14 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 
+import { hostname } from 'os';
+
 export interface JsonResponseType {
   statusCode: string;
   code: string;
   message: string | object;
-  service?: string;
+  application?: string;
+  hostname: string;
   meta?: any[];
   data?: any;
 }
@@ -31,7 +34,7 @@ export interface JsonResponseType {
 export class HttpClientExceptionFilter implements ExceptionFilter {
   constructor(
     private readonly logger: LoggerService,
-    private readonly service: string = 'api-gateway',
+    private readonly application: string = 'api-gateway',
   ) {}
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -60,11 +63,13 @@ export class HttpClientExceptionFilter implements ExceptionFilter {
       ?.split('at ')[1]
       ?.split(' ')[0];
 
-    this.logger.error(
-      JSON.stringify(errRes?.message),
-      stackTop,
-      HttpClientExceptionFilter.name,
-    );
+    if (stackTop) {
+      this.logger.error(
+        JSON.stringify(errRes?.message),
+        stackTop,
+        HttpClientExceptionFilter.name,
+      );
+    }
 
     this.logger.error(
       `${req.originalUrl}`,
@@ -87,40 +92,43 @@ export class HttpClientExceptionFilter implements ExceptionFilter {
       HttpClientExceptionFilter.name,
     );
 
+    const returnJson = {
+      statusCode: status,
+      code: -1,
+      message: errRes?.message?.message || errRes?.message,
+      application: errRes?.message?.application || this.application,
+      hostname: errRes?.message?.hostname || hostname(),
+    };
+
     // 网关直接抛出 HttpException 相关
     if (exception instanceof BadRequestException) {
       // api-gateway dto body validationPipe throwError
+
       return res.status(status).json({
-        statusCode: status,
+        ...returnJson,
         code: 600,
-        message: errRes?.message?.message || errRes?.message,
-        service: errRes?.message?.service || this.service,
         meta: errRes?.message?.meta || errRes?.meta,
       });
     }
 
-    // svc grpc throw rcpException
+    // grpc服务 throw rcpException
     // if (status == HttpStatus.UNAUTHORIZED) {
     //   // 未授权
     // } else if (status == HttpStatus.FORBIDDEN) {
     //   // 禁止访问
     // } else
     if (status == HttpStatus.UNPROCESSABLE_ENTITY) {
-      // svc dto body validationPipe throwError
+      // grpc服务 dto body validationPipe throwError
       return res.status(status).json({
-        statusCode: status,
+        ...returnJson,
         code: errRes?.message?.code || 601,
-        message: errRes?.message?.message,
-        service: errRes?.message?.service,
-        meta: errRes?.message?.meta,
+        meta: errRes?.message?.meta || errRes?.meta,
       });
     } else {
       /* 其他异常 */
       return res.status(status).json({
-        statusCode: status,
+        ...returnJson,
         code: errRes?.message?.code || -1,
-        message: errRes?.message?.message || errRes?.message,
-        service: errRes?.message?.service || this.service,
       });
     }
   }

@@ -1,7 +1,7 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-10 23:21:24
- * @LastEditTime: 2023-05-29 20:54:00
+ * @LastEditTime: 2023-06-01 07:48:31
  * @Description:
  *
  */
@@ -28,8 +28,8 @@ import { join } from 'path';
             transport: Transport.GRPC,
             options: {
               url: v,
-              package: GRPC_AI_V1_PACKAGE_NAME,
-              protoPath: join(process.cwd(), MICRO_PROTO_AI),
+              package: [GRPC_AI_V1_PACKAGE_NAME],
+              protoPath: [join(process.cwd(), MICRO_PROTO_AI)],
               loader: {
                 keepCase: true,
               },

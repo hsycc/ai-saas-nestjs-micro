@@ -96,18 +96,23 @@
     "DDTHH",
     "EDITMSG",
     "healthcheck",
+    "metinseylan",
+    "middlewares",
     "moderations",
     "mpga",
     "nacos",
     "openai",
+    "opentelemetry",
     "pdcpz",
     "protoc",
     "protos",
     "skywalking",
     "srcs",
     "struct",
+    "Traefik",
     "tsup",
     "ualegqse",
-    "uawc"
+    "uawc",
+    "zipkin"
   ]
 }

@@ -1,13 +1,13 @@
 /*
  * @Author: hsycc
  * @Date: 2023-05-07 03:44:52
- * @LastEditTime: 2023-05-30 01:23:05
+ * @LastEditTime: 2023-06-02 05:16:46
  * @Description:
  *
  */
 import { Inject, Injectable } from '@nestjs/common';
 
-import { CustomPrismaService } from 'nestjs-prisma';
+import { CustomPrismaService } from 'nestjs-prisma/dist/custom';
 
 import { UserModelList, UserModel } from '@proto/gen/user.pb';
 import {
@@ -18,7 +18,7 @@ import {
   QueryUserByAccessKeyDto,
 } from './dto';
 import { GrpcInternalException } from '@lib/grpc';
-import { genSaltSync, hashSync } from 'bcrypt';
+import { genSaltSync, hashSync } from 'bcryptjs';
 import { generateKeyPair, getAesInstance } from '@lib/common';
 import { PRISMA_CLIENT_NAME_USER } from '@prisma/scripts/constants';
 import { PrismaClient, Prisma } from '@prisma/@user-client';
